@@ -11,11 +11,12 @@ import {
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
 
-import {  Input,Button } from "../components";
+import {  Input,Button as ComponentButton} from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 import SearchBar from 'react-native-searchbar';
 import DateTimePicker from "react-native-modal-datetime-picker";
+import {Card,Button,Icon } from 'react-native-elements'; 
 
 const { width, height } = Dimensions.get("screen");
 
@@ -280,9 +281,9 @@ if(dayName==6){
                  
              
                   <View style={{flexDirection:'row'}}>
-                  <Button
+                  <ComponentButton
                     onPress={this.showDatePicker}//from button
-                    style={{marginTop:10}}
+                    style={{marginTop:10,width:width*0.6,marginLeft:70}}
                       color="transparent"
                       textStyle={{
                         color: "#333",
@@ -293,7 +294,7 @@ if(dayName==6){
                      <Text style={{color:argonTheme.COLORS.GRADIENT_START}}>
                      {this.state.dateToSearch || "select suitable day"}
                      </Text> 
-                    </Button>
+                    </ComponentButton>
                   <DateTimePicker
                        isVisible={this.state.dateVisible}
                        onConfirm={this.handleDatePicked}
@@ -304,9 +305,9 @@ if(dayName==6){
                        </View>
                     
                     
-                    <Button
+                    <ComponentButton
                     onPress={this.showTimePicker}//from button
-                    style={{marginTop:10}}
+                    style={{marginTop:10,width:width*0.6,marginLeft:70}}
                       color="transparent"
                       textStyle={{
                         color: "#333",
@@ -317,7 +318,7 @@ if(dayName==6){
                      <Text style={{color:argonTheme.COLORS.GRADIENT_START}}>
                      {this.state.timeToSearch || "select suitable time"}
                      </Text> 
-                    </Button>
+                    </ComponentButton>
                                <DateTimePicker
                        isVisible={this.state.dateTimeVisible}
                        onConfirm={this.search}
@@ -329,18 +330,39 @@ if(dayName==6){
                              />
             
             
-                     <View style={{flexDirection:'column',marginLeft:150}}>
+                     <View style={styles.itemsList}>
                          {!this.state.nodata && this.state.data.map((value,index)=>{
-                             var name;
+                             
+                             var name,specialization,email;
                              fire.database().ref("users").child(value.id).child("name").on('value',(snap)=>{
                                   name=snap.val();
                                   
                              })
+                             fire.database().ref("users").child(value.id).child("Specialization").on('value',(snapshot)=>{
+                                specialization=snapshot.val();
+                             })
+                             fire.database().ref("users").child(value.id).child("email").on('value',(snapshot)=>{
+                                email=snapshot.val();
+                             })
                              return(
-                                    <Button
-                                    style={{marginTop:10,backgroundColor:'#444'}}
-                                    small
-                                    onPress={()=>
+
+                                <View key={index} style={{marginTop:20}}>
+                    <Card
+                  title={name}
+                  //image={require('../images/pic2.jpg')}
+                  >
+                  
+               <Text style={{marginBottom: 10}}>
+                       email:{email}
+                 </Text>
+                 
+                 <Text style={{marginBottom: 10}}>
+                 Specialization:{specialization}
+                 </Text>
+                  
+                  
+                     <Button
+                      onPress={()=>
                                     {
                                         fire.database().ref("users").child(this.state.idP).child("appointment").push().set({
                                                    'idDoctor':value.id,
@@ -361,7 +383,13 @@ if(dayName==6){
                                                alert("success !")
                                     }
                                     }
-                                    ><Text>{name}</Text></Button>
+                           icon={<Icon name='code' color='#ffffff' />}
+                           buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor:"#444"}}
+                           title='VIEW NOW' />
+                        </Card>
+                    </View>
+
+                                    
                                   )
                             
                          })}

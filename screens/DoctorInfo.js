@@ -380,7 +380,7 @@ class DoctorInfo extends React.Component {
 
                   <Button
                     onPress={this.showDateTimePicker}//from button
-                    style={{marginTop:10}}
+                    style={{marginTop:10,width:width*0.6,marginLeft:10}}
                       color="transparent"
                       textStyle={{
                         color: "#233DD2",
@@ -388,7 +388,7 @@ class DoctorInfo extends React.Component {
                         fontSize: 16
                       }}
                     >
-                     <Text style={{color:argonTheme.COLORS.GRADIENT_START}}>start time</Text> 
+                     <Text style={{color:argonTheme.COLORS.GRADIENT_START}}>{this.state.from || "start time"}</Text> 
                     </Button>
                     
 
@@ -403,7 +403,7 @@ class DoctorInfo extends React.Component {
                              />
 
                     <Button
-                    style={{marginTop:50}}
+                    style={{marginTop:10,width:width*0.6,marginLeft:10}}
                     onPress={this.showDateTimePickerTo}//to button
                       color="transparent"
                       textStyle={{
@@ -412,7 +412,7 @@ class DoctorInfo extends React.Component {
                         fontSize: 16
                       }}
                     >
-                     <Text style={{color:argonTheme.COLORS.GRADIENT_START}}>end time</Text> 
+                     <Text style={{color:argonTheme.COLORS.GRADIENT_START}}>{this.state.to || "end time"}</Text> 
                     </Button>
                     <DateTimePicker
                        isVisible={this.state.isDateTimePickerVisibleTo}
