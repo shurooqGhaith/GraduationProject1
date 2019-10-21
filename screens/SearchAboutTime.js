@@ -31,6 +31,7 @@ class SearchAboutTime extends React.Component {
         this.hideDateTimePicker=this.hideDateTimePicker.bind(this);
         this.handleDatePicked=this.handleDatePicked.bind(this);
         this.handleTimePicked=this.handleTimePicked.bind(this);
+        this.filterResult=this.filterResult.bind(this);
         this.search=this.search.bind(this);
         this.state={
             data:[],
@@ -46,7 +47,10 @@ class SearchAboutTime extends React.Component {
             timeToSearch:'',
             dateToSearch:'',
             appointments:[],
-            workingHour:[]
+            workingHour:[],
+            Specialties:[],
+            spSelected:'',
+            filterEnable:false
         }
     }
     componentDidMount(){
@@ -71,8 +75,8 @@ class SearchAboutTime extends React.Component {
             )
     }
     search = time =>{
-
-        const hours = time.getHours();
+  
+    const hours = time.getHours();
     const minutes = time.getMinutes();
     var h=`${hours}`;
     var m=`${minutes}`;
@@ -96,12 +100,15 @@ class SearchAboutTime extends React.Component {
                    //alert(app);
                    if(app=="doctor"){
                        fire.database().ref("users").child(keys[i]).child("appointment").on('value',(result)=>{
+                           //لما ما يكون ما في مواعيد عند الدكتور افحصي مواعيد الدوام ا
+                           //ازا الوقت يلي اختاره و اليوم ضمن مواعيد الدوام ، بقدر يحجز عنده
+                           // ما بعرض داتا الا لما احط فلتر لازم ازبط هاي الشغلة
                            if(result.val()){
                                let appointment = Object.values(result.val());
                                this.setState({appointments:appointment})
 
                                //map appointments state
-                               this.state.appointments.map((element,index)=>{
+                               this.state.appointments.map((element,index)=>{////////////////////////
                                // alert(this.state.dateToSearch + "\ntime:"+this.state.timeToSearch);
                                    if(element.timeSelected==this.state.timeToSearch && element.available && element.dateSelected==this.state.dateToSearch ){
                                       // alert(element.dateSelected+element.daySelected);
@@ -124,7 +131,7 @@ class SearchAboutTime extends React.Component {
                                    }
                                    if(element.timeSelected !=this.state.timeToSearch || element.dateSelected !=this.state.dateToSearch ){
                                       
-                                       fire.database().ref("users").child(keys[i]).child("workingHours").on('value',(workHours)=>{
+                                       fire.database().ref("users").child(keys[i]).child("workingHours").on('value',(workHours)=>{//////
                                         if(workHours.val()){
                                           let work = Object.values(workHours.val());
                                           this.setState({workingHour:work}) 
@@ -148,7 +155,26 @@ class SearchAboutTime extends React.Component {
                                    }
 
                                })
-                           }
+                           }//appointment end
+
+
+                          ///no appointment yet 
+                           if(!result.val()){
+                           //get working hour
+                           fire.database().ref("users").child(keys[i]).child("workingHours").on('value',(workHours)=>{
+                            if(workHours.val()){
+                                let work = Object.values(workHours.val());
+                                this.setState({workingHour:work}) 
+                                this.state.workingHour.map((w,ind)=>{
+                                    if(w.days==this.state.daySelected && w.enable && this.state.timeToSearch >= w.start && this.state.timeToSearch <= w.end ){
+                                        array.push({id:keys[i],clinic:w.selectedClinic});
+                                    }
+                                    
+                                })
+                              }
+                           })
+    
+                        }//no appointment end
                        })
                      
                    }//app==doctor
@@ -171,11 +197,33 @@ class SearchAboutTime extends React.Component {
         data:result,
         nodata:false
     })
+
+    var sp=[];
+    this.state.data.map((value,index)=>{
+        fire.database().ref("users").child(value.id).child("Specialization").on('value',(snap)=>{
+            sp.push({sp:snap.val()});
+        })
+    })
+    
+    var result2 = sp.reduce((unique, o) => {
+        if(!unique.some(obj => obj.sp === o.sp)) {
+          unique.push(o);
+        }
+        return unique;
+    },[]);
+        this.setState({
+            Specialties:result2
+        })
    }
-   
+  
     }
   
-    
+    filterResult(){
+             this.setState({
+                 filterEnable:true
+             })
+            
+    }
       
     
 
@@ -273,7 +321,7 @@ if(dayName==6){
             
 
 
-            <View> 
+            <View style={{backgroundColor:"#eee"}}> 
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
@@ -282,7 +330,7 @@ if(dayName==6){
              
                   <View style={{flexDirection:'row'}}>
                   <ComponentButton
-                    onPress={this.showDatePicker}//from button
+                    onPress={this.showDatePicker}
                     style={{marginTop:10,width:width*0.6,marginLeft:70}}
                       color="transparent"
                       textStyle={{
@@ -306,7 +354,7 @@ if(dayName==6){
                     
                     
                     <ComponentButton
-                    onPress={this.showTimePicker}//from button
+                    onPress={this.showTimePicker}
                     style={{marginTop:10,width:width*0.6,marginLeft:70}}
                       color="transparent"
                       textStyle={{
@@ -328,11 +376,57 @@ if(dayName==6){
                        timePickerModeAndroid={'clock'}
                        is24Hour={false}
                              />
+                         
             
-            
+
+                         <View style={{flexDirection:'column'}}>
+                <Picker 
+                   mode='dialog'
+                    style={{height: 60, width: width*0.2,marginLeft:70}} 
+                    selectedValue = {this.state.spSelected} 
+                    onValueChange = {(value) => {this.setState({spSelected: value});
+                    }}>
+                    {this.state.Specialties.map((value,index)=>{
+                      return(
+                        <Picker.Item label = {value.sp} value = {value.sp} />
+                      )
+                    })}
+                         
+                    </Picker>
+                    <View style={{flexDirection:'row'}}>
+                      <ComponentButton
+                      small
+                      onPress={this.filterResult}
+                      style={{marginTop:10,marginLeft:90,backgroundColor:'#004D40'}}
+                      
+                      textStyle={{
+                        color: "#fff",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }}
+                      >
+                              <Text>filter</Text>
+                      </ComponentButton>
+
+                      <ComponentButton
+                      small
+                      onPress={()=>this.setState({filterEnable:false})}
+                      style={{marginTop:10,marginLeft:20,backgroundColor:'#3E2723'}}
+                      
+                      textStyle={{
+                        color: "#fff",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }}
+                      >
+                              <Text>all</Text>
+                      </ComponentButton>
+                      </View>
+                    </View>
+
                      <View style={styles.itemsList}>
                          {!this.state.nodata && this.state.data.map((value,index)=>{
-                             
+                             if(!this.state.data){return(<View><Text>No data </Text></View>)}
                              var name,specialization,email;
                              fire.database().ref("users").child(value.id).child("name").on('value',(snap)=>{
                                   name=snap.val();
@@ -344,56 +438,109 @@ if(dayName==6){
                              fire.database().ref("users").child(value.id).child("email").on('value',(snapshot)=>{
                                 email=snapshot.val();
                              })
-                             return(
 
-                                <View key={index} style={{marginTop:20}}>
-                    <Card
-                  title={name}
-                  //image={require('../images/pic2.jpg')}
-                  >
-                  
-               <Text style={{marginBottom: 10}}>
-                       email:{email}
-                 </Text>
-                 
-                 <Text style={{marginBottom: 10}}>
-                 Specialization:{specialization}
-                 </Text>
-                  
-                  
-                     <Button
-                      onPress={()=>
-                                    {
-                                        fire.database().ref("users").child(this.state.idP).child("appointment").push().set({
-                                                   'idDoctor':value.id,
-                                                   'daySelected':this.state.daySelected,
-                                                   'dateSelected':this.state.dateToSearch,
-                                                   'timeSelected':this.state.timeToSearch,
-                                                   'clinicName':value.clinic,
-                                                   'available':false
-                                               });
-                                               fire.database().ref("users").child(value.id).child("appointment").push().set({
-                                                   'idPatient':this.state.idP,
-                                                   'daySelected':this.state.daySelected,
-                                                   'dateSelected':this.state.dateToSearch,
-                                                   'timeSelected':this.state.timeToSearch,
-                                                   'clinicName':value.clinic,
-                                                   'available':false
-                                               });
-                                               alert("success !")
-                                    }
-                                    }
-                           icon={<Icon name='code' color='#ffffff' />}
-                           buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor:"#444"}}
-                           title='VIEW NOW' />
-                        </Card>
-                    </View>
+                             if(this.state.filterEnable && specialization==this.state.spSelected){
+                                return(
 
-                                    
-                                  )
+                                       <View key={index} style={{marginTop:20}}>
+                                         <Card
+                                             title={name}
+                                          >
+
+                                          <Text style={{marginBottom: 10}}>
+                                           email:{email}
+                                           </Text>
+
+                                        <Text style={{marginBottom: 10}}>
+                                      Specialization:{specialization}
+                                          </Text>
+
+                                           <Button
+                                                    onPress={()=>
+                                                 {
+                                       fire.database().ref("users").child(this.state.idP).child("appointment").push().set({
+                                            'idDoctor':value.id,
+                                             'daySelected':this.state.daySelected,
+                                              'dateSelected':this.state.dateToSearch,
+                                             'timeSelected':this.state.timeToSearch,
+                                              'clinicName':value.clinic,
+                                                   'available':false
+                                                 });
+                                        fire.database().ref("users").child(value.id).child("appointment").push().set({
+                                                  'idPatient':this.state.idP,
+                                                  'daySelected':this.state.daySelected,
+                                                    'dateSelected':this.state.dateToSearch,
+                                                'timeSelected':this.state.timeToSearch,
+                                                 'clinicName':value.clinic,
+                                                'available':false
+                                                           });
+                                                    alert("success !");
+                                                   // this.search(this.state.timeToSearch); 
+                                                 }
+                                                       }
+                                      icon={<Icon name='code' color='#ffffff' />}
+                                      buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor:"#444"}}
+                                      title='VIEW NOW' />
+                                              </Card>
+                                                    </View>
+
+    
+                                               )
+                                      
+                                                 }
+                        if(!this.state.filterEnable){
+                                return(
+
+                                       <View key={index} style={{marginTop:20}}>
+                                         <Card
+                                             title={name}
+                                          >
+
+                                          <Text style={{marginBottom: 10}}>
+                                           email:{email}
+                                           </Text>
+
+                                        <Text style={{marginBottom: 10}}>
+                                      Specialization:{specialization}
+                                          </Text>
+
+                                           <Button
+                                                    onPress={()=>
+                                                 {
+                                       fire.database().ref("users").child(this.state.idP).child("appointment").push().set({
+                                            'idDoctor':value.id,
+                                             'daySelected':this.state.daySelected,
+                                              'dateSelected':this.state.dateToSearch,
+                                             'timeSelected':this.state.timeToSearch,
+                                              'clinicName':value.clinic,
+                                                   'available':false
+                                                 });
+                                        fire.database().ref("users").child(value.id).child("appointment").push().set({
+                                                  'idPatient':this.state.idP,
+                                                  'daySelected':this.state.daySelected,
+                                                    'dateSelected':this.state.dateToSearch,
+                                                'timeSelected':this.state.timeToSearch,
+                                                 'clinicName':value.clinic,
+                                                'available':false
+                                                           });
+                                                    alert("success !");
+                                                    //this.search(this.state.timeToSearch);
+                                                 }
+                                                       }
+                                      icon={<Icon name='code' color='#ffffff' />}
+                                      buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor:"#444"}}
+                                      title='VIEW NOW' />
+                                              </Card>
+                                                    </View>
+
+    
+                                               )
+
+                                                 }
+                                                 
                             
-                         })}
-                     </View>
+                                                        })}
+                                               </View>
            
       </ScrollView>
       

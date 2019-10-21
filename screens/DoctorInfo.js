@@ -397,7 +397,7 @@ class DoctorInfo extends React.Component {
                        onConfirm={this.handleFromDatePicked}
                        onCancel={this.hideDateTimePicker}
                        mode='time'
-                      //datePickerModeAndroid={'calendar'}
+                       //datePickerModeAndroid={'calendar'}
                        timePickerModeAndroid={'clock'}
                        is24Hour={false}
                              />
