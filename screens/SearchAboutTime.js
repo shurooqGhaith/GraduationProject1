@@ -381,8 +381,8 @@ if(dayName==6){
 
                          <View style={{flexDirection:'column'}}>
                 <Picker 
-                   mode='dialog'
-                    style={{height: 60, width: width*0.2,marginLeft:70}} 
+                   
+                    style={{height: 60, width: width*0.2,marginLeft:70,borderWidth:5}} 
                     selectedValue = {this.state.spSelected} 
                     onValueChange = {(value) => {this.setState({spSelected: value});
                     }}>

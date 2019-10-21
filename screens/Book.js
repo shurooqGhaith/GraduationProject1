@@ -27,6 +27,7 @@ class Book extends React.Component {
         super(props);
         this.showInfo=this.showInfo.bind(this);
         this.SearchFilterFunction=this.SearchFilterFunction.bind(this);
+        this.handle=this.handle.bind(this);
         this.state={
             data:[],
             DrInfo:[],
@@ -135,7 +136,28 @@ class Book extends React.Component {
     }
     }
 
-   
+    handle=input=>{
+        if(this.state.searchParameter=="name"){
+            fire.database().ref("users").orderByChild("name").startAt(this.state.search.toLowerCase()).endAt(this.state.search.toLowerCase()+"\uf8ff").on('value',(snap)=>{
+                
+                let items = Object.values(snap.val());
+                this.setState({
+                    data:items,
+                    nodata:false
+                })
+            })
+        }
+        if(this.state.searchParameter=="specialization"){
+            fire.database().ref("users").orderByChild("Specialization").startAt(this.state.search.toLowerCase()).endAt(this.state.search.toLowerCase()+"\uf8ff").on('value',(snap)=>{
+                let items = Object.values(snap.val());
+                this.setState({
+                    data:items,
+                    nodata:false
+                })
+            })
+        }
+       
+    }
     
     
     render(){
@@ -165,6 +187,7 @@ class Book extends React.Component {
                            showOnLoad
                            onSubmitEditing={()=>this.SearchFilterFunction()}
                            backgroundColor="#444"
+                           handleSearch={(input)=>this.handle(input)}
                                />
                                </View>
 
