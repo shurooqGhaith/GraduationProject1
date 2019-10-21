@@ -125,7 +125,12 @@ class DoctorAppointment extends React.Component {
                           <View key={index} style={{flexDirection:'column'}}>
                           <Button small style={{backgroundColor:'#fff'}}
                           onPress={()=>{
-                            this.props.navigation.navigate("PatientInfo",{idDoctor:this.state.id,idPatient:item.idPatient})
+                            this.props.navigation.navigate("PatientInfo",{
+                              idDoctor:this.state.id,
+                              idPatient:item.idPatient,
+                              date:item.dateSelected,
+                              time:item.timeSelected
+                              })
                           }}
                           ><Text style={{color:'#000'}}>{name}</Text></Button>
                           <View style={{flexDirection:'row'}}>

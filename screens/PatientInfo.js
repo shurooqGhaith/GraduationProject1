@@ -52,7 +52,10 @@ class PatientInfo extends React.Component {
       medicineNameFromDB:[],
       noMedicine:true,
       checkedMoney:false,
-      money:''
+      money:'',
+      appointments:[],
+      date:'',
+      time:''
     }
   }
 
@@ -68,9 +71,14 @@ class PatientInfo extends React.Component {
     const { navigation } = this.props;  
     var idD=navigation.getParam('idDoctor');
     var idP=navigation.getParam('idPatient');
+    var date=navigation.getParam('idDoctor');
+    var time=navigation.getParam('idPatient');
+
      this.setState({
          idDoctor:idD,
-         idPatient:idP
+         idPatient:idP,
+         date:date,
+         time:time
      })
      
    fire.database().ref("users").child(idP).child("name").on('value',(datasnapshot)=>{
@@ -133,7 +141,28 @@ class PatientInfo extends React.Component {
               
             }
             )
-            //اعمل الموعد هاد متوفر
+            //////اعمل الموعد هاد متوفر
+
+            fire.database().ref("users").child(this.state.idDoctor).child("appointment").on('value',(result)=>{
+              
+              if(result.val()){
+                  let appointment = Object.values(result.val());
+                  this.setState({appointments:appointment})
+
+                  //map appointments state
+                  this.state.appointments.map((element,index)=>{
+                      if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idPatient==this.state.idPatient  ){                         
+                        fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(result.val())[ind]).child("available").set(true)
+
+
+                      }
+                      
+                      
+
+                  })
+              }//appointment end
+              
+          })
         }
 
 
