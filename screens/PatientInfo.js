@@ -54,6 +54,7 @@ class PatientInfo extends React.Component {
       checkedMoney:false,
       money:'',
       appointments:[],
+      appointmentsPatient:[],
       date:'',
       time:''
     }
@@ -71,8 +72,8 @@ class PatientInfo extends React.Component {
     const { navigation } = this.props;  
     var idD=navigation.getParam('idDoctor');
     var idP=navigation.getParam('idPatient');
-    var date=navigation.getParam('idDoctor');
-    var time=navigation.getParam('idPatient');
+    var date=navigation.getParam('date');
+    var time=navigation.getParam('time');
 
      this.setState({
          idDoctor:idD,
@@ -109,6 +110,25 @@ class PatientInfo extends React.Component {
         }
   
         submit(){
+
+          fire.database().ref("users").child(this.state.idDoctor).child("appointment").on('value',(result)=>{
+              
+            if(result.val()){
+                let appointment = Object.values(result.val());
+                this.setState({appointments:appointment})
+
+                //map appointments state
+                this.state.appointments.map((element,index)=>{
+                    if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idPatient==this.state.idPatient  ){                         
+                      //alert(Object.keys(result.val())[index]);  
+                      fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(result.val())[index]).child("available").set(true);
+
+                    }
+
+                })
+            }
+            
+        })
 	
           var process=[];
           if(this.state.checkedPermanent){process.push("permanent dental filling")}
@@ -119,7 +139,7 @@ class PatientInfo extends React.Component {
 
           if(!this.state.checkedMoney){this.setState({money:0})}
         
-          fire.database().ref("users").child(this.state.idDoctor).child("session").push().set(
+          fire.database().ref("users").child(this.state.idDoctor).child("patients").push().set(
           {
             'idPatient':this.state.idPatient,
             'sessionNumber':this.state.session,
@@ -142,27 +162,8 @@ class PatientInfo extends React.Component {
             }
             )
             //////اعمل الموعد هاد متوفر
-
-            fire.database().ref("users").child(this.state.idDoctor).child("appointment").on('value',(result)=>{
-              
-              if(result.val()){
-                  let appointment = Object.values(result.val());
-                  this.setState({appointments:appointment})
-
-                  //map appointments state
-                  this.state.appointments.map((element,index)=>{
-                      if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idPatient==this.state.idPatient  ){                         
-                        fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(result.val())[ind]).child("available").set(true)
-
-
-                      }
-                      
-                      
-
-                  })
-              }//appointment end
-              
-          })
+            //لازم اكبس مرتين مشان تتعدل !!!
+          
         }
 
 
@@ -171,13 +172,17 @@ class PatientInfo extends React.Component {
       <Block flex style={styles.profile}>
         <Block flex>
          
-          
+        <Header
+                  leftComponent={<Text>{this.state.username}</Text>}
+                  centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
+                  
+           />
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
               
-                  
+
                   <Block middle>
                   <Text>{this.state.username}</Text>
                   <Text>{this.state.email}</Text>
@@ -185,15 +190,16 @@ class PatientInfo extends React.Component {
                   
                   <View style={{flexDirection:'column',marginTop:150,marginLeft:50}}>
                    
-                       <TextInput  
+                       <Input  
+                               borderless
                               placeholder="Enter session Number"  
-                              underlineColorAndroid='transparent'  
-                             style={styles.TextInputStyle}  
+                               
+                             style={{width:width*0.5}}  
                              onChangeText={value => this.setState({session:value})}
                              keyboardType = 'numeric'
                               />
 
-                              <View style={{flexDirection:'column',borderRadius: 10, borderWidth: 1, borderColor: '#009688'}}>
+                              <View style={{flexDirection:'column',borderRadius: 10, borderWidth: 1, borderColor: '#009688',marginRight:10}}>
                               <View style={{flexDirection:'row' }}>
                               <CheckBox
                                        value={this.state.checkedTemporary}
@@ -233,15 +239,14 @@ class PatientInfo extends React.Component {
                                        onValueChange={() => this.setState({ checkedMoney: !this.state.checkedMoney })}
                                  />
                                   <Text style={{marginTop: 5}}>Paid </Text>
-                                  
-                                  { this.state.checkedMoney &&<TextInput
-                                  style={styles.input}  
+                             </View>
+                             { this.state.checkedMoney &&<Input
+                                 style={{marginTop:10,width:width*0.5}}  
                          keyboardType = 'numeric'
                         placeholder="Amount paid"
                         onChangeText={(money)=>this.setState({money})}
                         value={this.state.money}
                       /> }
-                             </View>
                              </View>
                               {this.state.medicinesName.map((name,index)=>{
                       return(
@@ -272,6 +277,82 @@ class PatientInfo extends React.Component {
                       onPress={this.addMedicineName}
                     >
                      add medicine name
+                    </Button>
+
+
+                    <Button style={{width:width*0.5}} 
+                    onPress={()=>{
+                      fire.database().ref("users").child(this.state.idPatient).child("appointment").once('value',(result)=>{
+              
+              if(result.val()){
+                  let appointment = Object.values(result.val());
+                  this.setState({appointmentsPatient:appointment})
+  
+                  //map appointments state
+                  this.state.appointmentsPatient.map((element,index)=>{
+                      if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idDoctor==this.state.idDoctor  ){                         
+                        //alert(Object.keys(result.val())[index]);  
+                        fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(result.val())[index]).child("available").set(true);
+  
+                      }
+  
+                  })
+              }
+              
+          })
+                      fire.database().ref("users").child(this.state.idDoctor).child("appointment").once('value',(result)=>{
+              
+              if(result.val()){
+                  let appointment = Object.values(result.val());
+                  this.setState({appointments:appointment})
+  
+                  //map appointments state
+                  this.state.appointments.map((element,index)=>{
+                      if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idPatient==this.state.idPatient  ){                         
+                        //alert(Object.keys(result.val())[index]);  
+                        fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(result.val())[index]).child("available").set(true);
+  
+                      }
+  
+                  })
+              }
+              
+          })
+    
+            var process=[];
+            if(this.state.checkedPermanent){process.push("permanent dental filling")}
+            if(this.state.checkedTemporary){process.push("temporary dental filling")}
+            if(this.state.checkedRepairing){process.push("repairing")}
+            if(this.state.checkedWindmillDressing){process.push("windmill dressing")}
+  
+  
+            if(!this.state.checkedMoney){this.setState({money:0})}
+          
+            fire.database().ref("users").child(this.state.idDoctor).child("patients").push().set(
+            {
+              'idPatient':this.state.idPatient,
+              'sessionNumber':this.state.session,
+              'process':process,
+              'money':this.state.money,
+              'medicine':this.state.medicinesName
+              
+              
+            }
+            )
+            fire.database().ref("users").child(this.state.idPatient).child("session").push().set(
+              {
+                'idDoctor':this.state.idDoctor,
+                'sessionNumber':this.state.session,
+                'process':process,
+                'money':this.state.money,
+                'medicine':this.state.medicinesName
+                
+                
+              }
+              )
+                    }}>
+                    <Text>add</Text>
+                    
                     </Button>
                     </View>
 

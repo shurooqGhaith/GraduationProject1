@@ -262,11 +262,28 @@ class Profile extends React.Component {
                     
 
                   </Block>
-                  <Block style={{ paddingBottom: -HeaderHeight * 2 }}>
+                  <Block style={{ paddingBottom: -HeaderHeight * 2  }}>
+                  <View style={{marginLeft:60}}>
                   <Button
                       
                       onPress={()=>this.props.navigation.navigate("DoctorAppointment",{id:this.state.id})}//show patient name
                       color="transparent"
+                      style={{width:width*0.5}}
+                      textStyle={{
+                        color: "#233DD2",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }}
+                    >
+                       Appointments
+                    </Button>
+                    </View>
+                    <View style={{marginLeft:60,marginTop:10}}>
+                    <Button
+                      
+                     // onPress={()=>this.props.navigation.navigate("DoctorAppointment",{id:this.state.id})}//show patient name
+                      color="transparent"
+                      style={{width:width*0.5}}
                       textStyle={{
                         color: "#233DD2",
                         fontWeight: "500",
@@ -275,11 +292,14 @@ class Profile extends React.Component {
                     >
                        Patients
                     </Button>
+                    </View>
+                    <View style={{marginLeft:60,marginTop:10}}>
                   <Button
                       
-                      style={{marginTop:20}}
+                      
                       // create an Article
                       color="transparent"
+                      style={{width:width*0.5}}
                       textStyle={{
                         color: "#233DD2",
                         fontWeight: "500",
@@ -288,7 +308,8 @@ class Profile extends React.Component {
                     >
                        create an Article
                     </Button>
-                   
+                    </View>
+                    
                   </Block>
                 </Block>
               </Block>
