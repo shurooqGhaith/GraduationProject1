@@ -111,17 +111,31 @@ class PatientInfo extends React.Component {
   
         submit(){
 
-          fire.database().ref("users").child(this.state.idDoctor).child("appointment").on('value',(result)=>{
-              
+         var name;
+          fire.database().ref("users").child(this.state.idPatient).child("name").on('value',(snap)=>{
+           name=snap.val();
+          })
+
+          var array=this.state.medicinesName;
+          array.forEach((value,index)=>{
+            fire.database().ref("medicines").push().set({
+              'idPatient':this.state.idPatient,
+              'patientName':name,
+              'medicine':value.toLowerCase().trim()
+            })
+          })
+          
+          fire.database().ref("users").child(this.state.idPatient).child("appointment").once('value',(result)=>{
+
             if(result.val()){
                 let appointment = Object.values(result.val());
-                this.setState({appointments:appointment})
+                this.setState({appointmentsPatient:appointment})
 
                 //map appointments state
-                this.state.appointments.map((element,index)=>{
-                    if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idPatient==this.state.idPatient  ){                         
+                this.state.appointmentsPatient.map((element,index)=>{
+                    if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idDoctor==this.state.idDoctor  ){                         
                       //alert(Object.keys(result.val())[index]);  
-                      fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(result.val())[index]).child("available").set(true);
+                      fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(result.val())[index]).child("available").set(true);
 
                     }
 
@@ -129,7 +143,25 @@ class PatientInfo extends React.Component {
             }
             
         })
-	
+                    fire.database().ref("users").child(this.state.idDoctor).child("appointment").once('value',(result1)=>{
+            
+            if(result.val()){
+                let appointment = Object.values(result1.val());
+                this.setState({appointments:appointment})
+
+                //map appointments state
+                this.state.appointments.map((element,index)=>{
+                    if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idPatient==this.state.idPatient  ){                         
+                      //alert(Object.keys(result.val())[index]);  
+                      fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(result1.val())[index]).child("available").set(true);
+
+                    }
+
+                })
+            }
+            
+        })
+  
           var process=[];
           if(this.state.checkedPermanent){process.push("permanent dental filling")}
           if(this.state.checkedTemporary){process.push("temporary dental filling")}
@@ -161,8 +193,7 @@ class PatientInfo extends React.Component {
               
             }
             )
-            //////اعمل الموعد هاد متوفر
-            //لازم اكبس مرتين مشان تتعدل !!!
+                 
           
         }
 
@@ -248,6 +279,7 @@ class PatientInfo extends React.Component {
                         value={this.state.money}
                       /> }
                              </View>
+                             
                               {this.state.medicinesName.map((name,index)=>{
                       return(
                           <View key={index} style={{marginLeft:50,width:width*0.5}}>
@@ -281,76 +313,7 @@ class PatientInfo extends React.Component {
 
 
                     <Button style={{width:width*0.5}} 
-                    onPress={()=>{
-                      fire.database().ref("users").child(this.state.idPatient).child("appointment").once('value',(result)=>{
-              
-              if(result.val()){
-                  let appointment = Object.values(result.val());
-                  this.setState({appointmentsPatient:appointment})
-  
-                  //map appointments state
-                  this.state.appointmentsPatient.map((element,index)=>{
-                      if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idDoctor==this.state.idDoctor  ){                         
-                        //alert(Object.keys(result.val())[index]);  
-                        fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(result.val())[index]).child("available").set(true);
-  
-                      }
-  
-                  })
-              }
-              
-          })
-                      fire.database().ref("users").child(this.state.idDoctor).child("appointment").once('value',(result)=>{
-              
-              if(result.val()){
-                  let appointment = Object.values(result.val());
-                  this.setState({appointments:appointment})
-  
-                  //map appointments state
-                  this.state.appointments.map((element,index)=>{
-                      if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idPatient==this.state.idPatient  ){                         
-                        //alert(Object.keys(result.val())[index]);  
-                        fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(result.val())[index]).child("available").set(true);
-  
-                      }
-  
-                  })
-              }
-              
-          })
-    
-            var process=[];
-            if(this.state.checkedPermanent){process.push("permanent dental filling")}
-            if(this.state.checkedTemporary){process.push("temporary dental filling")}
-            if(this.state.checkedRepairing){process.push("repairing")}
-            if(this.state.checkedWindmillDressing){process.push("windmill dressing")}
-  
-  
-            if(!this.state.checkedMoney){this.setState({money:0})}
-          
-            fire.database().ref("users").child(this.state.idDoctor).child("patients").push().set(
-            {
-              'idPatient':this.state.idPatient,
-              'sessionNumber':this.state.session,
-              'process':process,
-              'money':this.state.money,
-              'medicine':this.state.medicinesName
-              
-              
-            }
-            )
-            fire.database().ref("users").child(this.state.idPatient).child("session").push().set(
-              {
-                'idDoctor':this.state.idDoctor,
-                'sessionNumber':this.state.session,
-                'process':process,
-                'money':this.state.money,
-                'medicine':this.state.medicinesName
-                
-                
-              }
-              )
-                    }}>
+                    onPress={this.submit}>
                     <Text>add</Text>
                     
                     </Button>
