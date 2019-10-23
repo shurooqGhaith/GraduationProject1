@@ -1,468 +1,219 @@
 import React from "react";
-import { ScrollView, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
-// Galio components
-import { Block, Text, Button as GaButton, theme } from "galio-framework";
-// Argon themed components
-import { argonTheme, tabs } from "../constants/";
-import { Button, Select, Icon, Input, Header, Switch } from "../components/";
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  Image,
+  ImageBackground,
+  Platform,
+  Picker,
+  TextInput,
+  CheckBox,
+  TouchableOpacity
+} from "react-native";
+import { Block, Text, theme } from "galio-framework";
 
-const { width } = Dimensions.get("screen");
+import { Button,Icon,Input } from "../components";
+import { Images, argonTheme } from "../constants";
+import { HeaderHeight } from "../constants/utils";
+import fire from "../constants/firebaseConfigrations";
+import DateTimePicker from "react-native-modal-datetime-picker";
+import MapView,{Marker} from "react-native-maps";
+import { Col, Row, Grid } from "react-native-easy-grid";
+import { Divider,Header ,Card } from 'react-native-elements';
+import Autocomplete from 'react-native-autocomplete-input';
+const { width, height } = Dimensions.get("screen");
 
-class Elements extends React.Component {
-  state = {
-    "switch-1": true,
-    "switch-2": false
-  };
+const thumbMeasure = (width - 48 - 32) / 3;
 
-  toggleSwitch = switchId =>
-    this.setState({ [switchId]: !this.state[switchId] });
+class Info extends React.Component {
 
-  renderButtons = () => {
-    return (
-      <Block flex>
-        <Text bold size={16} style={styles.title}>
-          Buttons
-        </Text>
-        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-          <Block center>
-            <Button color="default" style={styles.button}>
-              DEFAULT
-            </Button>
-          </Block>
-          <Block center>
-            <Button
-              color="secondary"
-              textStyle={{ color: "black", fontSize: 12, fontWeight: "700" }}
-              style={styles.button}
-            >
-              SECONDARY
-            </Button>
-          </Block>
-          <Block center>
-            <Button style={styles.button}>PRIMARY</Button>
-          </Block>
-          <Block center>
-            <Button color="info" style={styles.button}>
-              INFO
-            </Button>
-          </Block>
-          <Block center>
-            <Button color="success" style={styles.button}>
-              SUCCESS
-            </Button>
-          </Block>
-          <Block center>
-            <Button color="warning" style={styles.button}>
-              WARNING
-            </Button>
-          </Block>
-          <Block center>
-            <Button color="error" style={styles.button}>
-              ERROR
-            </Button>
-          </Block>
-          <Block row space="evenly">
-            <Block flex left>
-              <Select
-                defaultIndex={1}
-                options={["01", "02", "03", "04", "05"]}
-              />
-            </Block>
-            <Block flex center>
-              <Button small center color="default" style={styles.optionsButton}>
-                DELETE
-              </Button>
-            </Block>
-            <Block flex={1.25} right>
-              <Button center color="default" style={styles.optionsButton}>
-                SAVE FOR LATER
-              </Button>
-            </Block>
-          </Block>
-        </Block>
-      </Block>
-    );
-  };
+  constructor(props){
+    super(props);
+    this.authListener=this.authListener.bind(this);
+    
+        this.state={
+      username:"",
+      email:'',
+      idDoctor:"",
+      idPatient:'',
+      patientInfo:[],
+      search:[],
+      view:false,
+      noInfo:false,
+      process:[],
+      medicines:[]
+      
+      
+    }
+  }
 
-  renderText = () => {
-    return (
-      <Block flex style={styles.group}>
-        <Text bold size={16} style={styles.title}>
-          Typography
-        </Text>
-        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-          <Text
-            h1
-            style={{ marginBottom: theme.SIZES.BASE / 2 }}
-            color={argonTheme.COLORS.DEFAULT}
-          >
-            Heading 1
-          </Text>
-          <Text
-            h2
-            style={{ marginBottom: theme.SIZES.BASE / 2 }}
-            color={argonTheme.COLORS.DEFAULT}
-          >
-            Heading 2
-          </Text>
-          <Text
-            h3
-            style={{ marginBottom: theme.SIZES.BASE / 2 }}
-            color={argonTheme.COLORS.DEFAULT}
-          >
-            Heading 3
-          </Text>
-          <Text
-            h4
-            style={{ marginBottom: theme.SIZES.BASE / 2 }}
-            color={argonTheme.COLORS.DEFAULT}
-          >
-            Heading 4
-          </Text>
-          <Text
-            h5
-            style={{ marginBottom: theme.SIZES.BASE / 2 }}
-            color={argonTheme.COLORS.DEFAULT}
-          >
-            Heading 5
-          </Text>
-          <Text
-            p
-            style={{ marginBottom: theme.SIZES.BASE / 2 }}
-            color={argonTheme.COLORS.DEFAULT}
-          >
-            Paragraph
-          </Text>
-          <Text muted>This is a muted paragraph.</Text>
-        </Block>
-      </Block>
-    );
-  };
+  componentDidMount(){
+    this.authListener();
+    //this.getLocation();
+  }
 
-  renderInputs = () => {
-    return (
-      <Block flex style={styles.group}>
-        <Text bold size={16} style={styles.title}>
-          Inputs
-        </Text>
-        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-          <Input right placeholder="Regular" iconContent={<Block />} />
-        </Block>
-        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-          <Input
-            right
-            placeholder="Regular Custom"
-            style={{
-              borderColor: argonTheme.COLORS.INFO,
-              borderRadius: 4,
-              backgroundColor: "#fff"
-            }}
-            iconContent={<Block />}
-          />
-        </Block>
-        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-          <Input
-            placeholder="Icon left"
-            iconContent={
-              <Icon
-                size={11}
-                style={{ marginRight: 10 }}
-                color={argonTheme.COLORS.ICON}
-                name="search-zoom-in"
-                family="ArgonExtra"
-              />
-            }
-          />
-        </Block>
-        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-          <Input
-            right
-            placeholder="Icon Right"
-            iconContent={
-              <Icon
-                size={11}
-                color={argonTheme.COLORS.ICON}
-                name="search-zoom-in"
-                family="ArgonExtra"
-              />
-            }
-          />
-        </Block>
-        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-          <Input
-            success
-            right
-            placeholder="Success"
-            iconContent={
-              <Block
-                middle
-                style={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: 10,
-                  backgroundColor: argonTheme.COLORS.INPUT_SUCCESS
-                }}
-              >
-                <Icon
-                  size={11}
-                  color={argonTheme.COLORS.ICON}
-                  name="g-check"
-                  family="ArgonExtra"
-                />
-              </Block>
-            }
-          />
-        </Block>
-        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-          <Input
-            error
-            right
-            placeholder="Error Input"
-            iconContent={
-              <Block
-                middle
-                style={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: 10,
-                  backgroundColor: argonTheme.COLORS.INPUT_ERROR
-                }}
-              >
-                <Icon
-                  size={11}
-                  color={argonTheme.COLORS.ICON}
-                  name="support"
-                  family="ArgonExtra"
-                />
-              </Block>
-            }
-          />
-        </Block>
-      </Block>
-    );
-  };
+  
+  
+  authListener(){
+  
+    const { navigation } = this.props;  
+    var idP=navigation.getParam('id');
+    var idD=navigation.getParam('idDoctor');
+    
 
-  renderSwitches = () => {
-    return (
-      <Block flex style={styles.group}>
-        <Text bold size={16} style={styles.title}>
-          Switches
-        </Text>
-        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-          <Block
-            row
-            middle
-            space="between"
-            style={{ marginBottom: theme.SIZES.BASE }}
-          >
-            <Text size={14}>Switch is ON</Text>
-            <Switch
-              value={this.state["switch-1"]}
-              onValueChange={() => this.toggleSwitch("switch-1")}
-            />
-          </Block>
-          <Block row middle space="between">
-            <Text size={14}>Switch is OFF</Text>
-            <Switch
-              value={this.state["switch-2"]}
-              onValueChange={() => this.toggleSwitch("switch-2")}
-            />
-          </Block>
-        </Block>
-      </Block>
-    );
-  };
+     this.setState({
+      idPatient:idP,
+      idDoctor:idD
+     })
+     
+   fire.database().ref("users").child(idP).child("name").on('value',(datasnapshot)=>{
+    this.setState({
+      username:datasnapshot.val()
+    })
+ })
+    
+ fire.database().ref("users").child(idP).child("email").on('value',(datasnapshot)=>{
+    this.setState({
+      email:datasnapshot.val()
+    })
+ })
+ fire.database().ref("users").child(idD).child("patients").on('value',(snapshot)=>{
+     if(snapshot.val()){
+        let data = Object.values(snapshot.val());
+    this.setState({
+      patientInfo:data,
+      noInfo:false
+    })
+     }
+    
+     else{
+         this.setState({
+          noInfo:true
+         })
+     }
 
-  renderTableCell = () => {
-    const { navigation } = this.props;
-    return (
-      <Block flex style={styles.group}>
-        <Text bold size={16} style={styles.title}>
-          Table Cell
-        </Text>
-        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-          <Block style={styles.rows}>
-            <TouchableOpacity onPress={() => navigation.navigate("Pro")}>
-              <Block row middle space="between" style={{ paddingTop: 7 }}>
-                <Text size={14}>Manage Options</Text>
-                <Icon
-                  name="chevron-right"
-                  family="entypo"
-                  style={{ paddingRight: 5 }}
-                />
-              </Block>
-            </TouchableOpacity>
-          </Block>
-        </Block>
-      </Block>
-    );
-  };
+   })
+ 
 
-  renderSocial = () => {
-    return (
-      <Block flex style={styles.group}>
-        <Text bold size={16} style={styles.title}>
-          Social
-        </Text>
-        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-          <Block row center space="between">
-            <Block flex middle right>
-              <GaButton
-                round
-                onlyIcon
-                shadowless
-                icon="facebook"
-                iconFamily="Font-Awesome"
-                iconColor={theme.COLORS.WHITE}
-                iconSize={theme.SIZES.BASE * 1.625}
-                color={theme.COLORS.FACEBOOK}
-                style={[styles.social, styles.shadow]}
-              />
-            </Block>
-            <Block flex middle center>
-              <GaButton
-                round
-                onlyIcon
-                shadowless
-                icon="twitter"
-                iconFamily="Font-Awesome"
-                iconColor={theme.COLORS.WHITE}
-                iconSize={theme.SIZES.BASE * 1.625}
-                color={theme.COLORS.TWITTER}
-                style={[styles.social, styles.shadow]}
-              />
-            </Block>
-            <Block flex middle left>
-              <GaButton
-                round
-                onlyIcon
-                shadowless
-                icon="dribbble"
-                iconFamily="Font-Awesome"
-                iconColor={theme.COLORS.WHITE}
-                iconSize={theme.SIZES.BASE * 1.625}
-                color={theme.COLORS.DRIBBBLE}
-                style={[styles.social, styles.shadow]}
-              />
-            </Block>
-          </Block>
-        </Block>
-      </Block>
-    );
-  };
+  }
 
-  renderNavigation = () => {
-    return (
-      <Block flex style={styles.group}>
-        <Text bold size={16} style={styles.title}>
-          Navigation
-        </Text>
-        <Block>
-          <Block style={{ marginBottom: theme.SIZES.BASE }}>
-            <Header back title="Title" navigation={this.props.navigation} />
-          </Block>
+ 
 
-          <Block style={{ marginBottom: theme.SIZES.BASE }}>
-            <Header white back title="Title" navigation={this.props.navigation} bgColor={argonTheme.COLORS.ACTIVE} titleColor="white" iconColor="white" />
-          </Block>
 
-          <Block style={{ marginBottom: theme.SIZES.BASE }}>
-            <Header search title="Title" navigation={this.props.navigation} />
-          </Block>
-
-          <Block style={{ marginBottom: theme.SIZES.BASE }}>
-            <Header tabs={tabs.categories} search title="Title" navigation={this.props.navigation} />
-          </Block>
-
-          <Block style={{ marginBottom: theme.SIZES.BASE }}>
-            <Header
-              options
-              search
-              title="Title"
-              optionLeft="Option 1"
-              optionRight="Option 2"
-              navigation={this.props.navigation}
-            />
-          </Block>
-        </Block>
-      </Block>
-    );
-  };
 
   render() {
     return (
-      <Block flex center>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
-          {this.renderButtons()}
-          {this.renderText()}
-          {this.renderInputs()}
-          {this.renderSocial()}
-          {this.renderSwitches()}
-          {this.renderNavigation()}
-          {this.renderTableCell()}
-        </ScrollView>
+   
+        <Block flex style={styles.profile}>
+        <Block flex>
+         
+
+       
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={{ width, marginTop: '25%' }}
+            >
+              <Block flex style={styles.profileCard}>
+                
+                <Block style={styles.info}>
+                  
+                <View style={{marginTop:20,backgroundColor:"#000",width:width,height:40,color:"#fff",flexDirection:'row',alignContent:'center'}}>
+                         <Text size={16} bold color="#fff" style={{marginLeft:5,padding:5}}>{this.state.username}</Text>
+                         <Text color="#fff" style={{marginLeft:80,padding:5}}>{this.state.email}</Text>   
+                </View>
+
+              
+                  
+                  
+                  <Block middle>
+                    <View style={styles.itemsList} >
+                  { !this.state.noInfo && this.state.patientInfo.map((value,index)=>{
+                      if(value.idPatient==this.state.idPatient){
+                        
+                        
+                                return(
+                                  <Card title={"session number :"+value.sessionNumber}> 
+                             <View style={{flexDirection:'column',marginTop:20}}>
+                             <Text>process : {value.process}</Text>
+                             <Text>medicine:{value.medicine}</Text>
+                             <Text>money:{value.money}</Text>
+                             <Text>checkup : {value.medicalExaminations==="" ? value.medicalExaminations:"no checkup"}</Text>
+                             </View>
+                             </Card> 
+                                )
+                              }
+                             
+                   })}
+                    </View>
+                    
+                    
+                    
+                  </Block>
+                  
+
+
+                  
+                  
+                  
+                </Block>
+              </Block>
+            </ScrollView>
+          
+        </Block>
+        
       </Block>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  title: {
-    paddingBottom: theme.SIZES.BASE,
-    paddingHorizontal: theme.SIZES.BASE * 2,
-    marginTop: 44,
-    color: argonTheme.COLORS.HEADER
+  
+  itemsList: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    marginTop:100
+},
+
+  
+  profile: {
+    marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
+    // marginBottom: -HeaderHeight * 2,
+    flex: 1,
+    backgroundColor:'#eee'
   },
-  group: {
-    paddingTop: theme.SIZES.BASE * 2
+  profileContainer: {
+    width: width,
+    height: height,
+    padding: 0,
+    zIndex: 1
   },
-  shadow: {
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    shadowOpacity: 0.2,
-    elevation: 2
+  profileBackground: {
+    width: width,
+    height: height / 2
   },
-  button: {
-    marginBottom: theme.SIZES.BASE,
-    width: width - theme.SIZES.BASE * 2
-  },
-  optionsButton: {
-    width: "auto",
-    height: 34,
-    paddingHorizontal: theme.SIZES.BASE,
-    paddingVertical: 10
-  },
-  input: {
-    borderBottomWidth: 1
-  },
-  inputDefault: {
-    borderBottomColor: argonTheme.COLORS.PLACEHOLDER
-  },
-  inputTheme: {
-    borderBottomColor: argonTheme.COLORS.PRIMARY
-  },
-  inputTheme: {
-    borderBottomColor: argonTheme.COLORS.PRIMARY
-  },
-  inputInfo: {
-    borderBottomColor: argonTheme.COLORS.INFO
-  },
-  inputSuccess: {
-    borderBottomColor: argonTheme.COLORS.SUCCESS
-  },
-  inputWarning: {
-    borderBottomColor: argonTheme.COLORS.WARNING
-  },
-  inputDanger: {
-    borderBottomColor: argonTheme.COLORS.ERROR
-  },
-  social: {
-    width: theme.SIZES.BASE * 3.5,
-    height: theme.SIZES.BASE * 3.5,
-    borderRadius: theme.SIZES.BASE * 1.75,
-    justifyContent: "center"
-  },
+  
+  TextInputStyle: {  
+    textAlign: 'center',  
+    height: 40,  
+    borderRadius: 10,  
+    borderWidth: 2,  
+    borderColor: '#009688',  
+    marginBottom: 10  ,
+    width:width*0.5,
+    marginLeft:20
+} ,
+
+input: {
+  borderRadius: 4,
+  borderColor: argonTheme.COLORS.BORDER,
+  height: 44,
+  backgroundColor: '#FFFFFF',
+  marginTop:10
+},
+  
 });
 
-export default Elements;
+export default Info;

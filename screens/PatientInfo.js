@@ -34,6 +34,8 @@ class PatientInfo extends React.Component {
     this.authListener=this.authListener.bind(this);
     this.addMedicineName=this.addMedicineName.bind(this);
     this.handleChange=this.handleChange.bind(this);
+    this.handleMedicalExaminationsChange=this.handleMedicalExaminationsChange.bind(this);
+    this.addMedicalExaminations=this.addMedicalExaminations.bind(this);
     this.submit=this.submit.bind(this);
         this.state={
       username:"",
@@ -58,7 +60,12 @@ class PatientInfo extends React.Component {
       appointmentsPatient:[],
       date:'',
       time:'',
-      medicineFromDB:['shurooq','yaser','safa','shosho','saber','shurooq ghaith'],
+      medicineFromDB:[],
+      error:'',
+      medicalExaminations:[],
+      medicalExaminationName:'',
+      patientData:[]
+      
       
     }
   }
@@ -97,13 +104,12 @@ class PatientInfo extends React.Component {
     })
  })
     
-//  fire.database().ref("users").orderByChild("name").on('value',(snap)=>{
-//   let items = Object.values(snap.val());
-//   this.setState({
-//     medicineFromDB:items
-     
-//   })
-// })
+ fire.database().ref("medicines").on('value', (snapshot) => {
+  let data = snapshot.val();
+  let items = Object.values(data);
+  this.setState({medicineFromDB:items});
+  
+})
 
   }
 
@@ -113,30 +119,69 @@ class PatientInfo extends React.Component {
         medicinesName:[...this.state.medicinesName,""]
     })
   }
+  addMedicalExaminations(){
+    this.setState({
+      medicalExaminations:[...this.state.medicalExaminations,""]
+  })
+  }
 
   handleChange(e,index){
     this.state.medicinesName[index]=e;
     this.setState({medicinesName:this.state.medicinesName})
         }
+
+        handleMedicalExaminationsChange(e,index){
+          this.state.medicalExaminations[index]=e;
+          this.setState({medicalExaminations:this.state.medicalExaminations})
+        }
   
         submit(){
+
 
          var name;
           fire.database().ref("users").child(this.state.idPatient).child("name").on('value',(snap)=>{
            name=snap.val();
+           
           })
-
-          var array=this.state.medicinesName;
-          array.forEach((value,index)=>{
-           // fire.database().ref("medicines").orderByChild("clinic").equalTo(v.toLowerCase()).on('value',(snap)=>{
-
-            fire.database().ref("medicines").push().set({
-              //'idPatient':this.state.idPatient,
-              //'patientName':name,
-              'medicine':value.toLowerCase().trim()
+          if(!this.state.session ){alert("fill ");return;}
+          else{
+            var m="";
+          if(this.state.medicinesName){
+            var array=this.state.medicinesName;
+            array.forEach((value,index)=>{
+              if(value !== ""){
+                fire.database().ref("medicines").orderByChild("medicine").equalTo(value.toLowerCase()).on('value',(snap)=>{
+                  //alert("1");
+                  m+=value.trim()+"\n";
+                  if(!snap.val()){
+                    fire.database().ref("medicines").push().set({ 'medicine':value.toLowerCase().trim()})
+                  }
+                })
+              }
+              
+              
             })
-          })
+          }
+
           
+          if(!this.state.medicinesName){
+            m+="no medicine";
+          }
+          if(this.state.medicalExaminationName){
+           
+              //fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(value.toLowerCase()).on('value',(snap)=>{
+                
+                //if(!snap.val()){
+                  fire.database().ref("medicalExaminations").push().set({ 'exam':this.state.medicalExaminationName.trim()})
+                //}
+             // })
+              
+            
+          }
+         
+         
+          
+           
           fire.database().ref("users").child(this.state.idPatient).child("appointment").once('value',(result)=>{
 
             if(result.val()){
@@ -174,21 +219,26 @@ class PatientInfo extends React.Component {
                     
   
           var process=[];
-          if(this.state.checkedPermanent){process.push("permanent dental filling")}
-          if(this.state.checkedTemporary){process.push("temporary dental filling")}
-          if(this.state.checkedRepairing){process.push("repairing")}
-          if(this.state.checkedWindmillDressing){process.push("windmill dressing")}
+          var pro="";
+          if(this.state.checkedPermanent){process.push("permanent dental filling");pro+="permanent dental filling\n"}
+          if(this.state.checkedTemporary){process.push("temporary dental filling");pro+="temporary dental filling\n"}
+          if(this.state.checkedRepairing){process.push("repairing");pro+="repairing\n"}
+          if(this.state.checkedWindmillDressing){process.push("windmill dressing");pro+="windmill dressing\n"}
+          if(!this.state.checkedPermanent && !this.state.checkedTemporary && !this.state.checkedRepairing && !this.state.checkedWindmillDressing){
+                process.push("nothing done");
+                pro+="nothing done yet !";
+          }
 
-
-          if(!this.state.checkedMoney){this.setState({money:0})}
+          if(!this.state.money){this.setState({money:0})}
         
           fire.database().ref("users").child(this.state.idDoctor).child("patients").push().set(
           {
             'idPatient':this.state.idPatient,
             'sessionNumber':this.state.session,
-            'process':process,
+            'process':pro,
             'money':this.state.money,
-            'medicine':this.state.medicinesName
+            'medicine':m ,////////////
+            'medicalExaminations':this.state.medicalExaminationName 
             
             
           }
@@ -197,15 +247,23 @@ class PatientInfo extends React.Component {
             {
               'idDoctor':this.state.idDoctor,
               'sessionNumber':this.state.session,
-              'process':process,
-              'money':this.state.money,
-              'medicine':this.state.medicinesName
-              
+            'process':pro,
+            'money':this.state.money,
+            'medicine':m ,////////////
+            'medicalExaminations':this.state.medicalExaminationName 
               
             }
             )
-                 
-          
+          }
+        }
+
+
+        renderPatients(){
+               fire.database().ref("users").child(this.state.idDoctor).child("patients").on('value',(snapshot)=>{
+                let data = Object.values(snapshot.val());
+                this.setState({patientData:data})
+
+               })
         }
 
 
@@ -239,7 +297,7 @@ class PatientInfo extends React.Component {
                                      onChangeText={text => this.setState({ medicine: text })}
                                  renderItem={({ item, i }) => (
                                          <TouchableOpacity onPress={() => this.setState({ medicine: item })}>
-                                                         <Text>{item}</Text>
+                                                         <Text>{item.medicine}</Text>
                                             </TouchableOpacity>
                                             )}
                                                     />
@@ -247,12 +305,12 @@ class PatientInfo extends React.Component {
                   <View style={{flexDirection:'column',marginTop:150,marginLeft:50}}>
                    
                        <Input  
-                               borderless
-                              placeholder="Enter session Number"  
-                               
+                             borderless
+                             placeholder="Enter session Number"   
                              style={{width:width*0.5}}  
                              onChangeText={value => this.setState({session:value})}
                              keyboardType = 'numeric'
+                             
                               />
 
                               <View style={{flexDirection:'column',borderRadius: 10, borderWidth: 1, borderColor: '#009688',marginRight:10}}>
@@ -335,6 +393,28 @@ class PatientInfo extends React.Component {
                     >
                      add medicine name
                     </Button>
+
+
+                   
+                          <View style={{marginLeft:50,width:width*0.5}}>
+                          <Input
+                        
+                        borderless
+                        placeholder="medical examinations"
+                        onChangeText={value => this.setState({medicalExaminationName:value})}
+                        value={this.state.medicalExaminationName}
+                        iconContent={
+                            <Icon
+                            size={16}
+                            color={argonTheme.COLORS.ICON}
+                            name="shop"
+                            family="ArgonExtra"
+                            style={styles.inputIcons}
+                          />
+                        }
+                        />
+
+                                  </View>
 
 
                     <Button style={{width:width*0.5}} 

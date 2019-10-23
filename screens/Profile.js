@@ -281,7 +281,7 @@ class Profile extends React.Component {
                     <View style={{marginLeft:60,marginTop:10}}>
                     <Button
                       
-                     // onPress={()=>this.props.navigation.navigate("DoctorAppointment",{id:this.state.id})}//show patient name
+                      onPress={()=>this.props.navigation.navigate("PatientAfterSession",{id:this.state.id})}//show patient name
                       color="transparent"
                       style={{width:width*0.5}}
                       textStyle={{

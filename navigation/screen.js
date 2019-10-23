@@ -4,7 +4,7 @@ import Onboarding from "../screens/Onboarding";
 import Pro from "../screens/Pro";
 import Profile from "../screens/Profile";
 import Register from "../screens/Register";
-import Elements from "../screens/Elements";
+import Info from "../screens/Elements";
 import Articles from "../screens/Articles";
 import Main from "../screens/Main";
 import Login from "../screens/Login";
@@ -18,10 +18,22 @@ import SearchAboutTime from "../screens/SearchAboutTime";
 import DoctorAppointment from "../screens/DoctorAppointment";
 import PatientInfo from "../screens/PatientInfo";
 import Search from "../screens/Search";
+import PatientAfterSession from "../screens/PatientAfterSession";
 const AppNavigator = createStackNavigator(
     {
 
-
+      Info:{
+        screen: Info,
+        navigationOptions: {
+          header: null,
+        }
+      },
+      PatientAfterSession:{
+        screen: PatientAfterSession,
+        navigationOptions: {
+          header: null,
+        }
+      },
       Search:{ screen: Search,
         navigationOptions: {
           header: null,
@@ -80,7 +92,6 @@ const AppNavigator = createStackNavigator(
   navigationOptions:{
     header:null,
   }},
-  Elements:{screen:Elements},
   Articles:{screen:Articles},
   Main:{screen:Main},
   Login:{screen:Login,
