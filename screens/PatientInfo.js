@@ -9,7 +9,8 @@ import {
   Platform,
   Picker,
   TextInput,
-  CheckBox
+  CheckBox,
+  TouchableOpacity
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
@@ -21,7 +22,7 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import MapView,{Marker} from "react-native-maps";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { Divider,Header } from 'react-native-elements';
-import { Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger} from "react-native-popup-menu";
+import Autocomplete from 'react-native-autocomplete-input';
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -56,7 +57,9 @@ class PatientInfo extends React.Component {
       appointments:[],
       appointmentsPatient:[],
       date:'',
-      time:''
+      time:'',
+      medicineFromDB:['shurooq','yaser','safa','shosho','saber','shurooq ghaith'],
+      
     }
   }
 
@@ -94,6 +97,13 @@ class PatientInfo extends React.Component {
     })
  })
     
+//  fire.database().ref("users").orderByChild("name").on('value',(snap)=>{
+//   let items = Object.values(snap.val());
+//   this.setState({
+//     medicineFromDB:items
+     
+//   })
+// })
 
   }
 
@@ -118,9 +128,11 @@ class PatientInfo extends React.Component {
 
           var array=this.state.medicinesName;
           array.forEach((value,index)=>{
+           // fire.database().ref("medicines").orderByChild("clinic").equalTo(v.toLowerCase()).on('value',(snap)=>{
+
             fire.database().ref("medicines").push().set({
-              'idPatient':this.state.idPatient,
-              'patientName':name,
+              //'idPatient':this.state.idPatient,
+              //'patientName':name,
               'medicine':value.toLowerCase().trim()
             })
           })
@@ -135,32 +147,31 @@ class PatientInfo extends React.Component {
                 this.state.appointmentsPatient.map((element,index)=>{
                     if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idDoctor==this.state.idDoctor  ){                         
                       //alert(Object.keys(result.val())[index]);  
-                      fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(result.val())[index]).child("available").set(true);
+                      fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(result.val())[index]).child("available").set(true)
+                      .then(()=>{
+                        fire.database().ref("users").child(this.state.idDoctor).child("appointment").once('value',(snap)=>{
+                          if(snap.val()){
+                              let appointmentD = Object.values(snap.val());
+                              this.setState({appointments:appointmentD})
+                              this.state.appointments.map((value,ind)=>{
+                                  if(value.timeSelected==this.state.time  && value.dateSelected==this.state.date && value.idPatient==this.state.idPatient  ){                         
+                                    fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[ind]).child("available").set(true);
+              
+                                  }
+              
+                              })
+                          }
+                          
+                      })
+                      })
 
                     }
 
                 })
             }
             
-        })
-                    fire.database().ref("users").child(this.state.idDoctor).child("appointment").once('value',(result1)=>{
-            
-            if(result.val()){
-                let appointment = Object.values(result1.val());
-                this.setState({appointments:appointment})
-
-                //map appointments state
-                this.state.appointments.map((element,index)=>{
-                    if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idPatient==this.state.idPatient  ){                         
-                      //alert(Object.keys(result.val())[index]);  
-                      fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(result1.val())[index]).child("available").set(true);
-
-                    }
-
-                })
-            }
-            
-        })
+        });
+                    
   
           var process=[];
           if(this.state.checkedPermanent){process.push("permanent dental filling")}
@@ -204,8 +215,8 @@ class PatientInfo extends React.Component {
         <Block flex>
          
         <Header
-                  leftComponent={<Text>{this.state.username}</Text>}
-                  centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
+                  leftComponent={{ text: 'MY TITLE', style: { color: '#000' } }}
+                  centerComponent={{ text: 'MY TITLE', style: { color: '#000' } }}
                   
            />
             <ScrollView
@@ -219,6 +230,20 @@ class PatientInfo extends React.Component {
                   <Text>{this.state.email}</Text>
                   </Block>
                   
+
+                  <View style={{width:width*0.4,marginTop:20,flex:1}}>
+                             <Autocomplete
+                                    data={this.state.medicineNameFromDB}
+                                    listStyle={{zIndex: 1, position: 'absolute'}}
+                                    defaultValue={this.state.medicine}
+                                     onChangeText={text => this.setState({ medicine: text })}
+                                 renderItem={({ item, i }) => (
+                                         <TouchableOpacity onPress={() => this.setState({ medicine: item })}>
+                                                         <Text>{item}</Text>
+                                            </TouchableOpacity>
+                                            )}
+                                                    />
+                             </View>
                   <View style={{flexDirection:'column',marginTop:150,marginLeft:50}}>
                    
                        <Input  
