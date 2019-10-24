@@ -37,7 +37,8 @@ class PatientInfo extends React.Component {
     this.handleMedicalExaminationsChange=this.handleMedicalExaminationsChange.bind(this);
     this.addMedicalExaminations=this.addMedicalExaminations.bind(this);
     this.submit=this.submit.bind(this);
-
+    this.determineNextSession=this.determineNextSession.bind(this);
+    this.hide=this.hide.bind(this);
     this.handleDatePicked=this.handleDatePicked.bind(this);
     this.hideDatePicker=this.hideDatePicker.bind(this);
     this.showDatePicker=this.showDatePicker.bind(this);
@@ -45,6 +46,7 @@ class PatientInfo extends React.Component {
       username:"",
       idDoctor:"",
       idPatient:'',
+      clinic:'',
       nodata:false,
       info:[],
       email:'',
@@ -78,9 +80,14 @@ class PatientInfo extends React.Component {
       appointmentChange:[],
       workingHour:[],
       app:[],
-      change:false
+      change:false,
       
-      
+      //next session
+      nextSession:false,
+      sessionDate:'',
+      sessionDay:'',
+      sessionTime:'',
+      nextEnable:false
     }
   }
 
@@ -176,18 +183,12 @@ this.state.appointmentChange.map((value,index)=>{
               this.setState({
                 change:true
               })
-              /////-----------
-              
-/////------
+             
               // this.setState({
               //   date:this.state.dateToSearch,
               //   time:this.state.timeToSearch
               // })
             }//if working hour
-
-           
-            
-            
             
         })//map work hour
       }
@@ -290,6 +291,172 @@ else{
         this.setState({ dateVisible: true });
       };
   
+
+      determineNextSession=date=>{
+        const day   = date.getDate();
+        const dayName=date.getDay();
+       const  month = date.getMonth()+1;
+        const  year  = date.getFullYear();
+          
+    
+        const hours = date.getHours();
+    const minutes = date.getMinutes();
+    var h=`${hours}`;
+    var m=`${minutes}`;
+    if(h.length==1){h=`0${h}`}
+    if(m.length==1){m=`0${m}`}
+    
+    const timeSelected=h+":"+m;
+    
+      this.setState({
+        sessionTime:timeSelected
+      })
+        if(dayName==0){
+            this.setState({
+                sessionDay:"sunday"
+            })
+       }
+    
+       
+       if(dayName==1){
+        this.setState({
+          sessionDay:"monday"
+        })
+    }
+    
+    if(dayName==2){
+    this.setState({
+      sessionDay:"tuesday"
+    })
+    }
+    
+    if(dayName==3){
+    this.setState({
+      sessionDay:"wednesday"
+    })
+    }
+    
+    if(dayName==4){
+    this.setState({
+      sessionDay:"thursday"
+    })
+    }
+    
+    if(dayName==5){
+    this.setState({
+      sessionDay:"friday"
+    })
+    }
+    
+    if(dayName==6){
+    this.setState({
+      sessionDay:"saturday"
+    })
+    }
+           this.setState({
+            sessionDate:day + '-' + month + '-' + year
+           })
+           
+           this.hide();
+
+
+           fire.database().ref("users").child(this.state.idDoctor).child("appointment").on('value',(snap)=>{
+            if(snap.val()){
+    let appointments = Object.values(snap.val());
+    this.setState({appointmentChange:appointments});
+    this.state.appointmentChange.map((value,index)=>{
+      //بدي الف ع المواعيد و اروح ع الموعد يلي بدي اياه و بعدين اشوف بقدر اغيره للموعد الجديد او لا 
+      //بعدين بدي اشوف بزبط اعدله للموعد الجديد ولا لا
+      if(value.timeSelected==this.state.sessionTime && value.available && value.dateSelected==this.state.sessionDate ){
+    
+        
+        fire.database().ref("users").child(this.state.idDoctor).child("workingHours").on('value',(workHours)=>{
+          if(workHours.val()){
+            let work = Object.values(workHours.val());
+            this.setState({workingHour:work}) 
+            this.state.workingHour.map((w,ind)=>{
+                if(w.days==this.state.sessionDay && w.enable && this.state.sessionTime >= w.start && this.state.sessionTime <= w.end ){
+                  this.setState({
+                    nextEnable:true
+                  })
+                }//if working hour
+                
+            })//map work hour
+          }
+            
+       })//work hour firebase
+    
+      }//فحص اول إف
+    
+      if(value.timeSelected !=this.state.sessionTime || value.dateSelected !=this.state.sessionDate ){
+                                      
+        
+        fire.database().ref("users").child(this.state.idDoctor).child("workingHours").on('value',(workHours)=>{//////
+         if(workHours.val()){
+           let work = Object.values(workHours.val());
+           this.setState({workingHour:work}) 
+           this.state.workingHour.map((w,ind)=>{
+    
+               if(w.days==this.state.sessionDay && w.enable && this.state.sessionTime >= w.start && this.state.sessionTime <= w.end ){
+                this.setState({
+                  nextEnable:true
+                })
+    
+               }//نهاية الأف التانية
+               
+           })
+         }
+           
+      })
+    }
+    
+    else{
+      this.setState({
+        nextEnable:false
+      })
+      // alert("choose other time");
+    }
+    
+    
+    })
+            }
+    
+          })
+
+          if(this.state.nextEnable){
+            fire.database().ref("users").child(this.state.idDoctor).child("appointment").push().set({
+              'idPatient':this.state.idPatient,
+              'daySelected':this.state.sessionDay,
+              'dateSelected':this.state.sessionDate,
+              'timeSelected':this.state.sessionTime,
+              'clinicName':this.state.clinic,
+              'available':false
+          });
+
+          fire.database().ref("users").child(this.state.idPatient).child("appointment").push().set({
+            'idDoctor':this.state.idDoctor,
+            'daySelected':this.state.sessionDay,
+              'dateSelected':this.state.sessionDate,
+              'timeSelected':this.state.sessionTime,
+            'clinicName':this.state.clinic,
+            'available':false
+        });
+
+        alert("added successfully!")
+          }
+
+          if(!this.state.nextEnable){
+            alert("not available");
+          }
+
+          
+      }
+
+
+
+      hide(){
+        this.setState({nextSession:false})
+      }
   authListener(){
   
     const { navigation } = this.props;  
@@ -297,12 +464,13 @@ else{
     var idP=navigation.getParam('idPatient');
     var date=navigation.getParam('date');
     var time=navigation.getParam('time');
-
+    var c=navigation.getParam('clinic');
      this.setState({
          idDoctor:idD,
          idPatient:idP,
          date:date,
-         time:time
+         time:time,
+         clinic:c
      })
      
    fire.database().ref("users").child(idP).child("name").on('value',(datasnapshot)=>{
@@ -490,11 +658,19 @@ else{
             >
               
 
-              <View style={{flexDirection:'row'}}>
+              
+
+                  <Block middle>
+                  <Text>{this.state.username}</Text>
+                  <Text>{this.state.email}</Text>
+                  </Block>
+                  
+
+                  <View style={{flexDirection:'row'}}>
               <Button
                       small
                       onPress={this.showDatePicker}
-                      style={{backgroundColor:'#004D40',marginLeft:20}}
+                      style={{backgroundColor:'#00897B',marginLeft:80,marginTop:50}}
                       textStyle={{
                         color: "#fff",
                         fontWeight: "500",
@@ -515,13 +691,7 @@ else{
                
                   </View>
 
-                  <Block middle>
-                  <Text>{this.state.username}</Text>
-                  <Text>{this.state.email}</Text>
-                  </Block>
-                  
-
-                  <View style={{width:width*0.4,marginTop:20,flex:1}}>
+                  {/* <View style={{width:width*0.4,marginTop:20,flex:1}}>
                              <Autocomplete
                                     data={this.state.medicineNameFromDB}
                                     listStyle={{zIndex: 1, position: 'absolute'}}
@@ -533,7 +703,7 @@ else{
                                             </TouchableOpacity>
                                             )}
                                                     />
-                             </View>
+                             </View> */}
                   <View style={{flexDirection:'column',marginTop:150,marginLeft:50}}>
                    
                        <Input  
@@ -649,11 +819,30 @@ else{
                                   </View>
 
 
-                    <Button style={{width:width*0.5}} 
+                    <Button  
+                    style={{width:width*0.5,backgroundColor:'#004D40'}} 
                     onPress={this.submit}>
                     <Text>add</Text>
                     
                     </Button>
+
+                    <Button  
+                    
+                    
+                    style={{width:width*0.5,backgroundColor:"#880E4F"}} 
+                    onPress={()=>this.setState({nextSession:true})}
+                    >
+                    <Text>{this.state.sessionDate-this.state.sessionTime || "next session"}</Text>
+                    
+                    </Button>
+
+                    <DateTimePicker
+                       isVisible={this.state.nextSession}
+                       onConfirm={this.determineNextSession}
+                       onCancel={this.hide}
+                       mode={'datetime'}
+                       datePickerModeAndroid={'spinner'}
+                             />
                     </View>
 
                

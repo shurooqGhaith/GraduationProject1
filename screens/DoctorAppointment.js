@@ -230,9 +230,6 @@ class DoctorAppointment extends React.Component {
 
                           <Text style={{color:'#888'}}>{item.clinicName}</Text>
                           
-                          <View style={{flexDirection:'row',marginTop:50}}>
-                      
-                      </View>
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
 
                          </View>
@@ -249,7 +246,8 @@ class DoctorAppointment extends React.Component {
                               idDoctor:this.state.id,
                               idPatient:item.idPatient,
                               date:item.dateSelected,
-                              time:item.timeSelected
+                              time:item.timeSelected,
+                              clinic:item.clinicName
                               })
                           }}
                           ><Text style={{color:'#000'}}>{name}</Text></Button>
@@ -261,28 +259,7 @@ class DoctorAppointment extends React.Component {
                           
 
                           <Text style={{color:'#888'}}>{item.clinicName}</Text>
-                          <View style={{flexDirection:'row',marginTop:50}}>
-                      <Button
-                      small
-                      onPress={()=>{
-                        this.setState({
-                          dateVisible:true
-                        })
-                        
-                        
-
-
-
-
-                      }}
-                      style={{backgroundColor:'#004D40',marginLeft:20}}
-                      textStyle={{
-                        color: "#fff",
-                        fontWeight: "500",
-                        fontSize: 16
-                      }}
-                      ></Button>
-                      </View>
+                      
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
 
                          </View>
