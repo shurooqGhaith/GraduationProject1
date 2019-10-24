@@ -131,15 +131,18 @@ class Info extends React.Component {
                     <View style={styles.itemsList} >
                   { !this.state.noInfo && this.state.patientInfo.map((value,index)=>{
                       if(value.idPatient==this.state.idPatient){
-                        
-                        
+                        var money,medicine,exam;
+                        if(!value.money){money="no";}else{money=value.money}
+                        if(!value.medicine){medicine="no medicine";}else{medicine=value.medicine}
+                        if(!value.medicalExaminations){exam="no checkup needed";}else{exam=value.medicalExaminations}
                                 return(
+                                  
                                   <Card title={"session number :"+value.sessionNumber}> 
                              <View style={{flexDirection:'column',marginTop:20}}>
                              <Text>process : {value.process}</Text>
-                             <Text>medicine:{value.medicine}</Text>
-                             <Text>money:{value.money}</Text>
-                             <Text>checkup : {value.medicalExaminations==="" ? value.medicalExaminations:"no checkup"}</Text>
+                             <Text>medicine:{medicine}</Text>
+                             <Text>money:{money}</Text>
+                             <Text>checkup : {exam}</Text>
                              </View>
                              </Card> 
                                 )
