@@ -35,6 +35,8 @@ class DoctorAppointment extends React.Component {
     this.authListener=this.authListener.bind(this);
     this.filterResult=this.filterResult.bind(this);
     this.getAllAppointment=this.getAllAppointment.bind(this);  
+   
+
     this.state={
       username:"",
       id:"",
@@ -42,7 +44,8 @@ class DoctorAppointment extends React.Component {
       patientInfo:[],
       filterEnable:false,
       todayDate:'',
-      no:false
+      no:false,
+      
       
     }
   }
@@ -59,7 +62,7 @@ class DoctorAppointment extends React.Component {
     }) 
   }
 
-  
+
   
   authListener(){
   
@@ -188,9 +191,8 @@ class DoctorAppointment extends React.Component {
                       </Button>
                       </View>
 
-              
-                  
-                  
+                      
+
                   <Block middle>
 
                   {this.state.nodata && <View style={{marginTop:150}}><Text bold size={20}>no appointment today</Text></View>}
@@ -227,6 +229,10 @@ class DoctorAppointment extends React.Component {
                           
 
                           <Text style={{color:'#888'}}>{item.clinicName}</Text>
+                          
+                          <View style={{flexDirection:'row',marginTop:50}}>
+                      
+                      </View>
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
 
                          </View>
@@ -255,6 +261,28 @@ class DoctorAppointment extends React.Component {
                           
 
                           <Text style={{color:'#888'}}>{item.clinicName}</Text>
+                          <View style={{flexDirection:'row',marginTop:50}}>
+                      <Button
+                      small
+                      onPress={()=>{
+                        this.setState({
+                          dateVisible:true
+                        })
+                        
+                        
+
+
+
+
+                      }}
+                      style={{backgroundColor:'#004D40',marginLeft:20}}
+                      textStyle={{
+                        color: "#fff",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }}
+                      ></Button>
+                      </View>
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
 
                          </View>

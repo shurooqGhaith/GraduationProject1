@@ -37,6 +37,10 @@ class PatientInfo extends React.Component {
     this.handleMedicalExaminationsChange=this.handleMedicalExaminationsChange.bind(this);
     this.addMedicalExaminations=this.addMedicalExaminations.bind(this);
     this.submit=this.submit.bind(this);
+
+    this.handleDatePicked=this.handleDatePicked.bind(this);
+    this.hideDatePicker=this.hideDatePicker.bind(this);
+    this.showDatePicker=this.showDatePicker.bind(this);
         this.state={
       username:"",
       idDoctor:"",
@@ -64,7 +68,15 @@ class PatientInfo extends React.Component {
       error:'',
       medicalExaminations:[],
       medicalExaminationName:'',
-      patientData:[]
+      patientData:[],
+///change time
+      dateVisible:false,
+      dateTimeVisible:false,
+      daySelected:'',
+      dateToSearch:'',
+      timeToSearch:'',
+      appointmentChange:[],
+      workingHour:[]
       
       
     }
@@ -75,7 +87,163 @@ class PatientInfo extends React.Component {
     //this.getLocation();
   }
 
-  
+  handleDatePicked =pickeddate=> {
+    const day   = pickeddate.getDate();
+    const dayName=pickeddate.getDay();
+   const  month = pickeddate.getMonth()+1;
+    const  year  = pickeddate.getFullYear();
+      
+
+    const hours = pickeddate.getHours();
+const minutes = pickeddate.getMinutes();
+var h=`${hours}`;
+var m=`${minutes}`;
+if(h.length==1){h=`0${h}`}
+if(m.length==1){m=`0${m}`}
+
+const timeSelected=h+":"+m;
+
+  this.setState({
+    timeToSearch:timeSelected
+  })
+    if(dayName==0){
+        this.setState({
+            daySelected:"sunday"
+        })
+   }
+
+   
+   if(dayName==1){
+    this.setState({
+        daySelected:"monday"
+    })
+}
+
+if(dayName==2){
+this.setState({
+    daySelected:"tuesday"
+})
+}
+
+if(dayName==3){
+this.setState({
+    daySelected:"wednesday"
+})
+}
+
+if(dayName==4){
+this.setState({
+    daySelected:"thursday"
+})
+}
+
+if(dayName==5){
+this.setState({
+    daySelected:"friday"
+})
+}
+
+if(dayName==6){
+this.setState({
+    daySelected:"saturday"
+})
+}
+       this.setState({
+        dateToSearch:day + '-' + month + '-' + year
+       })
+       
+       this.hideDatePicker();
+
+
+       fire.database().ref("users").child(this.state.idDoctor).child("appointment").on('value',(snap)=>{
+        if(snap.val()){
+let appointments = Object.values(snap.val());
+this.setState({appointmentChange:appointments});
+this.state.appointmentChange.map((value,index)=>{
+  //بدي الف ع المواعيد و اروح ع الموعد يلي بدي اياه و بعدين اشوف بقدر اغيره للموعد الجديد او لا 
+  if(value.idPatient == this.state.idPatient && value.dateSelected ==this.state.date && value.timeSelected==this.state.time){
+
+  if(value.timeSelected==this.state.timeToSearch && value.available && value.dateSelected==this.state.dateToSearch ){
+
+
+    fire.database().ref("users").child(this.state.idDoctor).child("workingHours").on('value',(workHours)=>{
+      if(workHours.val()){
+        let work = Object.values(workHours.val());
+        this.setState({workingHour:work}) 
+        this.state.workingHour.map((w,ind)=>{
+            if(w.days==this.state.daySelected && w.enable && this.state.timeToSearch >= w.start && this.state.timeToSearch <= w.end ){
+                fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[index]).child("timeSelected").set(this.state.timeToSearch);
+                fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[index]).child("dateSelected").set(this.state.dateToSearch);
+                fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[index]).child("daySelected").set(this.state.daySelected);
+                
+            }
+            
+        })
+      }
+        
+   })
+
+  }
+
+  if(value.timeSelected !=this.state.timeToSearch || value.dateSelected !=this.state.dateToSearch ){
+                                      
+    fire.database().ref("users").child(this.state.idDoctor).child("workingHours").on('value',(workHours)=>{//////
+     if(workHours.val()){
+       let work = Object.values(workHours.val());
+       this.setState({workingHour:work}) 
+       this.state.workingHour.map((w,ind)=>{
+
+           if(w.days==this.state.daySelected && w.enable && this.state.timeToSearch >= w.start && this.state.timeToSearch <= w.end ){
+            fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[index]).child("timeSelected").set(this.state.timeToSearch);
+            fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[index]).child("dateSelected").set(this.state.dateToSearch);
+            fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[index]).child("daySelected").set(this.state.daySelected);
+
+           }
+           
+       })
+     }
+       
+  })
+}
+
+else{
+  alert("choose other time");
+}
+}
+})
+        }
+
+      })
+
+      fire.database().ref("users").child(this.state.idPatient).child("appointment").on('value',(snapshot)=>{
+        if(snapshot.val()){
+let appointments = Object.values(snapshot.val());
+this.setState({appointmentChange:appointments});
+this.state.appointmentChange.map((value,index)=>{
+if(value.idDoctor == this.state.idDoctor && value.dateSelected ==this.state.date && value.timeSelected==this.state.time){
+
+fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("timeSelected").set(this.state.timeToSearch);
+fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("dateSelected").set(this.state.dateToSearch);
+fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("daySelected").set(this.state.daySelected);
+
+}
+})
+        }
+
+      })
+    }//end handle
+
+
+   
+
+
+    hideDatePicker=()=>{
+      this.setState({dateVisible:false})
+ }
+
+    showDatePicker = () => {
+        this.setState({ dateVisible: true });
+      };
   
   authListener(){
   
@@ -258,13 +426,7 @@ class PatientInfo extends React.Component {
         }
 
 
-        renderPatients(){
-               fire.database().ref("users").child(this.state.idDoctor).child("patients").on('value',(snapshot)=>{
-                let data = Object.values(snapshot.val());
-                this.setState({patientData:data})
-
-               })
-        }
+        
 
 
   render() {
@@ -282,6 +444,31 @@ class PatientInfo extends React.Component {
               style={{ width, marginTop: '25%' }}
             >
               
+
+              <View style={{flexDirection:'row'}}>
+              <Button
+                      small
+                      onPress={this.showDatePicker}
+                      style={{backgroundColor:'#004D40',marginLeft:20}}
+                      textStyle={{
+                        color: "#fff",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }}
+                      >
+                              <Text>change </Text>
+                      </Button>
+
+                      <DateTimePicker
+                       isVisible={this.state.dateVisible}
+                       onConfirm={this.handleDatePicked}
+                       onCancel={this.hideDatePicker}
+                       mode={'datetime'}
+                       datePickerModeAndroid={'spinner'}
+                             />
+
+               
+                  </View>
 
                   <Block middle>
                   <Text>{this.state.username}</Text>
