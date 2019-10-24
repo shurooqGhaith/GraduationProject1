@@ -177,6 +177,24 @@ this.state.appointmentChange.map((value,index)=>{
                 fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[index]).child("daySelected").set(this.state.daySelected);
                 
             }
+
+            fire.database().ref("users").child(this.state.idPatient).child("appointment").on('value',(snapshot)=>{
+              if(snapshot.val()){
+      let appointments = Object.values(snapshot.val());
+      this.setState({appointmentChange:appointments});
+      this.state.appointmentChange.map((value,index)=>{
+      if(value.idDoctor == this.state.idDoctor && value.dateSelected ==this.state.date && value.timeSelected==this.state.time){
+      
+      fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("timeSelected").set(this.state.timeToSearch);
+      fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("dateSelected").set(this.state.dateToSearch);
+      fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("daySelected").set(this.state.daySelected);
+      
+      }
+      })
+              }
+      
+            })
+            
             
         })
       }
@@ -199,6 +217,22 @@ this.state.appointmentChange.map((value,index)=>{
             fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[index]).child("daySelected").set(this.state.daySelected);
 
            }
+           fire.database().ref("users").child(this.state.idPatient).child("appointment").on('value',(snapshot)=>{
+            if(snapshot.val()){
+    let appointments = Object.values(snapshot.val());
+    this.setState({appointmentChange:appointments});
+    this.state.appointmentChange.map((value,index)=>{
+    if(value.idDoctor == this.state.idDoctor && value.dateSelected ==this.state.date && value.timeSelected==this.state.time){
+    
+    fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("timeSelected").set(this.state.timeToSearch);
+    fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("dateSelected").set(this.state.dateToSearch);
+    fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("daySelected").set(this.state.daySelected);
+    
+    }
+    })
+            }
+    
+          })
            
        })
      }
@@ -215,22 +249,7 @@ else{
 
       })
 
-      fire.database().ref("users").child(this.state.idPatient).child("appointment").on('value',(snapshot)=>{
-        if(snapshot.val()){
-let appointments = Object.values(snapshot.val());
-this.setState({appointmentChange:appointments});
-this.state.appointmentChange.map((value,index)=>{
-if(value.idDoctor == this.state.idDoctor && value.dateSelected ==this.state.date && value.timeSelected==this.state.time){
-
-fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("timeSelected").set(this.state.timeToSearch);
-fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("dateSelected").set(this.state.dateToSearch);
-fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("daySelected").set(this.state.daySelected);
-
-}
-})
-        }
-
-      })
+  
     }//end handle
 
 
