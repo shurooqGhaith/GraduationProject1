@@ -33,11 +33,16 @@ class DoctorAppointment extends React.Component {
   constructor(props){
     super(props);
     this.authListener=this.authListener.bind(this);
-        this.state={
+    this.filterResult=this.filterResult.bind(this);
+    this.getAllAppointment=this.getAllAppointment.bind(this);  
+    this.state={
       username:"",
       id:"",
       nodata:false,
-      patientInfo:[]
+      patientInfo:[],
+      filterEnable:false,
+      todayDate:'',
+      no:false
       
     }
   }
@@ -45,6 +50,13 @@ class DoctorAppointment extends React.Component {
   componentDidMount(){
     this.authListener();
     //this.getLocation();
+    var today = new Date();
+    const day   = today.getDate();
+    const  month = today.getMonth()+1;
+    const  year  = today.getFullYear();
+    this.setState({
+      todayDate:day + '-' + month + '-' + year
+    }) 
   }
 
   
@@ -83,8 +95,50 @@ class DoctorAppointment extends React.Component {
   }
 
 
+  noData(){
+    this.setState({
+      no:true
+    })
+  }
   
-  
+  filterResult(){
+    this.setState({
+      filterEnable:true
+    })
+    fire.database().ref("users").child(this.state.id).child("appointment").orderByChild("dateSelected").equalTo(this.state.todayDate).on('value',(snap)=>{
+      if(snap.val()){
+        let app=Object.values(snap.val());
+        this.setState({
+            patientInfo:app,
+            nodata:false
+        })
+      }
+      else{
+          this.setState({
+              nodata:true
+          })
+      }
+    })
+  }
+
+  getAllAppointment(){
+    this.setState({filterEnable:false})
+    fire.database().ref("users").child(this.state.id).child("appointment").on('value',(snap)=>{
+      if(snap.val()){
+        let app=Object.values(snap.val());
+        this.setState({
+            patientInfo:app,
+            nodata:false
+        })
+      }
+      else{
+          this.setState({
+              nodata:true
+          })
+      }
+    })
+
+  }
   render() {
     return (
       <Block flex style={styles.profile}>
@@ -103,25 +157,57 @@ class DoctorAppointment extends React.Component {
               <Block flex style={styles.profileCard}>
                 
                 <Block style={styles.info}>
-                  
+                  <View ><Text bold size={16}>Appointment</Text></View>
+                <View style={{flexDirection:'row',marginTop:50}}>
+                      <Button
+                      small
+                      onPress={this.filterResult}
+                      style={{backgroundColor:'#004D40',marginLeft:20}}
                       
+                      textStyle={{
+                        color: "#fff",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }}
+                      >
+                              <Text>today</Text>
+                      </Button>
+
+                      <Button
+                      small
+                      onPress={this.getAllAppointment}
+                      style={{marginLeft:20,backgroundColor:'#3E2723'}}
+                      
+                      textStyle={{
+                        color: "#fff",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }}
+                      >
+                              <Text>all</Text>
+                      </Button>
+                      </View>
 
               
                   
                   
                   <Block middle>
-                     
-                  <View >
+
+                  {this.state.nodata && <View style={{marginTop:150}}><Text bold size={20}>no appointment today</Text></View>}
+
+                  <View style={{marginTop:130}}>
                   {!this.state.nodata && this.state.patientInfo.map((item,index)=>{
                       
-                     
+                    
                      if(!item.available){
                         var name;
-                      
+                        var x=0;
                       fire.database().ref("users").child(item.idPatient).child("name").on('value',(snap)=>{
                         name=snap.val();
                       })
-                         return(
+                      if(this.state.filterEnable){
+                                
+                        return(
                           <View key={index} style={{flexDirection:'column'}}>
                           <Button small style={{backgroundColor:'#fff'}}
                           onPress={()=>{
@@ -141,21 +227,52 @@ class DoctorAppointment extends React.Component {
                           
 
                           <Text style={{color:'#888'}}>{item.clinicName}</Text>
-                         
-                          
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
 
                          </View>
 
                          )
+                      }
+
+                        if(!this.state.filterEnable){
+                          return(
+                          <View key={index} style={{flexDirection:'column'}}>
+                          <Button small style={{backgroundColor:'#fff'}}
+                          onPress={()=>{
+                            this.props.navigation.navigate("PatientInfo",{
+                              idDoctor:this.state.id,
+                              idPatient:item.idPatient,
+                              date:item.dateSelected,
+                              time:item.timeSelected
+                              })
+                          }}
+                          ><Text style={{color:'#000'}}>{name}</Text></Button>
+                          <View style={{flexDirection:'row'}}>
+                          <Text style={{color:'#000'}}>{item.daySelected}</Text>
+                          <Text style={{color:'#000'}}>-{item.dateSelected}</Text>
+                          <Text style={{color:'#000'}}>-{item.timeSelected}</Text>
+                          </View>
+                          
+
+                          <Text style={{color:'#888'}}>{item.clinicName}</Text>
+                          <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
+
+                         </View>
+
+                         )
+                        }
                          
-                      
-                     
+                        
                      }
-                   })}
+                     
+                   })
+                   
+                   }
                     </View>
                     
+                        
                     
+                       
                     
                   </Block>
                   

@@ -137,7 +137,7 @@ class Info extends React.Component {
                         if(!value.medicalExaminations){exam="no checkup needed";}else{exam=value.medicalExaminations}
                                 return(
                                   
-                                  <Card title={"session number :"+value.sessionNumber}> 
+                             <Card title={"session number :"+value.sessionNumber}> 
                              <View style={{flexDirection:'column',marginTop:20}}>
                              <Text>process : {value.process}</Text>
                              <Text>medicine:{medicine}</Text>
