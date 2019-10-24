@@ -75,7 +75,10 @@ class PatientInfo extends React.Component {
       daySelected:'',
       dateToSearch:'',
       timeToSearch:'',
-      appointmentChange:[]
+      appointmentChange:[],
+      workingHour:[],
+      app:[],
+      change:false
       
       
     }
@@ -159,38 +162,120 @@ this.setState({
 let appointments = Object.values(snap.val());
 this.setState({appointmentChange:appointments});
 this.state.appointmentChange.map((value,index)=>{
-if(value.idPatient == this.state.idPatient && value.dateSelected ==this.state.date && value.timeSelected==this.state.time){
-fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[index]).child("timeSelected").set(this.state.timeToSearch);
-fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[index]).child("dateSelected").set(this.state.dateToSearch);
-fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[index]).child("daySelected").set(this.state.daySelected);
+  //بدي الف ع المواعيد و اروح ع الموعد يلي بدي اياه و بعدين اشوف بقدر اغيره للموعد الجديد او لا 
+  //بعدين بدي اشوف بزبط اعدله للموعد الجديد ولا لا
+  if(value.timeSelected==this.state.timeToSearch && value.available && value.dateSelected==this.state.dateToSearch ){
+
+    
+    fire.database().ref("users").child(this.state.idDoctor).child("workingHours").on('value',(workHours)=>{
+      if(workHours.val()){
+        let work = Object.values(workHours.val());
+        this.setState({workingHour:work}) 
+        this.state.workingHour.map((w,ind)=>{
+            if(w.days==this.state.daySelected && w.enable && this.state.timeToSearch >= w.start && this.state.timeToSearch <= w.end ){
+              this.setState({
+                change:true
+              })
+              /////-----------
+              
+/////------
+              // this.setState({
+              //   date:this.state.dateToSearch,
+              //   time:this.state.timeToSearch
+              // })
+            }//if working hour
+
+           
+            
+            
+            
+        })//map work hour
+      }
+        
+   })//work hour firebase
+
+  }//فحص اول إف
+
+  if(value.timeSelected !=this.state.timeToSearch || value.dateSelected !=this.state.dateToSearch ){
+                                  
+    
+    fire.database().ref("users").child(this.state.idDoctor).child("workingHours").on('value',(workHours)=>{//////
+     if(workHours.val()){
+       let work = Object.values(workHours.val());
+       this.setState({workingHour:work}) 
+       this.state.workingHour.map((w,ind)=>{
+
+           if(w.days==this.state.daySelected && w.enable && this.state.timeToSearch >= w.start && this.state.timeToSearch <= w.end ){
+            this.setState({
+              change:true
+            })
+
+            // this.setState({
+            //   date:this.state.dateToSearch,
+            //   time:this.state.timeToSearch
+            // })
+           }//نهاية الأف التانية
+        
+          
+           
+       })
+     }
+       
+  })
 }
+
+else{
+  this.setState({
+    change:false
+  })
+  // alert("choose other time");
+}
+
 
 })
         }
 
       })
 
-      fire.database().ref("users").child(this.state.idPatient).child("appointment").on('value',(snapshot)=>{
-        if(snapshot.val()){
-let appointments = Object.values(snapshot.val());
-this.setState({appointmentChange:appointments});
-this.state.appointmentChange.map((value,index)=>{
-if(value.idDoctor == this.state.idDoctor && value.dateSelected ==this.state.date && value.timeSelected==this.state.time){
+      if(this.state.change){
 
-fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("timeSelected").set(this.state.timeToSearch);
-fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("dateSelected").set(this.state.dateToSearch);
-fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[index]).child("daySelected").set(this.state.daySelected);
+        fire.database().ref("users").child(this.state.idDoctor).child("appointment").on('value',(s)=>{
+          let appointments = Object.values(s.val());
+          this.setState({app:appointments});
+          this.state.app.map((v,ind)=>{
+            if(v.idPatient == this.state.idPatient && v.dateSelected ==this.state.date && v.timeSelected==this.state.time){//وصلت الموعد يلي بدي اغيره
+              fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(s.val())[ind]).child("timeSelected").set(this.state.timeToSearch);
+              fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(s.val())[ind]).child("dateSelected").set(this.state.dateToSearch);
+              fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(s.val())[ind]).child("daySelected").set(this.state.daySelected);
 
-}
-})
-        }
+            }
+          })//app doctor map
+         
+        })//app doctor
 
-      })
+        fire.database().ref("users").child(this.state.idPatient).child("appointment").on('value',(snapshot)=>{
+          if(snapshot.val()){
+  let appointments = Object.values(snapshot.val());
+  this.setState({app:appointments});
+  this.state.app.map((va,i)=>{
+  if(va.idDoctor == this.state.idDoctor && va.dateSelected ==this.state.date && va.timeSelected==this.state.time){
+  
+  fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[i]).child("timeSelected").set(this.state.timeToSearch);
+  fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[i]).child("dateSelected").set(this.state.dateToSearch);
+  fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[i]).child("daySelected").set(this.state.daySelected);
+  
+  }
+  })//map app p
+          }
+  
+        })//app patient
 
-      // this.setState({
-      //   date:this.state.dateToSearch,
-      //   time:this.state.timeToSearch
-      // })
+      }//end change if
+  
+      if(!this.state.change){
+        alert("no")
+      }
+      
     }//end handle
 
 
