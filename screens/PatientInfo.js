@@ -449,7 +449,7 @@ else{
             alert("not available");
           }
 
-          
+
       }
 
 
@@ -645,13 +645,12 @@ else{
   render() {
     return (
       <Block flex style={styles.profile}>
+
+      
         <Block flex>
+
          
-        <Header
-                  leftComponent={{ text: 'MY TITLE', style: { color: '#000' } }}
-                  centerComponent={{ text: 'MY TITLE', style: { color: '#000' } }}
-                  
-           />
+        
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
@@ -661,8 +660,17 @@ else{
               
 
                   <Block middle>
-                  <Text>{this.state.username}</Text>
-                  <Text>{this.state.email}</Text>
+                  <View style={{flexDirection:'column',marginTop:40}}>
+                  <View style={{flexDirection:'row'}}>
+                  <Text style={{color:"#004D40"}}>name:</Text>
+                  <Text style={{color:"#004D40"}}>{this.state.username}</Text>
+                  
+                  </View>
+                  <View style={{flexDirection:'row'}}>
+                    <Text style={{color:"#004D40"}}>email:</Text>
+                    <Text style={{color:"#004D40"}}>{this.state.email}</Text>
+                  </View>
+                  </View>
                   </Block>
                   
 
@@ -715,7 +723,7 @@ else{
                              
                               />
 
-                              <View style={{flexDirection:'column',borderRadius: 10, borderWidth: 1, borderColor: '#009688',marginRight:10}}>
+                              <View style={{flexDirection:'column',borderRadius: 10, borderWidth: 1, borderColor: '#009688'}}>
                               <View style={{flexDirection:'row' }}>
                               <CheckBox
                                        value={this.state.checkedTemporary}

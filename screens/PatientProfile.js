@@ -17,6 +17,8 @@ import { HeaderHeight } from "../constants/utils";
 import fire from "../constants/firebaseConfigrations";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import MapView,{Marker} from "react-native-maps";
+import { Divider } from 'react-native-elements';
+
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -37,7 +39,9 @@ class PatientProfile extends React.Component {
       closedAt:'',
       latitude:0,
       longitude:0,
-      showmap:false
+      showmap:false,
+      appointment:[],
+      nodata:false,
     };
   }
 
@@ -77,6 +81,21 @@ class PatientProfile extends React.Component {
     this.setState({
         username:datasnapshot.val()
     })
+  })
+
+  fire.database().ref("users").child(id).child("appointment").on('value',(snapshot)=>{
+    if(snapshot.val()){
+      let app=Object.values(snapshot.val());
+      this.setState({
+          appointment:app,
+          nodata:false
+      })
+    }
+    else{
+        this.setState({
+            nodata:true
+        })
+    }
   })
    }
    
@@ -139,9 +158,7 @@ class PatientProfile extends React.Component {
                     <Text bold size={28} color="#32325D" id="name">
                       {this.state.username}
                     </Text>
-                    <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
-                     patient
-                    </Text>
+                   
                   </Block>
                   <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
                     <Block style={styles.divider} />
@@ -150,7 +167,28 @@ class PatientProfile extends React.Component {
                   
                     
                   
-                    
+                    {!this.state.nodata && this.state.appointment.map((item,index)=>{
+                      if(!item.available){
+
+                        return(
+                          <View key={index} style={{flexDirection:'column'}}>
+                          
+                          <View style={{flexDirection:'row'}}>
+                          <Text style={{color:'#000'}}>{item.daySelected}</Text>
+                          <Text style={{color:'#000'}}>-{item.dateSelected}</Text>
+                          <Text style={{color:'#000'}}>-{item.timeSelected}</Text>
+                          </View>
+                          
+
+                          <Text style={{color:'#888'}}>{item.clinicName}</Text>
+                          
+                          <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
+
+                         </View>
+
+                         )
+                      }
+                    })}
                     
 
                     

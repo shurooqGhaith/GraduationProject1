@@ -25,7 +25,9 @@ const AppNavigator = createStackNavigator(
       Info:{
         screen: Info,
         navigationOptions: {
+          
           header: null,
+          
         }
       },
       PatientAfterSession:{

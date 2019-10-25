@@ -68,7 +68,7 @@ class DoctorAppointment extends React.Component {
   
     const { navigation } = this.props;  
     var id=navigation.getParam('id');
-  
+    
      this.setState({
          id:id
      })
@@ -199,7 +199,6 @@ class DoctorAppointment extends React.Component {
 
                   <View style={{marginTop:130}}>
                   {!this.state.nodata && this.state.patientInfo.map((item,index)=>{
-                      
                     
                      if(!item.available){
                         var name;
@@ -220,7 +219,7 @@ class DoctorAppointment extends React.Component {
                               time:item.timeSelected
                               })
                           }}
-                          ><Text style={{color:'#000'}}>{name}</Text></Button>
+                          ><Text style={{color:'#000'}}>edit</Text></Button>
                           <View style={{flexDirection:'row'}}>
                           <Text style={{color:'#000'}}>{item.daySelected}</Text>
                           <Text style={{color:'#000'}}>-{item.dateSelected}</Text>
@@ -250,7 +249,7 @@ class DoctorAppointment extends React.Component {
                               clinic:item.clinicName
                               })
                           }}
-                          ><Text style={{color:'#000'}}>{name}</Text></Button>
+                          ><Text style={{color:'#000'}}>edit</Text></Button>
                           <View style={{flexDirection:'row'}}>
                           <Text style={{color:'#000'}}>{item.daySelected}</Text>
                           <Text style={{color:'#000'}}>-{item.dateSelected}</Text>

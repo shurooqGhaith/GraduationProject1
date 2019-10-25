@@ -193,10 +193,12 @@ viewInfo(id){
                       })
                          return(
                           <View key={index} style={{flexDirection:'column'}}>
-                          <Button small style={{backgroundColor:'#fff'}}
+                          <View style={{flexDirection:'row'}}>
+                          <Text>{name}</Text>
+                          <Button small style={{backgroundColor:'#fff',marginLeft:30}}
                           onPress={()=>this.props.navigation.navigate("Info",{id:item.idPatient,idDoctor:this.state.idDoctor})}
-                          ><Text style={{color:'#000'}}>{name}</Text></Button>
-                          
+                          ><Text style={{color:'#000'}}>details</Text></Button>
+                          </View>
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
 
                          </View>
