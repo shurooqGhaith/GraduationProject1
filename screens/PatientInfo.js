@@ -619,19 +619,24 @@ else{
             'process':pro,
             'money':this.state.money,
             'medicine':m ,////////////
-            'medicalExaminations':this.state.medicalExaminationName 
-            
+            'medicalExaminations':this.state.medicalExaminationName ,
+            'time':this.state.time,
+            'date':this.state.date,
+            'clinic':this.state.clinic
             
           }
           )
           fire.database().ref("users").child(this.state.idPatient).child("session").push().set(
             {
-              'idDoctor':this.state.idDoctor,
-              'sessionNumber':this.state.session,
+            'idDoctor':this.state.idDoctor,
+            'sessionNumber':this.state.session,
             'process':pro,
             'money':this.state.money,
             'medicine':m ,////////////
-            'medicalExaminations':this.state.medicalExaminationName 
+            'medicalExaminations':this.state.medicalExaminationName ,
+            'time':this.state.time,
+            'date':this.state.date,
+            'clinic':this.state.clinic
               
             }
             )

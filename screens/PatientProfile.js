@@ -185,10 +185,16 @@ class PatientProfile extends React.Component {
                     
                   
                     {!this.state.nodata && this.state.appointment.map((item,index)=>{
-                      if(!item.available){
+                      if(item.available){//اذا المريض راح ع الموعد يعرض متى كان و شو الدكتور عمله
+                         if(!this.state.noSession){
+                           return this.state.session.map((session,ind)=>{
+                             if(item.dateSelected == session.date && item.timeSelected== session.time && item.clinicName ==session.clinic && item.idDoctor==session.idDoctor){
+                               if(!session.money){money="no";}else{money=session.money}
+                               if(!session.medicine){medicine="no medicine";}else{medicine=session.medicine}
+                               if(!session.medicalExaminations){exam="no checkup needed";}else{exam=session.medicalExaminations}
 
-                        return(
-                          <View key={index} style={{flexDirection:'column'}}>
+                              return(
+                                <View key={index} style={{flexDirection:'column'}}>
                           
                           <View style={{flexDirection:'row'}}>
                           <Text style={{color:'#000'}}>{item.daySelected}</Text>
@@ -196,16 +202,49 @@ class PatientProfile extends React.Component {
                           <Text style={{color:'#000'}}>-{item.timeSelected}</Text>
                           </View>
                           
-
                           <Text style={{color:'#888'}}>{item.clinicName}</Text>
                           
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
+                          <View style={{flexDirection:'column'}}>
+                          <Text>{session.sessionNumber}</Text>
+                          <Text>{session.process}</Text>
+                          <Text>medicine:{medicine}</Text>
+                             <Text>money:{money}</Text>
+                             <Text>checkup : {exam}</Text>
+                          </View>
+                         </View> 
+                              )
+                             }
+                            
+                           })//end session map
+                         }
+                       
+                      }//end appointemnt available
 
-                         </View>
 
-                         )
-                      }
-                    })}
+                      if(!item.available){
+
+                                 return(
+                               <View key={index} style={{flexDirection:'column'}}>
+
+                               <View style={{flexDirection:'row'}}>
+                                         <Text style={{color:'#000'}}>{item.daySelected}</Text>
+                                         <Text style={{color:'#000'}}>-{item.dateSelected}</Text>
+                                         <Text style={{color:'#000'}}>-{item.timeSelected}</Text>
+                                       </View>
+
+
+                               <Text style={{color:'#888'}}>{item.clinicName}</Text>
+
+                              <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
+
+                                           <Text>The appointment has not yet been made</Text>
+                                                   </View>
+
+                                       )
+                                         } 
+                                       })
+                    }
                     
 
                     
