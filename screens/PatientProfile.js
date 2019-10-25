@@ -42,6 +42,8 @@ class PatientProfile extends React.Component {
       showmap:false,
       appointment:[],
       nodata:false,
+      session:[],
+      noSession:false
     };
   }
 
@@ -94,6 +96,21 @@ class PatientProfile extends React.Component {
     else{
         this.setState({
             nodata:true
+        })
+    }
+  })
+
+  fire.database().ref("users").child(id).child("session").on('value',(snapshot)=>{
+    if(snapshot.val()){
+      let app=Object.values(snapshot.val());
+      this.setState({
+          session:app,
+          noSession:false
+      })
+    }
+    else{
+        this.setState({
+          noSession:true
         })
     }
   })
