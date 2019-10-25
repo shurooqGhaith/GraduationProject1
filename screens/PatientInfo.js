@@ -539,23 +539,18 @@ else{
                   }
                 })
               }
-              
-              
             })
           }
-
-          
           if(!this.state.medicinesName){
             m+="no medicine";
           }
           if(this.state.medicalExaminationName){
            
-              //fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(value.toLowerCase()).on('value',(snap)=>{
-                
-                //if(!snap.val()){
+              fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(value.trim()).on('value',(snap)=>{
+                if(!snap.val()){
                   fire.database().ref("medicalExaminations").push().set({ 'exam':this.state.medicalExaminationName.trim()})
-                //}
-             // })
+                }
+              })
               
             
           }

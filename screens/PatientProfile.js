@@ -204,7 +204,6 @@ class PatientProfile extends React.Component {
                           
                           <Text style={{color:'#888'}}>{item.clinicName}</Text>
                           
-                          <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
                           <View style={{flexDirection:'column'}}>
                           <Text>{session.sessionNumber}</Text>
                           <Text>{session.process}</Text>
@@ -212,6 +211,8 @@ class PatientProfile extends React.Component {
                              <Text>money:{money}</Text>
                              <Text>checkup : {exam}</Text>
                           </View>
+                          <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
+
                          </View> 
                               )
                              }
@@ -236,9 +237,10 @@ class PatientProfile extends React.Component {
 
                                <Text style={{color:'#888'}}>{item.clinicName}</Text>
 
-                              <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
 
                                            <Text>The appointment has not yet been made</Text>
+                                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
+
                                                    </View>
 
                                        )
