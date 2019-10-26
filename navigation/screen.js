@@ -19,8 +19,12 @@ import DoctorAppointment from "../screens/DoctorAppointment";
 import PatientInfo from "../screens/PatientInfo";
 import Search from "../screens/Search";
 import PatientAfterSession from "../screens/PatientAfterSession";
+import Chat from "../screens/Chat";
 const AppNavigator = createStackNavigator(
     {
+      Chat:{
+        screen: Chat
+      },
 
       Info:{
         screen: Info,

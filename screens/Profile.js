@@ -38,6 +38,7 @@ class Profile extends React.Component {
       user:[],
       workingHours:[],
       username:"",
+      email:'',
       clinicName:[],
       from:"",
       to:"",
@@ -95,6 +96,12 @@ class Profile extends React.Component {
       username:datasnapshot.val()
     })
  })
+
+ fire.database().ref("users").child(id).child("email").on('value',(datasnapshot)=>{
+  this.setState({
+    email:datasnapshot.val()
+  })
+})
     
 
   fire.database().ref("users").child(id).child("clinicName").on('value',(datasnapshot) =>{
@@ -170,6 +177,8 @@ class Profile extends React.Component {
                       Edit
                     </Button>
                     <Button
+                    onPress={()=>this.props.navigation.navigate("Chat",{sender:this.state.id,name:this.state.username,email:this.state.email,receiver:"Rr59qDpud2ONctVJBDtKrTOTOoZ2"})}
+
                       small
                       style={{ backgroundColor: argonTheme.COLORS.DEFAULT }}
                     >
