@@ -1,11 +1,9 @@
 import { createStackNavigator,createAppContainer } from 'react-navigation';
 import Home from "../screens/Home";
 import Onboarding from "../screens/Onboarding";
-import Pro from "../screens/Pro";
 import Profile from "../screens/Profile";
 import Register from "../screens/Register";
 import Info from "../screens/Elements";
-import Articles from "../screens/Articles";
 import Main from "../screens/Main";
 import Login from "../screens/Login";
 import DoctorInfo from "../screens/DoctorInfo";
@@ -21,7 +19,7 @@ import Search from "../screens/Search";
 import PatientAfterSession from "../screens/PatientAfterSession";
 import Chat from "../screens/Chat";
 import Location from "../screens/Location";
-
+import Pro from "../screens/SelectClinicName";
 const AppNavigator = createStackNavigator(
     {
       Location:{screen:Location,
@@ -81,7 +79,7 @@ const AppNavigator = createStackNavigator(
     navigationOptions: {
       header: null,
     }},
-  Pro:{screen:Pro},
+    Pro:{screen:Pro},
   Profile:{screen:Profile,
     navigationOptions: {
       header: null,
@@ -106,7 +104,6 @@ const AppNavigator = createStackNavigator(
   navigationOptions:{
     header:null,
   }},
-  Articles:{screen:Articles},
   Main:{screen:Main},
   Login:{screen:Login,
     navigationOptions:{

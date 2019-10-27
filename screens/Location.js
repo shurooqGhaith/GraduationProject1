@@ -5,6 +5,9 @@ const { width, height } = Dimensions.get("screen");
 import { StyleSheet, Text, View,  Alert, Dimensions,Picker } from 'react-native';
 import { Button } from "../components";
 
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = 0.0421;
+
 class Location extends Component {
  constructor(props) {
     super(props);
@@ -13,7 +16,9 @@ class Location extends Component {
     this.state = {
         id:'',
         clinicNames:[],
-        clinicName:'dental clinic',
+        clinicName:'',
+        clinics:[],
+        nodata:true,
        region: {
          latitude: 32.22111,
          longitude: 35.25444,
@@ -41,21 +46,59 @@ class Location extends Component {
 
      const { navigation } = this.props;  
     var id=navigation.getParam('id');
-  
+     var c=navigation.getParam('clinic');
      this.setState({
-         id:id
+         id:id,
+         clinicName:c
      })
 
         fire.database().ref("users").child(id).child("clinicName").on('value',(datasnapshot) =>{
             let nameClinic = Object.values(datasnapshot.val());
             this.setState({clinicNames:nameClinic});
+         });
+         var array=[];
+         fire.database().ref("users").on('value',(snap)=>{
+            var data=snap.val();
+            var keys=Object.keys(data);
+            for(var i=0 ; i<keys.length;i++){
+                fire.database().ref("users").child(keys[i]).child("type").on('value',(snapshot)=>{
+                    var app=snapshot.val();//type of user
+                    if(app=="doctor"){
+                        fire.database().ref("users").child(keys[i]).child("clinicName").on('value',(result)=>{
+                            if(result.val()){
+                                let appointment = Object.values(result.val());
+                                this.setState({clinicNames:appointment})
+
+                                this.state.clinicNames.map((value,index)=>{
+                                  array.push({clinicName:value.clinic,latitude:value.latitude,longitude:value.longitude});
+                                })
+                            }
+                        })
+                    }
+                })
+
+            }
          })
+
+         if(array.length>0){
+            var result = array.reduce((unique, o) => {
+                if(!unique.some(obj => obj.clinicName === o.clinicName )) {
+                  unique.push(o);
+                }
+                return unique;
+            },[]);
+        
+            this.setState({
+                clinics:result,
+                nodata:false
+            })
+        }
     navigator.geolocation.getCurrentPosition(
       position => {
 
 
         this.setState({
-          region: {2
+          region: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             latitudeDelta: 0.10922,
@@ -120,30 +163,30 @@ render () {
 	return (
 		  <View style={styles.container}>
 
-<View style={{flexDirection:'column'}}>
-                <Picker 
-                    style={{height: 60, width: width*0.5}} 
-                    selectedValue = {this.state.clinicName} 
-                    onValueChange = {(value) => {this.setState({clinicName: value});
-                    }}>
-                    {this.state.clinicNames.map((value,index)=>{
-                      return(
-                        <Picker.Item label = {value.clinic} value = {value.clinic} />
-                      )
-                    })}
-                         
-                    </Picker>
-                      
-                    </View>
+
 
 			<MapView
 			region={this.state.region}
 			style={styles.mapStyle}
-            showsUserLocation={true}
+            showsUserLocation
             onRegionChange={this.callGps}
-
             >
 				
+                {this.state.clinics.map((item,index)=>{
+                    return(
+                        <MapView.Marker
+                    
+                    key={index}
+                    coordinate={{
+                      latitude: item.latitude,
+                      longitude: item.longitude,
+                      latitudeDelta: LATITUDE_DELTA,
+                      longitudeDelta: LONGITUDE_DELTA,
+                    }}
+                    title={item.clinicName}
+                         />
+                    )
+                })}
 				
 			  <MapView.Marker
 				title={"put me on your location"}
@@ -162,7 +205,7 @@ render () {
 		    
 			</MapView>
 		
-            
+             
 		  </View>
 		)
 	}
@@ -181,7 +224,7 @@ const styles = StyleSheet.create({
    width: Dimensions.get('window').width,
    height: Dimensions.get('window').height,
   // bottom: 20,
-   marginTop:20
+   marginTop:60
   }
 });
 

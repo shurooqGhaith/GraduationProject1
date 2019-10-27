@@ -1,12 +1,37 @@
 import React from 'react';
-import { ImageBackground, Image, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
-import { Block, Button, Text, theme } from 'galio-framework';
+import { ImageBackground, Image, StyleSheet, StatusBar, Dimensions, Platform,Picker,View } from 'react-native';
+import { Block, Text, theme } from 'galio-framework';
+import { Button } from "../components";
 
 const { height, width } = Dimensions.get('screen');
-import { Images, argonTheme } from '../constants/';
+import { Images, argonTheme } from '../constants';
 import { HeaderHeight } from "../constants/utils";
+import fire from "../constants/firebaseConfigrations";
 
 export default class Pro extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state={
+      clinicNames:[],
+      clinicName:'',
+      id:''
+    }
+  }
+
+  componentDidMount(){
+    const { navigation } = this.props;  
+    var id=navigation.getParam('id');
+  
+     this.setState({
+         id:id
+     })
+
+        fire.database().ref("users").child(id).child("clinicName").on('value',(datasnapshot) =>{
+            let nameClinic = Object.values(datasnapshot.val());
+            this.setState({clinicNames:nameClinic});
+         })
+  }
   render() {
     const { navigation } = this.props;
 
@@ -20,24 +45,28 @@ export default class Pro extends React.Component {
           />
           <Block space="between" style={styles.padded}>
             <Block>
-              <Block>
-                <Image source={Images.ArgonLogo}
-                  style={{ marginBottom: theme.SIZES.BASE * 1.5 }}/>
-              </Block>
-              <Block >
-                <Block>
-                  <Text color="white" size={60}>Argon</Text>
-                </Block>
-                <Block>
-                  <Text color="white" size={60}>Design</Text>
-                </Block>
-                <Block row>
-                  <Text color="white" size={60}>System</Text>
-                  <Block middle style={styles.pro}>
-                    <Text size={16} color="white">PRO</Text>
-                  </Block>
-                </Block>
-              </Block>
+            <View style={{flexDirection:'column'}}>
+                <Picker 
+                    style={{height: 60, width: width*0.5}} 
+                    selectedValue = {this.state.clinicName} 
+                    onValueChange = {(value) => {this.setState({clinicName: value});
+                    }}>
+                    {this.state.clinicNames.map((value,index)=>{
+                      return(
+                        <Picker.Item label = {value.clinic} value = {value.clinic} />
+                      )
+                    })}
+                         
+                    </Picker>
+                      
+                      <Button small onPress={()=>{
+                        if(this.state.clinicName){
+                          navigation.navigate('Location',{clinic:this.state.clinicName,id:this.state.id})
+                        }
+                      }}><Text>Go</Text></Button>
+                    </View>
+
+             
               <Text size={16} color='rgba(255,255,255,0.6)' style={{ marginTop: 35 }}>
                 Take advantage of all the features and screens made upon Galio Design System, coded on React Native for both.
               </Text>
@@ -50,10 +79,9 @@ export default class Pro extends React.Component {
                   style={{ height: 38, width: 140 }} />
               </Block>
               <Button
-                shadowless
+                
                 style={styles.button}
-                color={argonTheme.COLORS.INFO}
-                onPress={() => navigation.navigate('Home')}>
+               >
                 <Text bold color={theme.COLORS.WHITE}>COMING SOON</Text>
               </Button>
             </Block>
@@ -80,6 +108,7 @@ const styles = StyleSheet.create({
     height: theme.SIZES.BASE * 3,
     shadowRadius: 0,
     shadowOpacity: 0,
+    backgroundColor:argonTheme.COLORS.INFO
   },
   pro: {
     backgroundColor: argonTheme.COLORS.INFO,
