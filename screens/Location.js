@@ -53,9 +53,13 @@ class Location extends Component {
      })
 
         fire.database().ref("users").child(id).child("clinicName").on('value',(datasnapshot) =>{
-            let nameClinic = Object.values(datasnapshot.val());
-            this.setState({clinicNames:nameClinic});
+            if(datasnapshot.val()){
+                let nameClinic = Object.values(datasnapshot.val());
+                this.setState({clinicNames:nameClinic});
+            }
+            
          });
+
          var array=[];
          fire.database().ref("users").on('value',(snap)=>{
             var data=snap.val();
@@ -66,8 +70,8 @@ class Location extends Component {
                     if(app=="doctor"){
                         fire.database().ref("users").child(keys[i]).child("clinicName").on('value',(result)=>{
                             if(result.val()){
-                                let appointment = Object.values(result.val());
-                                this.setState({clinicNames:appointment})
+                                let names = Object.values(result.val());
+                                this.setState({clinicNames:names})
 
                                 this.state.clinicNames.map((value,index)=>{
                                   array.push({clinicName:value.clinic,latitude:value.latitude,longitude:value.longitude});
