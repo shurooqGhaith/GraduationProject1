@@ -2,14 +2,18 @@ import React, { Component } from 'react'
 import MapView from 'react-native-maps';
 import fire from "../constants/firebaseConfigrations";
 const { width, height } = Dimensions.get("screen");
-import { StyleSheet, Text, View,  Alert, Dimensions } from 'react-native';
+import { StyleSheet, Text, View,  Alert, Dimensions,Picker } from 'react-native';
 import { Button } from "../components";
 
 class Location extends Component {
  constructor(props) {
     super(props);
     this.callGps=this.callGps.bind(this);
+    this.onRegionChange=this.onRegionChange.bind(this);
     this.state = {
+        id:'',
+        clinicNames:[],
+        clinicName:'dental clinic',
        region: {
          latitude: 32.22111,
          longitude: 35.25444,
@@ -35,12 +39,23 @@ class Location extends Component {
    }	
 	componentDidMount() {
 
+     const { navigation } = this.props;  
+    var id=navigation.getParam('id');
+  
+     this.setState({
+         id:id
+     })
+
+        fire.database().ref("users").child(id).child("clinicName").on('value',(datasnapshot) =>{
+            let nameClinic = Object.values(datasnapshot.val());
+            this.setState({clinicNames:nameClinic});
+         })
     navigator.geolocation.getCurrentPosition(
       position => {
 
 
         this.setState({
-          region: {
+          region: {2
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             latitudeDelta: 0.10922,
@@ -71,15 +86,24 @@ callGps(){
 			// write your firebase code here 
 
         //Alert.alert('Simple Button pressed')
-        const { navigation } = this.props;  
-    var id=navigation.getParam('id');
-    //var name,start,end,close;
-  
-     this.setState({
-         id:id
-     })
-        fire.database().ref("users").child(id).child("latitud").set(this.state.region.latitude);
-        fire.database().ref("users").child(id).child("longitude").set(this.state.region.longitude);
+        
+        fire.database().ref("users").child(this.state.id).child("latitud").set(this.state.region.latitude);
+        fire.database().ref("users").child(this.state.id).child("longitude").set(this.state.region.longitude);
+
+
+        this.state.clinicNames.map((value,index)=>{
+            if(value.clinic == this.state.clinicName){
+                fire.database().ref("users").child(this.state.id).child("clinicName").orderByChild("clinic").equalTo(this.state.clinicName).on('value',(snap)=>{
+                    if(snap.val()){
+                       fire.database().ref("users").child(this.state.id).child("clinicName").child(Object.keys(snap.val())[index]).child("latitude").set(this.state.region.latitude);
+                       fire.database().ref("users").child(this.state.id).child("clinicName").child(Object.keys(snap.val())[index]).child("longitude").set(this.state.region.longitude);
+
+       
+                    }
+              })
+            }
+        })
+       
 
        // Alert.alert('Done ^__^')
         //fire.database().ref("users").child(id).child("name").set(this.state.username.toLowerCase());
@@ -87,12 +111,30 @@ callGps(){
 
 }
 onRegionChange(region) {
-  this.state.region = region
+  this.setState({
+      region:region
+  })
 }	
 
 render () {
 	return (
 		  <View style={styles.container}>
+
+<View style={{flexDirection:'column'}}>
+                <Picker 
+                    style={{height: 60, width: width*0.5}} 
+                    selectedValue = {this.state.clinicName} 
+                    onValueChange = {(value) => {this.setState({clinicName: value});
+                    }}>
+                    {this.state.clinicNames.map((value,index)=>{
+                      return(
+                        <Picker.Item label = {value.clinic} value = {value.clinic} />
+                      )
+                    })}
+                         
+                    </Picker>
+                      
+                    </View>
 
 			<MapView
 			region={this.state.region}
@@ -119,12 +161,8 @@ render () {
 
 		    
 			</MapView>
-		<Button
-      // style={{width:width*0.5,backgroundColor:"#00897B",height:height*5}}
-		  onPress={this.callGps}
-        >
-        <Text>Press to set your location</Text>
-        </Button>
+		
+            
 		  </View>
 		)
 	}
