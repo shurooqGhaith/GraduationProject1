@@ -271,10 +271,11 @@ else{
   
         })//app patient
 
+        alert("The time is changed to "+this.state.dateToSearch+"\n"+this.state.timeToSearch);
       }//end change if
   
       if(!this.state.change){
-        alert("no")
+        alert("this time not available")
       }
       
     }//end handle
@@ -546,7 +547,7 @@ else{
           }
           if(this.state.medicalExaminationName){
            
-              fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(value.trim()).on('value',(snap)=>{
+              fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(this.state.medicalExaminationName.trim()).on('value',(snap)=>{
                 if(!snap.val()){
                   fire.database().ref("medicalExaminations").push().set({ 'exam':this.state.medicalExaminationName.trim()})
                 }
@@ -635,6 +636,7 @@ else{
               
             }
             )
+            alert("added successfully!")
           }
         }
 
@@ -657,9 +659,7 @@ else{
             >
               
 
-              
-
-                  <Block middle>
+                  <Block style={{marginLeft:5}}>
                   <View style={{flexDirection:'column',marginTop:40}}>
                   <View style={{flexDirection:'row'}}>
                   <Text style={{color:"#004D40"}}>name:</Text>
@@ -672,21 +672,22 @@ else{
                   </View>
                   </View>
                   </Block>
-                  
+                  <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
 
                   <View style={{flexDirection:'row'}}>
               <Button
-                      small
                       onPress={this.showDatePicker}
-                      style={{backgroundColor:'#00897B',marginLeft:80,marginTop:50}}
+                      style={{backgroundColor:'#00897B',marginLeft:80,marginTop:80,width:width*0.5}}
                       textStyle={{
                         color: "#fff",
                         fontWeight: "500",
                         fontSize: 16
                       }}
                       >
-                              <Text>change </Text>
+                              <Text>change time </Text>
                       </Button>
+
+                      <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
 
                       <DateTimePicker
                        isVisible={this.state.dateVisible}
@@ -696,7 +697,7 @@ else{
                        datePickerModeAndroid={'spinner'}
                              />
 
-               
+
                   </View>
 
                   {/* <View style={{width:width*0.4,marginTop:20,flex:1}}>
@@ -712,18 +713,18 @@ else{
                                             )}
                                                     />
                              </View> */}
-                  <View style={{flexDirection:'column',marginTop:150,marginLeft:50}}>
+                  <View style={{flexDirection:'column',marginTop:50,marginLeft:50}}>
                    
                        <Input  
                              borderless
                              placeholder="Enter session Number"   
-                             style={{width:width*0.5}}  
+                             style={{width:width*0.5,marginLeft:50}}  
                              onChangeText={value => this.setState({session:value})}
                              keyboardType = 'numeric'
                              
                               />
 
-                              <View style={{flexDirection:'column',borderRadius: 10, borderWidth: 1, borderColor: '#009688'}}>
+                              <View style={{flexDirection:'column',marginLeft:10}}>
                               <View style={{flexDirection:'row' }}>
                               <CheckBox
                                        value={this.state.checkedTemporary}
@@ -756,21 +757,21 @@ else{
                                   </View>
                               </View>
                               </View>
-                              <View style={{flexDirection:'column'}}>
-                             <View style={{flexDirection:'row',marginLeft:50}}>
+                              <View style={{flexDirection:'row',marginLeft:50}}>
+                             {/* <View style={{flexDirection:'row'}}>
                              <CheckBox
                                        value={this.state.checkedMoney}
                                        onValueChange={() => this.setState({ checkedMoney: !this.state.checkedMoney })}
                                  />
                                   <Text style={{marginTop: 5}}>Paid </Text>
-                             </View>
-                             { this.state.checkedMoney &&<Input
+                             </View> */}
+                             <Input
                                  style={{marginTop:10,width:width*0.5}}  
                          keyboardType = 'numeric'
                         placeholder="Amount paid"
                         onChangeText={(money)=>this.setState({money})}
                         value={this.state.money}
-                      /> }
+                      /> 
                              </View>
                              
                               {this.state.medicinesName.map((name,index)=>{
@@ -826,24 +827,22 @@ else{
 
                                   </View>
 
-
+                     <View style={{flexDirection:'row',marginLeft:5}}>
                     <Button  
-                    style={{width:width*0.5,backgroundColor:'#004D40'}} 
+                    style={{width:width*0.3,backgroundColor:'#333'}} 
                     onPress={this.submit}>
                     <Text>add</Text>
                     
                     </Button>
 
                     <Button  
-                    
-                    
-                    style={{width:width*0.5,backgroundColor:"#880E4F"}} 
+                    style={{width:width*0.3,backgroundColor:"#333",marginLeft:15}} 
                     onPress={()=>this.setState({nextSession:true})}
                     >
-                    <Text>{this.state.sessionDate-this.state.sessionTime || "next session"}</Text>
+                    <Text>{(this.state.sessionDate-this.state.sessionTime) || "next session"}</Text>
                     
                     </Button>
-
+                    </View>
                     <DateTimePicker
                        isVisible={this.state.nextSession}
                        onConfirm={this.determineNextSession}

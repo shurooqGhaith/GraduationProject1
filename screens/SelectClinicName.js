@@ -39,15 +39,15 @@ export default class Pro extends React.Component {
       <Block flex style={styles.container}>
         <StatusBar barStyle="light-content" />
         <Block flex>
-          <ImageBackground
-            source={Images.Pro}
-            style={{ flex: 1, height: height, width, zIndex: 1 }}
-          />
+         
           <Block space="between" style={styles.padded}>
             <Block>
             <View style={{flexDirection:'column'}}>
+            <Text size={16} color='#000' style={{ marginTop: 35 }}>
+                      select name of clinic you want to set its location 
+              </Text>
                 <Picker 
-                    style={{height: 60, width: width*0.5}} 
+                    style={{height: 60, width: width*0.8}} 
                     selectedValue = {this.state.clinicName} 
                     onValueChange = {(value) => {this.setState({clinicName: value});
                     }}>
@@ -59,6 +59,7 @@ export default class Pro extends React.Component {
                          
                     </Picker>
                       
+                   
                       <Button small onPress={()=>{
                         if(this.state.clinicName){
                           navigation.navigate('Location',{clinic:this.state.clinicName,id:this.state.id})
@@ -67,23 +68,9 @@ export default class Pro extends React.Component {
                     </View>
 
              
-              <Text size={16} color='rgba(255,255,255,0.6)' style={{ marginTop: 35 }}>
-                Take advantage of all the features and screens made upon Galio Design System, coded on React Native for both.
-              </Text>
-              <Block row style={{ marginTop: theme.SIZES.BASE * 1.5, marginBottom: theme.SIZES.BASE * 4 }}>
-                <Image
-                  source={Images.iOSLogo}
-                  style={{ height: 38, width: 82, marginRight: theme.SIZES.BASE * 1.5 }} />
-                <Image
-                  source={Images.androidLogo}
-                  style={{ height: 38, width: 140 }} />
-              </Block>
-              <Button
-                
-                style={styles.button}
-               >
-                <Text bold color={theme.COLORS.WHITE}>COMING SOON</Text>
-              </Button>
+              
+             
+              
             </Block>
           </Block>
         </Block>
@@ -94,14 +81,14 @@ export default class Pro extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.COLORS.BLACK,
-    marginTop: Platform.OS === 'android' ? -HeaderHeight : 0,
+    backgroundColor: "#eee",
+   // marginTop: Platform.OS === 'android' ? -HeaderHeight : 0,
   },
   padded: {
     paddingHorizontal: theme.SIZES.BASE * 2,
     zIndex: 3,
     position: 'absolute',
-    bottom: Platform.OS === 'android' ? theme.SIZES.BASE * 2 : theme.SIZES.BASE * 3,
+    //bottom: Platform.OS === 'android' ? theme.SIZES.BASE * 2 : theme.SIZES.BASE * 3,
   },
   button: {
     width: width - theme.SIZES.BASE * 4,

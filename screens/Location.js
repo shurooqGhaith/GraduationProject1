@@ -18,6 +18,7 @@ class Location extends Component {
         clinicName:'',
         clinics:[],
         nodata:true,
+        count:0,
        region: {
          latitude: 32.22111,
          longitude: 35.25444,
@@ -143,15 +144,14 @@ callGps(){
                     if(snap.val()){
                        fire.database().ref("users").child(this.state.id).child("clinicName").child(Object.keys(snap.val())[index]).child("latitude").set(this.state.region.latitude);
                        fire.database().ref("users").child(this.state.id).child("clinicName").child(Object.keys(snap.val())[index]).child("longitude").set(this.state.region.longitude);
-
-       
+      
+                       
                     }
               })
             }
         })
        
 
-       // Alert.alert('Done ^__^')
         //fire.database().ref("users").child(id).child("name").set(this.state.username.toLowerCase());
 
 
@@ -178,7 +178,7 @@ render () {
             
 				
 			  <MapView.Marker
-				title={"put me on your location"}
+				title={this.state.clinicName}
 			    draggable = {true}
 				coordinate={this.state.region}
 				onDragEnd={(e) => this.setState({ region: e.nativeEvent.coordinate })}
