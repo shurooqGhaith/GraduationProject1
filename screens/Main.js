@@ -6,7 +6,8 @@ import {
   StatusBar,
   Dimensions,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from "react-native";
 import { Block, Button, Text, theme } from "galio-framework";
 import { Divider } from 'react-native-elements';
@@ -44,7 +45,7 @@ export default class Main extends React.Component{
       })
        var array=[];
       if(type=="doctor"){
-        fire.database().ref("users").child(senderID).child("patients").on('value',(snap)=>{
+        fire.database().ref("users").child(id).child("patients").on('value',(snap)=>{
           if(snap.val()){
             let names = Object.values(snap.val());
             this.setState({users:names});
