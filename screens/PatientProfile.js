@@ -289,6 +289,15 @@ class PatientProfile extends React.Component {
                                 
                   </Button>
                    
+                  <Button
+                   onPress={() => this.props.navigation.navigate("ShowAllLocation")}
+                       color="primary" style={styles.createButton} >
+                        
+                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                         location
+                        </Text>
+                                
+                  </Button>
                   </Block>
                 </Block>
               </Block>

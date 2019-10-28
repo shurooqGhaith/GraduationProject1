@@ -61,28 +61,28 @@ class Location extends Component {
          });
 
          var array=[];
-         fire.database().ref("users").on('value',(snap)=>{
-            var data=snap.val();
-            var keys=Object.keys(data);
-            for(var i=0 ; i<keys.length;i++){
-                fire.database().ref("users").child(keys[i]).child("type").on('value',(snapshot)=>{
-                    var app=snapshot.val();//type of user
-                    if(app=="doctor"){
-                        fire.database().ref("users").child(keys[i]).child("clinicName").on('value',(result)=>{
-                            if(result.val()){
-                                let names = Object.values(result.val());
-                                this.setState({clinicNames:names})
+        //  fire.database().ref("users").on('value',(snap)=>{
+        //     var data=snap.val();
+        //     var keys=Object.keys(data);
+        //     for(var i=0 ; i<keys.length;i++){
+        //         fire.database().ref("users").child(keys[i]).child("type").on('value',(snapshot)=>{
+        //             var app=snapshot.val();//type of user
+        //             if(app=="doctor"){
+        //                 fire.database().ref("users").child(keys[i]).child("clinicName").on('value',(result)=>{
+        //                     if(result.val()){
+        //                         let names = Object.values(result.val());
+        //                         this.setState({clinicNames:names})
 
-                                this.state.clinicNames.map((value,index)=>{
-                                  array.push({clinicName:value.clinic,latitude:value.latitude,longitude:value.longitude});
-                                })
-                            }
-                        })
-                    }
-                })
+        //                         this.state.clinicNames.map((value,index)=>{
+        //                           array.push({clinicName:value.clinic,latitude:value.latitude,longitude:value.longitude});
+        //                         })
+        //                     }
+        //                 })
+        //             }
+        //         })
 
-            }
-         })
+        //     }
+        //  })
 
          if(array.length>0){
             var result = array.reduce((unique, o) => {
@@ -176,21 +176,7 @@ render () {
             onRegionChange={this.callGps}
             >
 				
-                {this.state.clinics.map((item,index)=>{
-                    return(
-                        <MapView.Marker
-                    
-                    key={index}
-                    coordinate={{
-                      latitude: item.latitude,
-                      longitude: item.longitude,
-                      latitudeDelta: LATITUDE_DELTA,
-                      longitudeDelta: LONGITUDE_DELTA,
-                    }}
-                    title={item.clinicName}
-                         />
-                    )
-                })}
+            
 				
 			  <MapView.Marker
 				title={"put me on your location"}

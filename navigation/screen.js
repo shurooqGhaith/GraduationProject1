@@ -20,8 +20,16 @@ import PatientAfterSession from "../screens/PatientAfterSession";
 import Chat from "../screens/Chat";
 import Location from "../screens/Location";
 import Pro from "../screens/SelectClinicName";
+import ShowAllLocation from "../screens/ShowAllLocation";
 const AppNavigator = createStackNavigator(
     {
+
+      ShowAllLocation:{screen:ShowAllLocation,
+        navigationOptions: {
+          header: null,
+        }
+  
+      },
       Location:{screen:Location,
         navigationOptions: {
           header: null,
