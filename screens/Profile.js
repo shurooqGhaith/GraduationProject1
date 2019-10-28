@@ -177,7 +177,7 @@ class Profile extends React.Component {
                       Edit
                     </Button>
                     <Button
-                    onPress={()=>this.props.navigation.navigate("Chat",{sender:this.state.id,name:this.state.username,email:this.state.email,receiver:"Rr59qDpud2ONctVJBDtKrTOTOoZ2"})}
+                    onPress={()=>this.props.navigation.navigate("Main",{sender:this.state.id,name:this.state.username,email:this.state.email,type:"doctor"})}
 
                       small
                       style={{ backgroundColor: argonTheme.COLORS.DEFAULT }}
@@ -274,9 +274,9 @@ class Profile extends React.Component {
                   <Block style={{ paddingBottom: -HeaderHeight * 2  }}>
                   <View style={{marginLeft:60}}>
                   <Button
-                      
                       onPress={()=>this.props.navigation.navigate("Pro",{id:this.state.id})}
                       color="transparent"
+                      style={{width:width*0.5}}
                       textStyle={{
                         color: "#233DD2",
                         fontWeight: "500",
@@ -286,7 +286,7 @@ class Profile extends React.Component {
                        set your location
                     </Button>
                     </View>
-                  <View style={{marginLeft:60}}>
+                  <View style={{marginLeft:60,marginTop:10}}>
                   <Button
                       
                       onPress={()=>this.props.navigation.navigate("DoctorAppointment",{id:this.state.id})}//show patient name

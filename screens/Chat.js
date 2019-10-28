@@ -15,7 +15,7 @@ class Chat extends React.Component {
     super(props);
   }
   static navigationOptions = ({ navigation }) => ({
-    title: (navigation.state.params || {}).name || 'Chat!',
+    title: (navigation.state.params || {}).nameR || 'Chat!',
   });
 
   state = {
@@ -73,6 +73,9 @@ class Chat extends React.Component {
     var name=navigation.getParam('name');
     var email=navigation.getParam('email');
     var receiver=navigation.getParam('receiver'); 
+    var receiverName=navigation.getParam('nameR'); 
+
+    
     this.setState({
         id:id,
         name:name,

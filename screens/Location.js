@@ -4,7 +4,6 @@ import fire from "../constants/firebaseConfigrations";
 const { width, height } = Dimensions.get("screen");
 import { StyleSheet, Text, View,  Alert, Dimensions,Picker } from 'react-native';
 import { Button } from "../components";
-
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = 0.0421;
 
