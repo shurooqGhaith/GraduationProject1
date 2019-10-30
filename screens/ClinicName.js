@@ -133,7 +133,11 @@ this.setState({clinicNames:this.state.clinicNames})
         }
         else{
         arr.forEach((v,ind)=>{
-            fire.database().ref("users").child(this.state.id).child("clinicName").push().set({'clinic':v.toLowerCase().trim()})
+            fire.database().ref("users").child(this.state.id).child("clinicName").push().set({
+              'clinic':v.toLowerCase().trim(),
+              'latitude':0,
+              'longitude':0
+            })
            .then(()=>{
             fire.database().ref("users").child(this.state.id).child("Specialization").set(this.state.Specialization.toLowerCase().trim());   
             fire.database().ref("clinics").orderByChild("clinic").equalTo(v.toLowerCase()).on('value',(snap)=>{

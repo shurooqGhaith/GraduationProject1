@@ -21,14 +21,20 @@ import Chat from "../screens/Chat";
 import Location from "../screens/Location";
 import Pro from "../screens/SelectClinicName";
 import ShowAllLocation from "../screens/ShowAllLocation";
+import AppointmentTable from "../screens/Table";
 const AppNavigator = createStackNavigator(
     {
+
+      AppointmentTable:{screen:AppointmentTable,
+        navigationOptions: {
+          header: null,
+        }
+      },
 
       ShowAllLocation:{screen:ShowAllLocation,
         navigationOptions: {
           header: null,
         }
-  
       },
       Location:{screen:Location,
         navigationOptions: {
