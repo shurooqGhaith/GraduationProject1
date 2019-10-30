@@ -21,9 +21,8 @@ import { HeaderHeight } from "../constants/utils";
 import fire from "../constants/firebaseConfigrations";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import MapView,{Marker} from "react-native-maps";
-import { Col, Row, Grid } from "react-native-easy-grid";
 import { Divider,Icon } from 'react-native-elements';
-import { Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger} from "react-native-popup-menu";
+import { Table, TableWrapper, Row, Cell, Col } from 'react-native-table-component';
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -245,9 +244,6 @@ class Profile extends React.Component {
                          </View>
 
                          )
-                         
-                      
-                     
                      }
                    })}
                     </View>
@@ -359,6 +355,11 @@ class Profile extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
+  head: { height: 40, backgroundColor: '#808B97' },
+  text: { margin: 6 },
+  row: { flexDirection: 'row', backgroundColor: '#FFF1C1' },
+
   headerText: {
     fontSize: 20,
     margin: 10,
@@ -383,11 +384,6 @@ itemtext: {
     fontWeight: 'bold',
     textAlign: 'center',
 },
-  container: {
-    flex: 1,
-    paddingTop: 22,
-    fontSize:20
-   },
   item: {
     padding: 10,
     fontSize: 18,

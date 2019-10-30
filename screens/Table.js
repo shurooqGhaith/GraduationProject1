@@ -14,7 +14,7 @@ import {
   Alert
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
-import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
+import { Table, TableWrapper, Row, Cell, Col,Rows } from 'react-native-table-component';
 import { Button } from "../components";
 import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
@@ -34,13 +34,23 @@ class AppointmentTable extends React.Component {
     this.authListener=this.authListener.bind(this);
         this.state={
             tableHead: ['Head', 'Head2', 'Head3', 'Head4'],
-      workingHours:[],
+            workingHour:[],
       appointment:[],
+      slot:[],
+      days:[],
+      hours:[],
       username:"",
       email:'',
       id:"",
       nodata:false,
-      noApp:false
+      noApp:false,
+      noSlot:false,
+      tableData: [
+        ['1', '2', '3'],
+        ['a', 'b', 'c'],
+        ['1', '2', '3'],
+        ['a', 'b', 'c']
+      ]
     }
   }
 
@@ -58,24 +68,26 @@ class AppointmentTable extends React.Component {
          id:id
      })
 
+     var array=[];
+     var array2=[];
+     fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
+        if(workHours.val()){
+            let work = Object.values(workHours.val());
+            this.setState({workingHour:work}) 
+            work.map((w,ind)=>{
+                if( w.enable ){
+                    array.push(w.days);
+                }
+                
+            })
+          }
+       })
 
- fire.database().ref("users").child(id).child("workingHours").on('value',(datasnapshot) =>{
-   if(datasnapshot.val()){
-    let items = Object.values(datasnapshot.val());
-
-    this.setState({
-      workingHours:items,
-      nodata:false
-        })
-
-   }
-  else{
-    this.setState({
-      nodata:true
-    })
-  }
-  
+if(array.length>0){
+this.setState({
+    days:array
 })
+}
 
 
 fire.database().ref("users").child(id).child("appointment").on('value',(datasnapshot) =>{
@@ -95,6 +107,34 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
    
  })
  
+ fire.database().ref("users").child(id).child("slots").on('value',(datasnapshot) =>{
+    if(datasnapshot.val()){
+     let items = Object.values(datasnapshot.val());
+     this.setState({
+        slot:items
+          })
+     items.map((w,ind)=>{
+            array2.push(w.slot);
+    })
+    }
+   else{
+     this.setState({
+       noSlot:true
+     })
+   }
+   
+ })
+ for(var i=0;i<array2.length;i++){
+    alert(array2[i]);
+}
+
+ if(array2.length>0){
+     this.setState({
+         hours:array2
+     })
+     
+ }
+ 
   }
 
 
@@ -113,22 +153,26 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
 
 <View style={styles.container}>
         <Table borderStyle={{borderColor: 'transparent'}}>
-          <Row data={this.state.tableHead} style={styles.head} textStyle={styles.text}/>
+          <Row data={this.state.days} style={styles.head} textStyle={styles.text}/>
+          <Col data={this.state.hours} style={styles.head}  textStyle={styles.text} />
           {
-            this.state.workingHours.map((rowData, index) => {
-                return(
+            this.state.workingHour.map((rowData, index) => {
+                    return(
               <TableWrapper key={index} style={styles.row}>
                     <Cell data={rowData.days} textStyle={styles.text}/>
                     <Cell data={rowData.start} textStyle={styles.text}/>
                     <Cell data={rowData.end} textStyle={styles.text}/>
                     <Cell data={rowData.selectedClinic} textStyle={styles.text}/>
-
              </TableWrapper>
                 )
+
+               
             })
           }
+
         </Table>
       </View>
+      <Text>{this.state.hours}</Text>
             </ScrollView>
         </Block>
         
@@ -138,6 +182,7 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
 }
 
 const styles = StyleSheet.create({
+    singleHead: { width: 80, height: 40, backgroundColor: '#c8e1ff' },
     container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
   head: { height: 40, backgroundColor: '#808B97' },
   text: { margin: 6 },
