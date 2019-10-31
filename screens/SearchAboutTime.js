@@ -256,7 +256,7 @@ class SearchAboutTime extends React.Component {
       handleDatePicked =pickeddate=> {
         const day   = pickeddate.getDate();
         const dayName=pickeddate.getDay();
-       const  month = pickeddate.getMonth()+1;
+        const  month = pickeddate.getMonth()+1;
         const  year  = pickeddate.getFullYear();
           
         if(dayName==0){

@@ -38,10 +38,12 @@ class AppointmentTable extends React.Component {
       appointment:[],
       slot:[],
       days:[],
+      dates:[],
       hours:[],
       username:"",
       email:'',
       id:"",
+      today:'',
       nodata:false,
       noApp:false,
       noSlot:false,
@@ -60,7 +62,6 @@ class AppointmentTable extends React.Component {
 
   
   authListener(){
-  
     const { navigation } = this.props;  
     var id=navigation.getParam('id');
   
@@ -68,12 +69,61 @@ class AppointmentTable extends React.Component {
          id:id
      })
 
-     var array=[];
      var array2=[];
+
+     var today = new Date();
+    const day1   = today.getDate();
+     const dayName=today.getDay();
+    const  month1 = today.getMonth()+1;
+    const  year1  = today.getFullYear();
+this.setState({today:day1 + '-' + month1 + '-' + year1})
+
+    for(var i=1;i<7;i++){
+        var t = new Date();
+        var tomorrow = new Date();
+        tomorrow.setDate(t.getDate()+i);
+         const day   = tomorrow.getDate();
+        //  const dayName=tomorrow.getDay();
+         const  month = tomorrow.getMonth()+1;
+         const  year  = tomorrow.getFullYear();
+          array2.push(day + '-' + month + '-' + year);
+    
+   
+    }
+    //alert(array2.length);//6
+    for(var i=0;i<array2.length;i++){
+       // alert(array2[i]);
+       fire.database().ref("users").child(id).child("appointment").on('value',(snap)=>{
+           if(snap.val()){
+            let items = Object.values(snap.val());
+            items.map((value)=>{
+                if(value.dateSelected==array[i] && !value.available){
+                    arr.push({date:value.dateSelected,time:value.timeSelected,day:value.daySelected,exist:"yes"})
+
+                }
+                if(value.dateSelected == array[i] && value.available){
+                    arr.push({date:value.dateSelected,time:value.timeSelected,day:value.daySelected,exist:"no"})
+                 }
+                 else{
+                    arr.push({date:array2[i],time:"",day:value.daySelected,exist:"no"})
+
+                 }
+    
+            })
+           }
+       })
+    }
+
+
+    this.setState({dates:array2});
+
+     var array=[];
+     var arr=[];
      fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
         if(workHours.val()){
             let work = Object.values(workHours.val());
-            this.setState({workingHour:work}) 
+            this.setState({workingHour:work}) ;
+            array.push("");
             work.map((w,ind)=>{
                 if( w.enable ){
                     array.push(w.days);
@@ -93,17 +143,25 @@ this.setState({
 fire.database().ref("users").child(id).child("appointment").on('value',(datasnapshot) =>{
     if(datasnapshot.val()){
      let items = Object.values(datasnapshot.val());
-     this.setState({
-       appointment:items,
-       noApp:false
+    //  this.setState({
+    //    appointment:items,
+    //    noApp:false
+    //      })
+         items.map((value,index)=>{
+             if(value.dateSelected == this.state.today && !value.available ){
+                  arr.push({date:value.dateSelected,time:value.timeSelected,day:value.daySelected,exist:"yes"})
+             }
+             if(value.dateSelected == this.state.today && value.available){
+                arr.push({date:value.dateSelected,time:value.timeSelected,day:value.daySelected,exist:"no"})
+             }
+             
+
          })
- 
+        
+            this.setState({
+                appointment:arr
+            })
     }
-   else{
-     this.setState({
-       noApp:true
-     })
-   }
    
  })
  
@@ -113,27 +171,20 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
      this.setState({
         slot:items
           })
-     items.map((w,ind)=>{
-            array2.push(w.slot);
-    })
+    
+
+    
+    
     }
-   else{
-     this.setState({
-       noSlot:true
-     })
-   }
+
+//    else{
+//      this.setState({
+//        noSlot:true
+//      })
+//    }
    
  })
- for(var i=0;i<array2.length;i++){
-    alert(array2[i]);
-}
 
- if(array2.length>0){
-     this.setState({
-         hours:array2
-     })
-     
- }
  
   }
 
@@ -154,25 +205,26 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
 <View style={styles.container}>
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.days} style={styles.head} textStyle={styles.text}/>
-          <Col data={this.state.hours} style={styles.head}  textStyle={styles.text} />
           {
-            this.state.workingHour.map((rowData, index) => {
-                    return(
+            this.state.appointment.map((data, index) => {
+                  //  return this.state.appointment.map((app,appIndex)=>{
+                        return(
               <TableWrapper key={index} style={styles.row}>
-                    <Cell data={rowData.days} textStyle={styles.text}/>
-                    <Cell data={rowData.start} textStyle={styles.text}/>
-                    <Cell data={rowData.end} textStyle={styles.text}/>
-                    <Cell data={rowData.selectedClinic} textStyle={styles.text}/>
+                    <Cell data={data.time} textStyle={styles.text}/>
+                    <Cell data={data.date} textStyle={styles.text}/>
+                    <Cell data={data.day} textStyle={styles.text}/>
+                    <Cell data={data.exist} textStyle={styles.text}/>
              </TableWrapper>
                 )
+                    
+                    
 
                
             })
           }
 
         </Table>
-      </View>
-      <Text>{this.state.hours}</Text>
+      </View>      
             </ScrollView>
         </Block>
         
