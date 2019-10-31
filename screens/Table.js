@@ -22,7 +22,7 @@ import fire from "../constants/firebaseConfigrations";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import MapView,{Marker} from "react-native-maps";
 import { Divider,Icon } from 'react-native-elements';
-import { Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger} from "react-native-popup-menu";
+import { slotCreator } from "react-native-slot-creator";
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -32,9 +32,10 @@ class AppointmentTable extends React.Component {
   constructor(props){
     super(props);
     this.authListener=this.authListener.bind(this);
+    this.createTable=this.createTable.bind(this);
         this.state={
-            tableHead: ['Head', 'Head2', 'Head3', 'Head4'],
-            workingHour:[],
+            head:["","exist","clinic"],
+      workingHour:[],
       appointment:[],
       slot:[],
       days:[],
@@ -47,19 +48,88 @@ class AppointmentTable extends React.Component {
       nodata:false,
       noApp:false,
       noSlot:false,
-      tableData: [
-        ['1', '2', '3'],
-        ['a', 'b', 'c'],
-        ['1', '2', '3'],
-        ['a', 'b', 'c']
-      ]
+      
+      no1:true,
+      day1:[],
+      day2:[],
+      day3:[],
+      day4:[],
+      day5:[],
+      day6:[],
+      day7:[],
     }
   }
 
   componentDidMount(){
-    this.authListener();
+    this.createTable();
   }
 
+  createTable(){
+
+    const { navigation } = this.props;  
+    var id=navigation.getParam('id');
+  
+    //today 31-10
+    var d;
+    var today=new Date();
+    const day   = today.getDate();
+    const dayName=today.getDay();
+    const  month = today.getMonth()+1;
+    const  year  = today.getFullYear();
+
+    if(dayName==0){ d = "sunday" ; }
+    if(dayName==1){ d = "monday" ; }
+    if(dayName==2){ d = "tuesday" ; }
+    if(dayName==3){ d = "wednesday" ; }
+    if(dayName==4){ d = "thursday" ; }
+    if(dayName==5){ d = "friday" ; }
+    if(dayName==6){ d = "saturday" ; }
+
+    var day1=day+'-'+month+'-'+year;//31-10-2019
+    var ar1=[];
+    alert(d);
+    fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
+        if(workHours.val()){
+            let work = Object.values(workHours.val());
+            work.map((w,ind)=>{
+                if(w.days==d && w.enable ){//في دوام بهاد اليوم
+                    let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
+                    var flag=false;
+                    requiredArray.map((slot)=>{
+                           fire.database().ref("users").child(id).child("appointment").on('value',(app)=>{
+                               if(app.val()){
+                                let appointment=Object.values(app.val());
+                               appointment.map((ap)=>{
+                                   if(app.timeSelected == slot && app.dateSelected==day1 && app.available ){//ما في موعد
+                                    ar1.push({time:slot,exist:"no",clinic:''})
+                                   }
+                                   if(app.timeSelected == slot && app.dateSelected==day1 && !app.available ){//في موعد
+                                    ar1.push({time:slot,exist:"yes",clinic:app.clinicName})
+                                   }
+                                     else{
+                                         flag=true;
+                                     }
+                               })
+                            }
+                           })//end app fire
+                           if(flag){ar1.push({time:slot,exist:"no",clinic:''})}
+                    })//end slot map
+                    this.setState({
+                        day1:ar1,
+                        no1:false
+                    })
+                }
+                
+                // else{//ما في دوام
+                //       this.setState({no1:true})  
+                // }
+                
+            })
+          }
+       })
+
+
+  }
   
   authListener(){
     const { navigation } = this.props;  
@@ -72,47 +142,37 @@ class AppointmentTable extends React.Component {
      var array2=[];
 
      var today = new Date();
-    const day1   = today.getDate();
+     const day1   = today.getDate();
      const dayName=today.getDay();
-    const  month1 = today.getMonth()+1;
-    const  year1  = today.getFullYear();
+     const  month1 = today.getMonth()+1;
+     const  year1  = today.getFullYear();
 this.setState({today:day1 + '-' + month1 + '-' + year1})
 
     for(var i=1;i<7;i++){
+        var d;
         var t = new Date();
         var tomorrow = new Date();
         tomorrow.setDate(t.getDate()+i);
          const day   = tomorrow.getDate();
-        //  const dayName=tomorrow.getDay();
+          const dayName=tomorrow.getDay();
          const  month = tomorrow.getMonth()+1;
          const  year  = tomorrow.getFullYear();
-          array2.push(day + '-' + month + '-' + year);
+         if(dayName==0){ d = "sunday" ; }
+         if(dayName==1){ d = "monday" ; }
+         if(dayName==2){ d = "tuesday" ; }
+         if(dayName==3){ d = "wednesday" ; }
+         if(dayName==4){ d = "thursday" ; }
+         if(dayName==5){ d = "friday" ; }
+         if(dayName==6){ d = "saturday" ; }
+
+          array2.push({date:day + '-' + month + '-' + year,day:d});
     
    
     }
     //alert(array2.length);//6
-    for(var i=0;i<array2.length;i++){
-       // alert(array2[i]);
-       fire.database().ref("users").child(id).child("appointment").on('value',(snap)=>{
-           if(snap.val()){
-            let items = Object.values(snap.val());
-            items.map((value)=>{
-                if(value.dateSelected==array[i] && !value.available){
-                    arr.push({date:value.dateSelected,time:value.timeSelected,day:value.daySelected,exist:"yes"})
-
-                }
-                if(value.dateSelected == array[i] && value.available){
-                    arr.push({date:value.dateSelected,time:value.timeSelected,day:value.daySelected,exist:"no"})
-                 }
-                 else{
-                    arr.push({date:array2[i],time:"",day:value.daySelected,exist:"no"})
-
-                 }
-    
-            })
-           }
-       })
-    }
+    array2.map((value,index)=>{
+        //alert(value.date+"-"+value.day);
+    })
 
 
     this.setState({dates:array2});
@@ -201,19 +261,19 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
+{this.state.no1 && <View><Text  bold size={20}>No appointment today</Text></View>}
 
-<View style={styles.container}>
+{!this.state.no1 && <View style={styles.container}>
         <Table borderStyle={{borderColor: 'transparent'}}>
-          <Row data={this.state.days} style={styles.head} textStyle={styles.text}/>
+          <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
           {
-            this.state.appointment.map((data, index) => {
+             this.state.day1.map((data, index) => {
                   //  return this.state.appointment.map((app,appIndex)=>{
                         return(
               <TableWrapper key={index} style={styles.row}>
                     <Cell data={data.time} textStyle={styles.text}/>
-                    <Cell data={data.date} textStyle={styles.text}/>
-                    <Cell data={data.day} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
+                    <Cell data={data.clinic} textStyle={styles.text}/>
              </TableWrapper>
                 )
                     
@@ -224,7 +284,7 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
           }
 
         </Table>
-      </View>      
+      </View> }     
             </ScrollView>
         </Block>
         
