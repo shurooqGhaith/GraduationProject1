@@ -34,7 +34,7 @@ class AppointmentTable extends React.Component {
     this.authListener=this.authListener.bind(this);
     this.createTable=this.createTable.bind(this);
         this.state={
-            head:["","exist","clinic"],
+            head:["","exist","clinic","action"],
       workingHour:[],
       appointment:[],
       slot:[],
@@ -656,6 +656,8 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+
              </TableWrapper>
                 )
                
@@ -678,6 +680,7 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
              </TableWrapper>
                 )
                
@@ -700,6 +703,7 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
              </TableWrapper>
                 )
                
@@ -722,6 +726,8 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+
              </TableWrapper>
                 )
                
@@ -743,6 +749,8 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+
              </TableWrapper>
                 )
                
@@ -764,6 +772,8 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+
              </TableWrapper>
                 )
                
@@ -785,6 +795,8 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+
              </TableWrapper>
                 )
                
@@ -805,9 +817,9 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
 const styles = StyleSheet.create({
     singleHead: { width: 80, height: 40, backgroundColor: '#c8e1ff' },
     container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
-  head: { height: 40, backgroundColor: '#808B97' },
+  head: { height: 40, backgroundColor: '#333' },
   text: { margin: 6 },
-  row: { flexDirection: 'row', backgroundColor: '#FFF1C1' },
+  row: { flexDirection: 'row', backgroundColor: '#eee' },
   btn: { width: 58, height: 18, backgroundColor: '#78B7BB',  borderRadius: 2 },
   btnText: { textAlign: 'center', color: '#fff' },
   
