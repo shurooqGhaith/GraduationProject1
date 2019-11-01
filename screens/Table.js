@@ -50,6 +50,7 @@ class AppointmentTable extends React.Component {
       noSlot:false,
       
       no1:true,
+      no2:true,
       day1:[],
       day2:[],
       day3:[],
@@ -87,7 +88,6 @@ class AppointmentTable extends React.Component {
 
     var day1=day+'-'+month+'-'+year;//31-10-2019
     var ar1=[];
-    alert(d);
     fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
         if(workHours.val()){
             let work = Object.values(workHours.val());
@@ -100,11 +100,11 @@ class AppointmentTable extends React.Component {
                                if(app.val()){
                                 let appointment=Object.values(app.val());
                                appointment.map((ap)=>{
-                                   if(app.timeSelected == slot && app.dateSelected==day1 && app.available ){//ما في موعد
-                                    ar1.push({time:slot,exist:"no",clinic:''})
+                                   if(ap.timeSelected == slot && ap.dateSelected==day1 && ap.available ){//ما في موعد
+                                    ar1.push({time:slot,exist:"no",clinic:'--'})
                                    }
-                                   if(app.timeSelected == slot && app.dateSelected==day1 && !app.available ){//في موعد
-                                    ar1.push({time:slot,exist:"yes",clinic:app.clinicName})
+                                   if(ap.timeSelected == slot && ap.dateSelected==day1 && !ap.available ){//في موعد
+                                    ar1.push({time:slot,exist:"yes",clinic:ap.clinicName})
                                    }
                                      else{
                                          flag=true;
@@ -112,7 +112,7 @@ class AppointmentTable extends React.Component {
                                })
                             }
                            })//end app fire
-                           if(flag){ar1.push({time:slot,exist:"no",clinic:''})}
+                           if(flag){ar1.push({time:slot,exist:"no",clinic:'--'})}
                     })//end slot map
                     this.setState({
                         day1:ar1,
@@ -128,6 +128,71 @@ class AppointmentTable extends React.Component {
           }
        })
 
+       /////second day
+       var d2;
+       var t1 = new Date();
+       var tomorrow = new Date();
+       tomorrow.setDate(t1.getDate()+1);
+       const day2   = tomorrow.getDate();
+       const dayName2=tomorrow.getDay();
+       const  month2 = tomorrow.getMonth()+1;
+       const  year2  = tomorrow.getFullYear();
+      if(dayName2==0){ d2 = "sunday" ; }
+       if(dayName2==1){ d2 = "monday" ; }
+       if(dayName2==2){ d2 = "tuesday" ; }
+       if(dayName2==3){ d2 = "wednesday" ; }
+       if(dayName2==4){ d2 = "thursday" ; }
+       if(dayName2==5){ d2 = "friday" ; }
+       if(dayName2==6){ d2 = "saturday" ; }
+   
+       var day_2=day2+'-'+month2+'-'+year2;//2-11-2019
+       var ar2=[];
+       //alert(day_2);
+       fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
+           if(workHours.val()){
+               let work = Object.values(workHours.val());
+               work.map((w,ind)=>{
+                   if(w.days==d2 && w.enable ){//في دوام بهاد اليوم
+                       let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
+                       var flag2=false;
+                       requiredArray.map((slot)=>{
+                              fire.database().ref("users").child(id).child("appointment").on('value',(app)=>{
+                                  if(app.val()){
+                                   let appointment=Object.values(app.val());
+                                  appointment.map((ap)=>{
+                                   
+
+                                      if(slot == ap.timeSelected  && ap.dateSelected==day_2 && ap.available ){//ما في موعد
+                                       ar2.push({time:slot,exist:"no",clinic:'--'})
+
+                                      }
+                                      if( slot == ap.timeSelected  && ap.dateSelected==day_2 && !ap.available ){//في موعد
+                                        alert(ap.dateSelected);
+                                        ar2.push({time:slot,exist:"yes",clinic:ap.clinicName});
+                                      }
+                                        else{
+                                            flag2=true;
+                                           
+                                        }
+                                  })//app map
+                               }
+                              })//end app fire
+                              if(flag2){ar2.push({time:slot,exist:"no",clinic:'--'})}
+                       })//end slot map
+                       this.setState({
+                           day2:ar2,
+                           no2:false
+                       })
+                   }
+                   
+                   // else{//ما في دوام
+                   //       this.setState({no1:true})  
+                   // }
+                   
+               })
+             }
+          })
+   
 
   }
   
@@ -276,15 +341,35 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.clinic} textStyle={styles.text}/>
              </TableWrapper>
                 )
-                    
-                    
+               
+            })
+          }
 
+        </Table>
+      </View> } 
+
+      {this.state.no2 && <View style={{marginTop:100}}><Text  bold size={20}>No appointment today</Text></View>}
+
+{!this.state.no2 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+        <Table borderStyle={{borderColor: 'transparent'}}>
+          <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
+          {
+             this.state.day2.map((data, index) => {
+                  //  return this.state.appointment.map((app,appIndex)=>{
+                        return(
+              <TableWrapper key={index} style={styles.row}>
+                    <Cell data={data.time} textStyle={styles.text}/>
+                    <Cell data={data.exist} textStyle={styles.text}/>
+                    <Cell data={data.clinic} textStyle={styles.text}/>
+             </TableWrapper>
+                )
                
             })
           }
 
         </Table>
       </View> }     
+    
             </ScrollView>
         </Block>
         
