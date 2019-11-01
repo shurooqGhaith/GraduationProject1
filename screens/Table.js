@@ -51,6 +51,11 @@ class AppointmentTable extends React.Component {
       
       no1:true,
       no2:true,
+      no3:true,
+      no4:true,
+      no5:true,
+      no6:true,
+      no7:true,
       day1:[],
       day2:[],
       day3:[],
@@ -147,7 +152,7 @@ class AppointmentTable extends React.Component {
    
        var day_2=day2+'-'+month2+'-'+year2;//2-11-2019
        var ar2=[];
-       //alert(day_2);
+       alert(day_2);
        fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
            if(workHours.val()){
                let work = Object.values(workHours.val());
@@ -164,10 +169,9 @@ class AppointmentTable extends React.Component {
 
                                       if(slot == ap.timeSelected  && ap.dateSelected==day_2 && ap.available ){//ما في موعد
                                        ar2.push({time:slot,exist:"no",clinic:'--'})
-
                                       }
                                       if( slot == ap.timeSelected  && ap.dateSelected==day_2 && !ap.available ){//في موعد
-                                        alert(ap.dateSelected);
+                                        // alert(ap.dateSelected);
                                         ar2.push({time:slot,exist:"yes",clinic:ap.clinicName});
                                       }
                                         else{
@@ -193,6 +197,319 @@ class AppointmentTable extends React.Component {
              }
           })
    
+             ////third day
+
+             var d3;
+             var t2 = new Date();
+             var tomorrow1 = new Date();
+             tomorrow1.setDate(t2.getDate()+2);
+             const day3   = tomorrow1.getDate();
+             const dayName3=tomorrow1.getDay();
+             const  month3 = tomorrow1.getMonth()+1;
+             const  year3  = tomorrow1.getFullYear();
+            if(dayName3==0){ d3 = "sunday" ; }
+             if(dayName3==1){ d3 = "monday" ; }
+             if(dayName3==2){ d3 = "tuesday" ; }
+             if(dayName3==3){ d3 = "wednesday" ; }
+             if(dayName3==4){ d3 = "thursday" ; }
+             if(dayName3==5){ d3 = "friday" ; }
+             if(dayName3==6){ d3 = "saturday" ; }
+         
+             var day_3=day3+'-'+month3+'-'+year3;//2-11-2019
+             var ar3=[];
+             alert(day_3);
+             fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
+                 if(workHours.val()){
+                     let work = Object.values(workHours.val());
+                     work.map((w,ind)=>{
+                         if(w.days==d3 && w.enable ){//في دوام بهاد اليوم
+                             let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
+                             var flag3=false;
+                             requiredArray.map((slot)=>{
+                                    fire.database().ref("users").child(id).child("appointment").on('value',(app)=>{
+                                        if(app.val()){
+                                         let appointment=Object.values(app.val());
+                                        appointment.map((ap)=>{
+                                         
+      
+                                            if(slot == ap.timeSelected  && ap.dateSelected==day_3 && ap.available ){//ما في موعد
+                                             ar3.push({time:slot,exist:"no",clinic:'--'})
+                                            }
+                                            if( slot == ap.timeSelected  && ap.dateSelected==day_3 && !ap.available ){//في موعد
+                                              // alert(ap.dateSelected);
+                                              ar3.push({time:slot,exist:"yes",clinic:ap.clinicName});
+                                            }
+                                              else{
+                                                  flag3=true;
+                                                 
+                                              }
+                                        })//app map
+                                     }
+                                    })//end app fire
+                                    if(flag3){ar3.push({time:slot,exist:"no",clinic:'--'})}
+                             })//end slot map
+                             this.setState({
+                                 day3:ar3,
+                                 no3:false
+                             })
+                         }
+                         
+                         
+                         
+                     })
+                   }
+                })
+      
+        //// fourth day
+        var d4;
+        var t3 = new Date();
+        var tomorrow2 = new Date();
+        tomorrow2.setDate(t3.getDate()+3);
+        const day4   = tomorrow2.getDate();
+        const dayName4=tomorrow2.getDay();
+        const  month4 = tomorrow2.getMonth()+1;
+        const  year4  = tomorrow2.getFullYear();
+       if(dayName4==0){ d4 = "sunday" ; }
+        if(dayName4==1){ d4 = "monday" ; }
+        if(dayName4==2){ d4 = "tuesday" ; }
+        if(dayName4==3){ d4 = "wednesday" ; }
+        if(dayName4==4){ d4 = "thursday" ; }
+        if(dayName4==5){ d4 = "friday" ; }
+        if(dayName4==6){ d4 = "saturday" ; }
+    
+        var day_4=day4+'-'+month4+'-'+year4;//2-11-2019
+        var ar4=[];
+        alert(day_4);
+        fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
+            if(workHours.val()){
+                let work = Object.values(workHours.val());
+                work.map((w,ind)=>{
+                    if(w.days==d4 && w.enable ){//في دوام بهاد اليوم
+                        let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
+                        var flag4=false;
+                        requiredArray.map((slot)=>{
+                               fire.database().ref("users").child(id).child("appointment").on('value',(app)=>{
+                                   if(app.val()){
+                                    let appointment=Object.values(app.val());
+                                    appointment.map((ap)=>{
+                                    
+ 
+                                       if(slot == ap.timeSelected  && ap.dateSelected==day_4 && ap.available ){//ما في موعد
+                                        ar4.push({time:slot,exist:"no",clinic:'--'})
+                                       }
+                                       if( slot == ap.timeSelected  && ap.dateSelected==day_4 && !ap.available ){//في موعد
+                                         // alert(ap.dateSelected);
+                                         ar4.push({time:slot,exist:"yes",clinic:ap.clinicName});
+                                       }
+                                         else{
+                                             flag4=true;
+                                            
+                                         }
+                                   })//app map
+                                }
+                               })//end app fire
+                               if(flag4){ar4.push({time:slot,exist:"no",clinic:'--'})}
+                        })//end slot map
+                        this.setState({
+                            day4:ar4,
+                            no4:false
+                        })
+                    }
+                    
+                    
+                    
+                })
+              }
+           })
+ 
+
+           /////fifth day
+           var d5;
+           var t4 = new Date();
+           var tomorrow3 = new Date();
+           tomorrow3.setDate(t4.getDate()+4);
+           const day5   = tomorrow3.getDate();
+           const dayName5=tomorrow3.getDay();
+           const  month5 = tomorrow3.getMonth()+1;
+           const  year5  = tomorrow3.getFullYear();
+          if(dayName5==0){ d5 = "sunday" ; }
+           if(dayName5==1){ d5 = "monday" ; }
+           if(dayName5==2){ d5 = "tuesday" ; }
+           if(dayName5==3){ d5 = "wednesday" ; }
+           if(dayName5==4){ d5 = "thursday" ; }
+           if(dayName5==5){ d5 = "friday" ; }
+           if(dayName5==6){ d5 = "saturday" ; }
+        
+           var day_5=day5+'-'+month5+'-'+year5;//2-11-2019
+           var ar5=[];
+           alert(day_5);
+           fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
+               if(workHours.val()){
+                   let work = Object.values(workHours.val());
+                   work.map((w,ind)=>{
+                       if(w.days==d5 && w.enable ){//في دوام بهاد اليوم
+                           let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
+                           var flag5=false;
+                           requiredArray.map((slot)=>{
+                                  fire.database().ref("users").child(id).child("appointment").on('value',(app)=>{
+                                      if(app.val()){
+                                       let appointment=Object.values(app.val());
+                                       appointment.map((ap)=>{
+                                       
+    
+                                          if(slot == ap.timeSelected  && ap.dateSelected==day_5 && ap.available ){//ما في موعد
+                                           ar5.push({time:slot,exist:"no",clinic:'--'})
+                                          }
+                                          if( slot == ap.timeSelected  && ap.dateSelected==day_5 && !ap.available ){//في موعد
+                                            // alert(ap.dateSelected);
+                                            ar5.push({time:slot,exist:"yes",clinic:ap.clinicName});
+                                          }
+                                            else{
+                                                flag5=true;
+                                               
+                                            }
+                                      })//app map
+                                   }
+                                  })//end app fire
+                                  if(flag5){ar5.push({time:slot,exist:"no",clinic:'--'})}
+                           })//end slot map
+                           this.setState({
+                               day5:ar5,
+                               no5:false
+                           })
+                       }
+                       
+                       
+                       
+                   })
+                 }
+              })
+
+              ////sixth day
+
+              var d6;
+              var t5 = new Date();
+              var tomorrow4 = new Date();
+              tomorrow4.setDate(t5.getDate()+5);
+              const day6   = tomorrow4.getDate();
+              const dayName6=tomorrow4.getDay();
+              const  month6 = tomorrow4.getMonth()+1;
+              const  year6  = tomorrow4.getFullYear();
+             if(dayName6==0){ d6 = "sunday" ; }
+              if(dayName6==1){ d6 = "monday" ; }
+              if(dayName6==2){ d6 = "tuesday" ; }
+              if(dayName6==3){ d6 = "wednesday" ; }
+              if(dayName6==4){ d6 = "thursday" ; }
+              if(dayName6==5){ d6 = "friday" ; }
+              if(dayName6==6){ d6 = "saturday" ; }
+          
+              var day_6=day6+'-'+month6+'-'+year6;//2-11-2019
+              var ar6=[];
+              alert(day_6);
+              fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
+                  if(workHours.val()){
+                      let work = Object.values(workHours.val());
+                      work.map((w,ind)=>{
+                          if(w.days==d6 && w.enable ){//في دوام بهاد اليوم
+                              let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
+                              var flag6=false;
+                              requiredArray.map((slot)=>{
+                                     fire.database().ref("users").child(id).child("appointment").on('value',(app)=>{
+                                         if(app.val()){
+                                          let appointment=Object.values(app.val());
+                                          appointment.map((ap)=>{
+                                          
+       
+                                             if(slot == ap.timeSelected  && ap.dateSelected==day_6 && ap.available ){//ما في موعد
+                                              ar6.push({time:slot,exist:"no",clinic:'--'})
+                                             }
+                                             if( slot == ap.timeSelected  && ap.dateSelected==day_6 && !ap.available ){//في موعد
+                                               // alert(ap.dateSelected);
+                                               ar6.push({time:slot,exist:"yes",clinic:ap.clinicName});
+                                             }
+                                               else{
+                                                   flag6=true;
+                                                  
+                                               }
+                                         })//app map
+                                      }
+                                     })//end app fire
+                                     if(flag6){ar6.push({time:slot,exist:"no",clinic:'--'})}
+                              })//end slot map
+                              this.setState({
+                                  day6:ar6,
+                                  no6:false
+                              })
+                          }
+                          
+                          
+                          
+                      })
+                    }
+                 })
+      
+   //////seventh day
+   var d7;
+   var t6 = new Date();
+   var tomorrow5 = new Date();
+   tomorrow5.setDate(t6.getDate()+6);
+   const day7   = tomorrow5.getDate();
+   const dayName7=tomorrow5.getDay();
+   const  month7 = tomorrow5.getMonth()+1;
+   const  year7  = tomorrow5.getFullYear();
+  if(dayName7==0){ d7 = "sunday" ; }
+   if(dayName7==1){ d7 = "monday" ; }
+   if(dayName7==2){ d7 = "tuesday" ; }
+   if(dayName7==3){ d7 = "wednesday" ; }
+   if(dayName7==4){ d7 = "thursday" ; }
+   if(dayName7==5){ d7 = "friday" ; }
+   if(dayName7==6){ d7 = "saturday" ; }
+
+   var day_7=day7+'-'+month7+'-'+year7;//2-11-2019
+   var ar7=[];
+   alert(day_7);
+   fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
+       if(workHours.val()){
+           let work = Object.values(workHours.val());
+           work.map((w,ind)=>{
+               if(w.days==d7 && w.enable ){//في دوام بهاد اليوم
+                   let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
+                   var flag7=false;
+                   requiredArray.map((slot)=>{
+                          fire.database().ref("users").child(id).child("appointment").on('value',(app)=>{
+                              if(app.val()){
+                               let appointment=Object.values(app.val());
+                               appointment.map((ap)=>{
+                               
+
+                                  if(slot == ap.timeSelected  && ap.dateSelected==day_7 && ap.available ){//ما في موعد
+                                   ar7.push({time:slot,exist:"no",clinic:'--'})
+                                  }
+                                  if( slot == ap.timeSelected  && ap.dateSelected==day_7 && !ap.available ){//في موعد
+                                    // alert(ap.dateSelected);
+                                    ar7.push({time:slot,exist:"yes",clinic:ap.clinicName});
+                                  }
+                                    else{
+                                        flag7=true;
+                                       
+                                    }
+                              })//app map
+                           }
+                          })//end app fire
+                          if(flag7){ar7.push({time:slot,exist:"no",clinic:'--'})}
+                   })//end slot map
+                   this.setState({
+                       day7:ar7,
+                       no7:false
+                   })
+               }
+               
+               
+               
+           })
+         }
+      })
+
 
   }
   
@@ -368,8 +685,115 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
           }
 
         </Table>
+      </View> }
+
+            {this.state.no3 && <View style={{marginTop:100}}><Text  bold size={20}>No appointment today</Text></View>}
+
+{!this.state.no3 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+        <Table borderStyle={{borderColor: 'transparent'}}>
+          <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
+          {
+             this.state.day3.map((data, index) => {
+                  //  return this.state.appointment.map((app,appIndex)=>{
+                        return(
+              <TableWrapper key={index} style={styles.row}>
+                    <Cell data={data.time} textStyle={styles.text}/>
+                    <Cell data={data.exist} textStyle={styles.text}/>
+                    <Cell data={data.clinic} textStyle={styles.text}/>
+             </TableWrapper>
+                )
+               
+            })
+          }
+
+        </Table>
       </View> }     
-    
+     
+      {this.state.no4 && <View style={{marginTop:100}}><Text  bold size={20}>No appointment today</Text></View>}
+
+{!this.state.no4 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+        <Table borderStyle={{borderColor: 'transparent'}}>
+          <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
+          {
+             this.state.day4.map((data, index) => {
+                  //  return this.state.appointment.map((app,appIndex)=>{
+                        return(
+              <TableWrapper key={index} style={styles.row}>
+                    <Cell data={data.time} textStyle={styles.text}/>
+                    <Cell data={data.exist} textStyle={styles.text}/>
+                    <Cell data={data.clinic} textStyle={styles.text}/>
+             </TableWrapper>
+                )
+               
+            })
+          }
+
+        </Table>
+      </View> }     
+      {this.state.no5 && <View style={{marginTop:100}}><Text  bold size={20}>No appointment today</Text></View>}
+
+{!this.state.no5 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+        <Table borderStyle={{borderColor: 'transparent'}}>
+          <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
+          {
+             this.state.day5.map((data, index) => {
+                  //  return this.state.appointment.map((app,appIndex)=>{
+                        return(
+              <TableWrapper key={index} style={styles.row}>
+                    <Cell data={data.time} textStyle={styles.text}/>
+                    <Cell data={data.exist} textStyle={styles.text}/>
+                    <Cell data={data.clinic} textStyle={styles.text}/>
+             </TableWrapper>
+                )
+               
+            })
+          }
+
+        </Table>
+      </View> }     
+      {this.state.no6 && <View style={{marginTop:100}}><Text  bold size={20}>No appointment today</Text></View>}
+
+{!this.state.no6 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+        <Table borderStyle={{borderColor: 'transparent'}}>
+          <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
+          {
+             this.state.day6.map((data, index) => {
+                  //  return this.state.appointment.map((app,appIndex)=>{
+                        return(
+              <TableWrapper key={index} style={styles.row}>
+                    <Cell data={data.time} textStyle={styles.text}/>
+                    <Cell data={data.exist} textStyle={styles.text}/>
+                    <Cell data={data.clinic} textStyle={styles.text}/>
+             </TableWrapper>
+                )
+               
+            })
+          }
+
+        </Table>
+      </View> }     
+      {this.state.no7 && <View style={{marginTop:100}}><Text  bold size={20}>No appointment today</Text></View>}
+
+{!this.state.no7 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+        <Table borderStyle={{borderColor: 'transparent'}}>
+          <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
+          {
+             this.state.day7.map((data, index) => {
+                  //  return this.state.appointment.map((app,appIndex)=>{
+                        return(
+              <TableWrapper key={index} style={styles.row}>
+                    <Cell data={data.time} textStyle={styles.text}/>
+                    <Cell data={data.exist} textStyle={styles.text}/>
+                    <Cell data={data.clinic} textStyle={styles.text}/>
+             </TableWrapper>
+                )
+               
+            })
+          }
+
+        </Table>
+      </View> }     
+
             </ScrollView>
         </Block>
         
