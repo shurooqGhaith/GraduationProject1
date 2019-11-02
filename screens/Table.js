@@ -31,8 +31,9 @@ class AppointmentTable extends React.Component {
 
   constructor(props){
     super(props);
-    this.authListener=this.authListener.bind(this);
     this.createTable=this.createTable.bind(this);
+    this.delete=this.delete.bind(this);
+    this.add=this.add.bind(this);
         this.state={
             head:["","exist","clinic","action"],
       workingHour:[],
@@ -44,11 +45,18 @@ class AppointmentTable extends React.Component {
       username:"",
       email:'',
       id:"",
-      today:'',
       nodata:false,
       noApp:false,
       noSlot:false,
       
+      today1:'',
+      today2:'',
+      today3:'',
+      today4:'',
+      today5:'',
+      today6:'',
+      today7:'',
+
       no1:true,
       no2:true,
       no3:true,
@@ -74,7 +82,9 @@ class AppointmentTable extends React.Component {
 
     const { navigation } = this.props;  
     var id=navigation.getParam('id');
-  
+    this.setState({
+        id:id
+    })
     //today 31-10
     var d;
     var today=new Date();
@@ -92,6 +102,9 @@ class AppointmentTable extends React.Component {
     if(dayName==6){ d = "saturday" ; }
 
     var day1=day+'-'+month+'-'+year;//31-10-2019
+    this.setState({
+        today1:day1
+    })
     var ar1=[];
     fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
         if(workHours.val()){
@@ -106,10 +119,10 @@ class AppointmentTable extends React.Component {
                                 let appointment=Object.values(app.val());
                                appointment.map((ap)=>{
                                    if(ap.timeSelected == slot && ap.dateSelected==day1 && ap.available ){//ما في موعد
-                                    ar1.push({time:slot,exist:"no",clinic:'--'})
+                                    ar1.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:ap.dateSelected,day:d})
                                    }
                                    if(ap.timeSelected == slot && ap.dateSelected==day1 && !ap.available ){//في موعد
-                                    ar1.push({time:slot,exist:"yes",clinic:ap.clinicName})
+                                    ar1.push({time:slot,exist:"yes",clinic:ap.clinicName,idPatient:ap.idPatient,date:ap.dateSelected,day:d});
                                    }
                                      else{
                                          flag=true;
@@ -117,7 +130,7 @@ class AppointmentTable extends React.Component {
                                })
                             }
                            })//end app fire
-                           if(flag){ar1.push({time:slot,exist:"no",clinic:'--'})}
+                           if(flag){ar1.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:day1,day:d})}
                     })//end slot map
                     this.setState({
                         day1:ar1,
@@ -125,9 +138,6 @@ class AppointmentTable extends React.Component {
                     })
                 }
                 
-                // else{//ما في دوام
-                //       this.setState({no1:true})  
-                // }
                 
             })
           }
@@ -151,8 +161,11 @@ class AppointmentTable extends React.Component {
        if(dayName2==6){ d2 = "saturday" ; }
    
        var day_2=day2+'-'+month2+'-'+year2;//2-11-2019
+       this.setState({
+           today2:day_2
+       })
        var ar2=[];
-       alert(day_2);
+       //alert(day_2);
        fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
            if(workHours.val()){
                let work = Object.values(workHours.val());
@@ -168,11 +181,11 @@ class AppointmentTable extends React.Component {
                                    
 
                                       if(slot == ap.timeSelected  && ap.dateSelected==day_2 && ap.available ){//ما في موعد
-                                       ar2.push({time:slot,exist:"no",clinic:'--'})
+                                       ar2.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:ap.dateSelected,day:d2})
                                       }
                                       if( slot == ap.timeSelected  && ap.dateSelected==day_2 && !ap.available ){//في موعد
                                         // alert(ap.dateSelected);
-                                        ar2.push({time:slot,exist:"yes",clinic:ap.clinicName});
+                                        ar2.push({time:slot,exist:"yes",clinic:ap.clinicName,idPatient:ap.idPatient,date:ap.dateSelected,day:d2});
                                       }
                                         else{
                                             flag2=true;
@@ -181,17 +194,13 @@ class AppointmentTable extends React.Component {
                                   })//app map
                                }
                               })//end app fire
-                              if(flag2){ar2.push({time:slot,exist:"no",clinic:'--'})}
+                              if(flag2){ar2.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:day_2,day:d2})}
                        })//end slot map
                        this.setState({
                            day2:ar2,
                            no2:false
                        })
                    }
-                   
-                   // else{//ما في دوام
-                   //       this.setState({no1:true})  
-                   // }
                    
                })
              }
@@ -215,9 +224,13 @@ class AppointmentTable extends React.Component {
              if(dayName3==5){ d3 = "friday" ; }
              if(dayName3==6){ d3 = "saturday" ; }
          
-             var day_3=day3+'-'+month3+'-'+year3;//2-11-2019
+             var day_3=day3+'-'+month3+'-'+year3;
+             this.setState({
+                today3:day_3
+            })
+     
              var ar3=[];
-             alert(day_3);
+            // alert(day_3);
              fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
                  if(workHours.val()){
                      let work = Object.values(workHours.val());
@@ -233,11 +246,11 @@ class AppointmentTable extends React.Component {
                                          
       
                                             if(slot == ap.timeSelected  && ap.dateSelected==day_3 && ap.available ){//ما في موعد
-                                             ar3.push({time:slot,exist:"no",clinic:'--'})
+                                             ar3.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:ap.dateSelected,day:d3})
                                             }
                                             if( slot == ap.timeSelected  && ap.dateSelected==day_3 && !ap.available ){//في موعد
                                               // alert(ap.dateSelected);
-                                              ar3.push({time:slot,exist:"yes",clinic:ap.clinicName});
+                                              ar3.push({time:slot,exist:"yes",clinic:ap.clinicName,idPatient:ap.idPatient,date:ap.dateSelected,day:d3});
                                             }
                                               else{
                                                   flag3=true;
@@ -246,7 +259,7 @@ class AppointmentTable extends React.Component {
                                         })//app map
                                      }
                                     })//end app fire
-                                    if(flag3){ar3.push({time:slot,exist:"no",clinic:'--'})}
+                                    if(flag3){ar3.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:day_3,day:d3})}
                              })//end slot map
                              this.setState({
                                  day3:ar3,
@@ -277,9 +290,13 @@ class AppointmentTable extends React.Component {
         if(dayName4==5){ d4 = "friday" ; }
         if(dayName4==6){ d4 = "saturday" ; }
     
-        var day_4=day4+'-'+month4+'-'+year4;//2-11-2019
+        var day_4=day4+'-'+month4+'-'+year4;
+        this.setState({
+            today4:day_4
+        })
+ 
         var ar4=[];
-        alert(day_4);
+        //alert(day_4);
         fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
             if(workHours.val()){
                 let work = Object.values(workHours.val());
@@ -295,11 +312,11 @@ class AppointmentTable extends React.Component {
                                     
  
                                        if(slot == ap.timeSelected  && ap.dateSelected==day_4 && ap.available ){//ما في موعد
-                                        ar4.push({time:slot,exist:"no",clinic:'--'})
+                                        ar4.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:ap.dateSelected,day:d4})
                                        }
                                        if( slot == ap.timeSelected  && ap.dateSelected==day_4 && !ap.available ){//في موعد
                                          // alert(ap.dateSelected);
-                                         ar4.push({time:slot,exist:"yes",clinic:ap.clinicName});
+                                         ar4.push({time:slot,exist:"yes",clinic:ap.clinicName,idPatient:ap.idPatient,date:ap.dateSelected,day:d4});
                                        }
                                          else{
                                              flag4=true;
@@ -308,7 +325,7 @@ class AppointmentTable extends React.Component {
                                    })//app map
                                 }
                                })//end app fire
-                               if(flag4){ar4.push({time:slot,exist:"no",clinic:'--'})}
+                               if(flag4){ar4.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:day_4,day:d4})}
                         })//end slot map
                         this.setState({
                             day4:ar4,
@@ -340,9 +357,13 @@ class AppointmentTable extends React.Component {
            if(dayName5==5){ d5 = "friday" ; }
            if(dayName5==6){ d5 = "saturday" ; }
         
-           var day_5=day5+'-'+month5+'-'+year5;//2-11-2019
+           var day_5=day5+'-'+month5+'-'+year5;
+           this.setState({
+            today5:day_5
+        })
+ 
            var ar5=[];
-           alert(day_5);
+          // alert(day_5);
            fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
                if(workHours.val()){
                    let work = Object.values(workHours.val());
@@ -358,11 +379,11 @@ class AppointmentTable extends React.Component {
                                        
     
                                           if(slot == ap.timeSelected  && ap.dateSelected==day_5 && ap.available ){//ما في موعد
-                                           ar5.push({time:slot,exist:"no",clinic:'--'})
+                                           ar5.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:ap.dateSelected,day:d5})
                                           }
                                           if( slot == ap.timeSelected  && ap.dateSelected==day_5 && !ap.available ){//في موعد
                                             // alert(ap.dateSelected);
-                                            ar5.push({time:slot,exist:"yes",clinic:ap.clinicName});
+                                            ar5.push({time:slot,exist:"yes",clinic:ap.clinicName,idPatient:ap.idPatient,date:ap.dateSelected,day:d5});
                                           }
                                             else{
                                                 flag5=true;
@@ -371,7 +392,7 @@ class AppointmentTable extends React.Component {
                                       })//app map
                                    }
                                   })//end app fire
-                                  if(flag5){ar5.push({time:slot,exist:"no",clinic:'--'})}
+                                  if(flag5){ar5.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:day_5,day:d5})}
                            })//end slot map
                            this.setState({
                                day5:ar5,
@@ -403,9 +424,13 @@ class AppointmentTable extends React.Component {
               if(dayName6==5){ d6 = "friday" ; }
               if(dayName6==6){ d6 = "saturday" ; }
           
-              var day_6=day6+'-'+month6+'-'+year6;//2-11-2019
+              var day_6=day6+'-'+month6+'-'+year6;
+              this.setState({
+                today6:day_6
+            })
+     
               var ar6=[];
-              alert(day_6);
+              //alert(day_6);
               fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
                   if(workHours.val()){
                       let work = Object.values(workHours.val());
@@ -421,11 +446,11 @@ class AppointmentTable extends React.Component {
                                           
        
                                              if(slot == ap.timeSelected  && ap.dateSelected==day_6 && ap.available ){//ما في موعد
-                                              ar6.push({time:slot,exist:"no",clinic:'--'})
+                                              ar6.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:ap.dateSelected,day:d6})
                                              }
                                              if( slot == ap.timeSelected  && ap.dateSelected==day_6 && !ap.available ){//في موعد
                                                // alert(ap.dateSelected);
-                                               ar6.push({time:slot,exist:"yes",clinic:ap.clinicName});
+                                               ar6.push({time:slot,exist:"yes",clinic:ap.clinicName,idPatient:ap.idPatient,date:ap.dateSelected,day:d6});
                                              }
                                                else{
                                                    flag6=true;
@@ -434,7 +459,7 @@ class AppointmentTable extends React.Component {
                                          })//app map
                                       }
                                      })//end app fire
-                                     if(flag6){ar6.push({time:slot,exist:"no",clinic:'--'})}
+                                     if(flag6){ar6.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:day_6,day:d6})}
                               })//end slot map
                               this.setState({
                                   day6:ar6,
@@ -465,9 +490,13 @@ class AppointmentTable extends React.Component {
    if(dayName7==5){ d7 = "friday" ; }
    if(dayName7==6){ d7 = "saturday" ; }
 
-   var day_7=day7+'-'+month7+'-'+year7;//2-11-2019
+   var day_7=day7+'-'+month7+'-'+year7;
+   this.setState({
+    today7:day_7
+})
+
    var ar7=[];
-   alert(day_7);
+   //alert(day_7);
    fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
        if(workHours.val()){
            let work = Object.values(workHours.val());
@@ -483,11 +512,11 @@ class AppointmentTable extends React.Component {
                                
 
                                   if(slot == ap.timeSelected  && ap.dateSelected==day_7 && ap.available ){//ما في موعد
-                                   ar7.push({time:slot,exist:"no",clinic:'--'})
+                                   ar7.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:ap.dateSelected,day:d7})
                                   }
                                   if( slot == ap.timeSelected  && ap.dateSelected==day_7 && !ap.available ){//في موعد
                                     // alert(ap.dateSelected);
-                                    ar7.push({time:slot,exist:"yes",clinic:ap.clinicName});
+                                    ar7.push({time:slot,exist:"yes",clinic:ap.clinicName,idPatient:ap.idPatient,date:ap.dateSelected,day:d7});
                                   }
                                     else{
                                         flag7=true;
@@ -496,7 +525,7 @@ class AppointmentTable extends React.Component {
                               })//app map
                            }
                           })//end app fire
-                          if(flag7){ar7.push({time:slot,exist:"no",clinic:'--'})}
+                          if(flag7){ar7.push({time:slot,exist:"no",clinic:'--',idPatient:'',date:day_7,day:d7})}
                    })//end slot map
                    this.setState({
                        day7:ar7,
@@ -513,126 +542,48 @@ class AppointmentTable extends React.Component {
 
   }
   
-  authListener(){
-    const { navigation } = this.props;  
-    var id=navigation.getParam('id');
-  
-     this.setState({
-         id:id
-     })
+  delete(time,date,idP){
+    fire.database().ref("users").child(idP).child("appointment").once('value',(result)=>{
 
-     var array2=[];
+        if(result.val()){
+            let appointment = Object.values(result.val());
+          //  this.setState({appointmentsPatient:appointment})
 
-     var today = new Date();
-     const day1   = today.getDate();
-     const dayName=today.getDay();
-     const  month1 = today.getMonth()+1;
-     const  year1  = today.getFullYear();
-this.setState({today:day1 + '-' + month1 + '-' + year1})
+            //map appointments state
+            appointment.map((element,index)=>{
+                if(element.timeSelected==time  && element.dateSelected==date && element.idDoctor==this.state.id  ){                         
+                  //alert(Object.keys(result.val())[index]);  
+                  fire.database().ref("users").child(idP).child("appointment").child(Object.keys(result.val())[index]).child("available").set(true)
+                  .then(()=>{
+                    fire.database().ref("users").child(this.state.id).child("appointment").once('value',(snap)=>{
+                      if(snap.val()){
+                          let appointmentD = Object.values(snap.val());
+                          //this.setState({appointments:appointmentD})
+                          appointmentD.map((value,ind)=>{
+                              if(value.timeSelected==time  && value.dateSelected==date && value.idPatient==idP  ){                         
+                                fire.database().ref("users").child(this.state.id).child("appointment").child(Object.keys(snap.val())[ind]).child("available").set(true);
+          
+                              }
+          
+                          })
+                      }
+                      
+                  })
+                  })
 
-    for(var i=1;i<7;i++){
-        var d;
-        var t = new Date();
-        var tomorrow = new Date();
-        tomorrow.setDate(t.getDate()+i);
-         const day   = tomorrow.getDate();
-          const dayName=tomorrow.getDay();
-         const  month = tomorrow.getMonth()+1;
-         const  year  = tomorrow.getFullYear();
-         if(dayName==0){ d = "sunday" ; }
-         if(dayName==1){ d = "monday" ; }
-         if(dayName==2){ d = "tuesday" ; }
-         if(dayName==3){ d = "wednesday" ; }
-         if(dayName==4){ d = "thursday" ; }
-         if(dayName==5){ d = "friday" ; }
-         if(dayName==6){ d = "saturday" ; }
-
-          array2.push({date:day + '-' + month + '-' + year,day:d});
-    
-   
-    }
-    //alert(array2.length);//6
-    array2.map((value,index)=>{
-        //alert(value.date+"-"+value.day);
-    })
-
-
-    this.setState({dates:array2});
-
-     var array=[];
-     var arr=[];
-     fire.database().ref("users").child(id).child("workingHours").on('value',(workHours)=>{
-        if(workHours.val()){
-            let work = Object.values(workHours.val());
-            this.setState({workingHour:work}) ;
-            array.push("");
-            work.map((w,ind)=>{
-                if( w.enable ){
-                    array.push(w.days);
                 }
-                
+
             })
-          }
-       })
-
-if(array.length>0){
-this.setState({
-    days:array
-})
-}
-
-
-fire.database().ref("users").child(id).child("appointment").on('value',(datasnapshot) =>{
-    if(datasnapshot.val()){
-     let items = Object.values(datasnapshot.val());
-    //  this.setState({
-    //    appointment:items,
-    //    noApp:false
-    //      })
-         items.map((value,index)=>{
-             if(value.dateSelected == this.state.today && !value.available ){
-                  arr.push({date:value.dateSelected,time:value.timeSelected,day:value.daySelected,exist:"yes"})
-             }
-             if(value.dateSelected == this.state.today && value.available){
-                arr.push({date:value.dateSelected,time:value.timeSelected,day:value.daySelected,exist:"no"})
-             }
-             
-
-         })
+        }
         
-            this.setState({
-                appointment:arr
-            })
-    }
-   
- })
- 
- fire.database().ref("users").child(id).child("slots").on('value',(datasnapshot) =>{
-    if(datasnapshot.val()){
-     let items = Object.values(datasnapshot.val());
-     this.setState({
-        slot:items
-          })
-    
-
-    
-    
-    }
-
-//    else{
-//      this.setState({
-//        noSlot:true
-//      })
-//    }
-   
- })
-
- 
+    });
   }
-
-
-
  
+  add(time,date,clinic,day){
+
+    //كيف بدي أجيب الآي دي تبع المريض 
+    
+  }
   render() {
     return (
       <Block flex style={styles.profile}>
@@ -643,9 +594,10 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
-{this.state.no1 && <View><Text  bold size={20}>No appointment today</Text></View>}
+{this.state.no1 && <View style={{flexDirection:'row'}}><Text bold size={14}>{this.state.today1}</Text><Text  bold size={12}>:No appointment today</Text></View>}
 
 {!this.state.no1 && <View style={styles.container}>
+<Text bold size={14}>{this.state.today1}</Text>
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
           {
@@ -656,7 +608,14 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
-                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button 
+                    onPress={()=>this.delete(data.time,data.date,data.idPatient)}
+                    style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>delete</Text></Button>
+                    :<Button
+                    onPress={()=>this.add(data.time,data.date,data.clinic,data.day)}
+                     style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
 
              </TableWrapper>
                 )
@@ -667,9 +626,10 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
         </Table>
       </View> } 
 
-      {this.state.no2 && <View style={{marginTop:100}}><Text  bold size={20}>No appointment today</Text></View>}
+      {this.state.no2 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today2}</Text><Text  bold size={12}>:No appointment today</Text></View>}
 
 {!this.state.no2 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+<Text bold size={14}>{this.state.today2}</Text>
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
           {
@@ -680,7 +640,13 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
-                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button 
+                    onPress={()=>this.delete(data.time,data.date,data.idPatient)}
+                    style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>delete</Text></Button>
+                    :<Button style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+
              </TableWrapper>
                 )
                
@@ -690,9 +656,10 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
         </Table>
       </View> }
 
-            {this.state.no3 && <View style={{marginTop:100}}><Text  bold size={20}>No appointment today</Text></View>}
+            {this.state.no3 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today3}</Text><Text  bold size={12}>:No appointment today</Text></View>}
 
 {!this.state.no3 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+<Text bold size={14}>{this.state.today3}</Text>
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
           {
@@ -703,7 +670,13 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
-                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button 
+                    onPress={()=>this.delete(data.time,data.date,data.idPatient)}
+                    style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>delete</Text></Button>
+                    :<Button style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+
              </TableWrapper>
                 )
                
@@ -713,9 +686,10 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
         </Table>
       </View> }     
      
-      {this.state.no4 && <View style={{marginTop:100}}><Text  bold size={20}>No appointment today</Text></View>}
+      {this.state.no4 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today4}</Text><Text  bold size={12}>:No appointment today</Text></View>}
 
 {!this.state.no4 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+<Text bold size={14}>{this.state.today4}</Text>
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
           {
@@ -726,7 +700,13 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
-                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button 
+                    onPress={()=>this.delete(data.time,data.date,data.idPatient)}
+                    style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>delete</Text></Button>
+                    :<Button style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+
 
              </TableWrapper>
                 )
@@ -736,9 +716,10 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
 
         </Table>
       </View> }     
-      {this.state.no5 && <View style={{marginTop:100}}><Text  bold size={20}>No appointment today</Text></View>}
+      {this.state.no5 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today5}</Text><Text  bold size={12}>:No appointment today</Text></View>}
 
 {!this.state.no5 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+<Text bold size={14}>{this.state.today5}</Text>
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
           {
@@ -749,7 +730,13 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
-                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button 
+                    onPress={()=>this.delete(data.time,data.date,data.idPatient)}
+                    style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>delete</Text></Button>
+                    :<Button style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+
 
              </TableWrapper>
                 )
@@ -759,9 +746,10 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
 
         </Table>
       </View> }     
-      {this.state.no6 && <View style={{marginTop:100}}><Text  bold size={20}>No appointment today</Text></View>}
+      {this.state.no6 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today6}</Text><Text  bold size={12}>:No appointment today</Text></View>}
 
 {!this.state.no6 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+<Text bold size={14}>{this.state.today6}</Text>
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
           {
@@ -772,7 +760,13 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
-                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button 
+                    onPress={()=>this.delete(data.time,data.date,data.idPatient)}
+                    style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>delete</Text></Button>
+                    :<Button style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+
 
              </TableWrapper>
                 )
@@ -782,9 +776,10 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
 
         </Table>
       </View> }     
-      {this.state.no7 && <View style={{marginTop:100}}><Text  bold size={20}>No appointment today</Text></View>}
+      {this.state.no7 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today7}</Text><Text  bold size={12}>:No appointment today</Text></View>}
 
 {!this.state.no7 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+<Text bold size={14}>{this.state.today7}</Text>
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
           {
@@ -795,7 +790,13 @@ fire.database().ref("users").child(id).child("appointment").on('value',(datasnap
                     <Cell data={data.time} textStyle={styles.text}/>
                     <Cell data={data.exist} textStyle={styles.text}/>
                     <Cell data={data.clinic} textStyle={styles.text}/>
-                    <Cell data={data.exist=="yes"?<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>delete</Text></Button>:<Button style={{backgroundColor:"#333"}} small><Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+                    <Cell data={data.exist=="yes"?<Button 
+                    onPress={()=>this.delete(data.time,data.date,data.idPatient)}
+                    style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>delete</Text></Button>
+                    :<Button style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
+
 
              </TableWrapper>
                 )
