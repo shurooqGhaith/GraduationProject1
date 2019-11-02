@@ -594,7 +594,7 @@ class AppointmentTable extends React.Component {
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
-{this.state.no1 && <View style={{flexDirection:'row'}}><Text bold size={14}>{this.state.today1}</Text><Text  bold size={12}>:No appointment today</Text></View>}
+{this.state.no1 && <View ><Text bold size={14}>{this.state.today1+":No appointment "}</Text></View>}
 
 {!this.state.no1 && <View style={styles.container}>
 <Text bold size={14}>{this.state.today1}</Text>
@@ -613,7 +613,7 @@ class AppointmentTable extends React.Component {
                     style={{backgroundColor:"#333"}} small>
                     <Text style={{color:"#fff"}}>delete</Text></Button>
                     :<Button
-                    onPress={()=>this.add(data.time,data.date,data.clinic,data.day)}
+                     onPress={()=>this.add(data.time,data.date,data.clinic,data.day)}
                      style={{backgroundColor:"#333"}} small>
                     <Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
 
@@ -626,7 +626,7 @@ class AppointmentTable extends React.Component {
         </Table>
       </View> } 
 
-      {this.state.no2 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today2}</Text><Text  bold size={12}>:No appointment today</Text></View>}
+      {this.state.no2 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today2+":No appointment "}</Text></View>}
 
 {!this.state.no2 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
 <Text bold size={14}>{this.state.today2}</Text>
@@ -656,7 +656,7 @@ class AppointmentTable extends React.Component {
         </Table>
       </View> }
 
-            {this.state.no3 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today3}</Text><Text  bold size={12}>:No appointment today</Text></View>}
+            {this.state.no3 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today3+":No appointment "}</Text></View>}
 
 {!this.state.no3 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
 <Text bold size={14}>{this.state.today3}</Text>
@@ -686,7 +686,7 @@ class AppointmentTable extends React.Component {
         </Table>
       </View> }     
      
-      {this.state.no4 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today4}</Text><Text  bold size={12}>:No appointment today</Text></View>}
+      {this.state.no4 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today4+":No appointment "}</Text></View>}
 
 {!this.state.no4 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
 <Text bold size={14}>{this.state.today4}</Text>
@@ -716,7 +716,7 @@ class AppointmentTable extends React.Component {
 
         </Table>
       </View> }     
-      {this.state.no5 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today5}</Text><Text  bold size={12}>:No appointment today</Text></View>}
+      {this.state.no5 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today5+":No appointment "}</Text></View>}
 
 {!this.state.no5 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
 <Text bold size={14}>{this.state.today5}</Text>
@@ -746,7 +746,7 @@ class AppointmentTable extends React.Component {
 
         </Table>
       </View> }     
-      {this.state.no6 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today6}</Text><Text  bold size={12}>:No appointment today</Text></View>}
+      {this.state.no6 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today6+":No appointment "}</Text></View>}
 
 {!this.state.no6 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
 <Text bold size={14}>{this.state.today6}</Text>
@@ -776,7 +776,7 @@ class AppointmentTable extends React.Component {
 
         </Table>
       </View> }     
-      {this.state.no7 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today7}</Text><Text  bold size={12}>:No appointment today</Text></View>}
+      {this.state.no7 && <View style={{marginTop:100}}><Text bold size={14}>{this.state.today7+":No appointment "}</Text></View>}
 
 {!this.state.no7 && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
 <Text bold size={14}>{this.state.today7}</Text>
