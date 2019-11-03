@@ -18,7 +18,7 @@ import fire from "../constants/firebaseConfigrations";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import MapView,{Marker} from "react-native-maps";
 import { Divider } from 'react-native-elements';
-import firebase from 'react-native-firebase';
+//import firebase from 'react-native-firebase';
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -28,7 +28,7 @@ class PatientProfile extends React.Component {
   constructor(props){
     super(props);
     this.authListener=this.authListener.bind(this);
-    this.setReminder=this.setReminder.bind(this);
+    //this.setReminder=this.setReminder.bind(this);
         this.state={
       user:[],
       username:"",
@@ -49,36 +49,37 @@ class PatientProfile extends React.Component {
 
   componentDidMount(){
     this.authListener();
-    this.setReminder();
+    //this.setReminder();
   }
 
 
-  setReminder = async () => {
-    const  notificationTime = this.state.time;
+  // setReminder = async () => {
+  //   const  notificationTime = this.state.time;
     
-    if (this.state.enableNotification) {
-      // schedule notification       
-      firebase.notifications().scheduleNotification(this.buildNotification(), {
-        fireDate: notificationTime,
-        repeatInterval: 'day',
-        exact: true,
-      });
-    } else {
-      return false;
-    }
-  };
+  //   if (this.state.enableNotification) {
+  //     // schedule notification       
+  //     firebase.notifications().scheduleNotification(this.buildNotification(), {
+  //       fireDate: notificationTime,
+  //       repeatInterval: 'day',
+  //       exact: true,
+  //     });
+  //   } else {
+  //     return false;
+  //   }
+  // };
 
-  buildNotification = () => {
-    const title = Platform.OS === "android" ? "Daily Reminder" : "";
-    const notification = new firebase.notifications.Notification()
-      .setNotificationId("1") // Any random ID
-      .setTitle(title) // Title of the notification
-      .setBody("This is a notification") // body of notification
-      .android.setPriority(firebase.notifications.Android.Priority.High) // set priority in Android
-      .android.setChannelId("reminder") // should be the same when creating channel for Android
-      .android.setAutoCancel(true); // To remove notification when tapped on it
-      return notification;
-  };
+  // buildNotification = () => {
+  //   const title = Platform.OS === "android" ? "Daily Reminder" : "";
+  //   const notification = new firebase.notifications.Notification()
+  //     .setNotificationId("1") // Any random ID
+  //     .setTitle(title) // Title of the notification
+  //     .setBody("This is a notification") // body of notification
+  //     .android.setPriority(firebase.notifications.Android.Priority.High) // set priority in Android
+  //     .android.setChannelId("reminder") // should be the same when creating channel for Android
+  //     .android.setAutoCancel(true); // To remove notification when tapped on it
+  //     return notification;
+  // };
+
   authListener(){
   
    var name,start,end,close;
@@ -115,11 +116,11 @@ class PatientProfile extends React.Component {
   fire.database().ref("users").child(id).child("appointment").on('value',(snapshot)=>{
     if(snapshot.val()){
       let app=Object.values(snapshot.val());
-      app.map((value,index)=>{
-        if(value.dateSelected == this.state.date){
-            this.setState({time:value.timeSelected})
-        }
-      })
+      // app.map((value,index)=>{
+      //   if(value.dateSelected == this.state.date){
+      //       this.setState({time:value.timeSelected})
+      //   }
+      // })
       this.setState({
           appointment:app,
           nodata:false

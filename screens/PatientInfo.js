@@ -23,6 +23,8 @@ import MapView,{Marker} from "react-native-maps";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { Divider,Header } from 'react-native-elements';
 import Autocomplete from 'react-native-autocomplete-input';
+import { slotCreator } from "react-native-slot-creator";
+
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -42,6 +44,8 @@ class PatientInfo extends React.Component {
     this.handleDatePicked=this.handleDatePicked.bind(this);
     this.hideDatePicker=this.hideDatePicker.bind(this);
     this.showDatePicker=this.showDatePicker.bind(this);
+
+    this.handleDate=this.handleDate.bind(this);
         this.state={
       username:"",
       idDoctor:"",
@@ -81,6 +85,7 @@ class PatientInfo extends React.Component {
       workingHour:[],
       app:[],
       change:false,
+      availableSlots:[],
       
       //next session
       nextSession:false,
@@ -96,10 +101,103 @@ class PatientInfo extends React.Component {
     //this.getLocation();
   }
 
+
+  handleDate =pickeddate=> {
+
+    const day   = pickeddate.getDate();
+    const dayName=pickeddate.getDay();
+    const  month = pickeddate.getMonth()+1;
+    const  year  = pickeddate.getFullYear();
+
+    if(dayName==0){
+      this.setState({
+          daySelected:"sunday"
+      })
+ }
+
+ 
+ if(dayName==1){
+  this.setState({
+      daySelected:"monday"
+  })
+}
+
+if(dayName==2){
+this.setState({
+  daySelected:"tuesday"
+})
+}
+
+if(dayName==3){
+this.setState({
+  daySelected:"wednesday"
+})
+}
+
+if(dayName==4){
+this.setState({
+  daySelected:"thursday"
+})
+}
+
+if(dayName==5){
+this.setState({
+  daySelected:"friday"
+})
+}
+
+if(dayName==6){
+this.setState({
+  daySelected:"saturday"
+})
+}
+     this.setState({
+      dateToSearch:day + '-' + month + '-' + year
+     })
+     
+     this.hideDatePicker();
+
+     var ar=[];
+     fire.database().ref("users").child(this.state.idDoctor).child("workingHours").on('value',(work)=>{
+       let workHour=Object.values(work.val());
+       workHour.map(w=>{
+         if(w.days == this.state.daySelected && w.enable){
+          let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
+
+          requiredArray.map((slot,index)=>{
+            fire.database().ref("users").child(this.state.idDoctor).child("appointment").on('value',(app)=>{
+              let appointment=Object.values(app.val());
+              appointment.map((ap)=>{
+                if(ap.dateSelected == this.state.dateToSearch && ap.timeSelected==slot && ap.available){
+                     ar.push({time:slot});
+                }
+                if(ap.dateSelected == this.state.dateToSearch && ap.timeSelected!=slot && !ap.available){
+                  ar.push({time:slot});
+             }
+
+              })//app map
+            })//app fire
+          })//slot arrays
+         }
+         else{
+           alert("noo")
+         }
+       })//work map
+       
+
+     })
+     this.setState({
+      availableSlots:ar
+    })
+    this.state.availableSlots.map((s)=>{
+      alert(s.time+"\n");
+    })
+  }
+
   handleDatePicked =pickeddate=> {
     const day   = pickeddate.getDate();
     const dayName=pickeddate.getDay();
-   const  month = pickeddate.getMonth()+1;
+    const  month = pickeddate.getMonth()+1;
     const  year  = pickeddate.getFullYear();
       
 
@@ -296,7 +394,7 @@ else{
       determineNextSession=date=>{
         const day   = date.getDate();
         const dayName=date.getDay();
-       const  month = date.getMonth()+1;
+        const  month = date.getMonth()+1;
         const  year  = date.getFullYear();
           
     
@@ -525,7 +623,7 @@ else{
            name=snap.val();
            
           })
-          if(!this.state.session ){alert("fill ");return;}
+          if(!this.state.session ){alert("ensure you have entered the session number !  ");return;}
           else{
             var m="";
           if(this.state.medicinesName){
@@ -684,16 +782,24 @@ else{
                         fontSize: 16
                       }}
                       >
-                              <Text>change time </Text>
+                              <Text>{this.state.dateToSearch || "change time"} </Text>
                       </Button>
 
+                      <View style={{marginTop:20,flexDirection:'column'}}>
+
+                        {this.state.availableSlots.map((slot,index)=>{
+                                 <View>
+                             <Text>{slot.time}</Text>
+                                </View>
+                                       })}
+                      </View>
                       <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
 
                       <DateTimePicker
                        isVisible={this.state.dateVisible}
-                       onConfirm={this.handleDatePicked}
+                       onConfirm={this.handleDate}
                        onCancel={this.hideDatePicker}
-                       mode={'datetime'}
+                       mode={'date'}
                        datePickerModeAndroid={'spinner'}
                              />
 
@@ -839,7 +945,7 @@ else{
                     style={{width:width*0.3,backgroundColor:"#333",marginLeft:15}} 
                     onPress={()=>this.setState({nextSession:true})}
                     >
-                    <Text>{(this.state.sessionDate-this.state.sessionTime) || "next session"}</Text>
+                    <Text>{this.state.sessionDate || "next session"}</Text>
                     
                     </Button>
                     </View>

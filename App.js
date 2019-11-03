@@ -1,15 +1,14 @@
 import React from 'react';
 import { Image , BackHandler  } from 'react-native';
+// import  firebase from 'react-native-firebase';
+
 import { AppLoading } from 'expo';
 import {  Asset } from 'expo-asset';
-
 import { Block, GalioProvider } from 'galio-framework';
 import Screens from './navigation/Screens';
 import AppContainer from "./navigation/screen";
 import { Images, articles, argonTheme } from './constants';
 import fire from "./constants/firebaseConfigrations";
-import  firebase from 'react-native-firebase';
-
 // cache app images
 const assetImages = [
   Images.Onboarding,
@@ -42,8 +41,8 @@ export default class App extends React.Component {
   }
   
   componentDidMount() {
-    this.createNotificationChannel();
-    this.checkPermission();
+    // this.createNotificationChannel();
+    // this.checkPermission();
     BackHandler.addEventListener('hardwareBackPress', function() {
       // this.onMainScreen and this.goBack are just examples, you need to use your own implementation here
       // Typically you would use the navigator here to go to the last state.
@@ -54,36 +53,36 @@ export default class App extends React.Component {
   
   }
 
-  createNotificationChannel = () => {
-    // Build a android notification channel
-    const channel = new firebase.notifications.Android.Channel(
-      "reminder", // channelId
-      "Reminders Channel", // channel name
-      firebase.notifications.Android.Importance.High // channel importance
-    ).setDescription("Used for getting reminder notification"); // channel description
-    // Create the android notification channel
-    firebase.notifications().android.createChannel(channel);
-  }
+  // createNotificationChannel = () => {
+  //   // Build a android notification channel
+  //   const channel = new firebase.notifications.Android.Channel(
+  //     "reminder", // channelId
+  //     "Reminders Channel", // channel name
+  //     firebase.notifications.Android.Importance.High // channel importance
+  //   ).setDescription("Used for getting reminder notification"); // channel description
+  //   // Create the android notification channel
+  //   firebase.notifications().android.createChannel(channel);
+  // }
   
-  checkPermission = async () => {
-    const enabled = await firebase.messaging().hasPermission();
-    if (enabled) {
-      // We've the permission
-      this.notificationListener = firebase
-        .notifications()
-        .onNotification(async notification => {
-          // Display your notification
-          await firebase.notifications().displayNotification(notification);
-        });
-    } else {
-      // user doesn't have permission
-      try {
-        await firebase.messaging().requestPermission();
-      } catch (error) {
-        alert("Unable to access the Notification permission. Please enable the Notification Permission from the settings");
-      }
-    }
-  };
+  // checkPermission = async () => {
+  //   const enabled = await firebase.messaging().hasPermission();
+  //   if (enabled) {
+  //     // We've the permission
+  //     this.notificationListener = firebase
+  //       .notifications()
+  //       .onNotification(async notification => {
+  //         // Display your notification
+  //         await firebase.notifications().displayNotification(notification);
+  //       });
+  //   } else {
+  //     // user doesn't have permission
+  //     try {
+  //       await firebase.messaging().requestPermission();
+  //     } catch (error) {
+  //       alert("Unable to access the Notification permission. Please enable the Notification Permission from the settings");
+  //     }
+  //   }
+  // };
 
 
   render() {
