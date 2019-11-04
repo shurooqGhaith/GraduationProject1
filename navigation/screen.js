@@ -22,9 +22,15 @@ import Location from "../screens/Location";
 import Pro from "../screens/SelectClinicName";
 import ShowAllLocation from "../screens/ShowAllLocation";
 import AppointmentTable from "../screens/Table";
+import PatientAppointment from "../screens/PatientAppointment";
 const AppNavigator = createStackNavigator(
     {
 
+      PatientAppointment:{screen:PatientAppointment,
+        navigationOptions: {
+          header: null,
+        }
+      },
       AppointmentTable:{screen:AppointmentTable,
         navigationOptions: {
           header: null,

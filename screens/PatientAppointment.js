@@ -23,7 +23,7 @@ const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
 
-class PatientProfile extends React.Component {
+class PatientAppointment extends React.Component {
 
   constructor(props){
     super(props);
@@ -53,42 +53,15 @@ class PatientProfile extends React.Component {
   }
 
 
-  // setReminder = async () => {
-  //   const  notificationTime = this.state.time;
-    
-  //   if (this.state.enableNotification) {
-  //     // schedule notification       
-  //     firebase.notifications().scheduleNotification(this.buildNotification(), {
-  //       fireDate: notificationTime,
-  //       repeatInterval: 'day',
-  //       exact: true,
-  //     });
-  //   } else {
-  //     return false;
-  //   }
-  // };
 
-  // buildNotification = () => {
-  //   const title = Platform.OS === "android" ? "Daily Reminder" : "";
-  //   const notification = new firebase.notifications.Notification()
-  //     .setNotificationId("1") // Any random ID
-  //     .setTitle(title) // Title of the notification
-  //     .setBody("This is a notification") // body of notification
-  //     .android.setPriority(firebase.notifications.Android.Priority.High) // set priority in Android
-  //     .android.setChannelId("reminder") // should be the same when creating channel for Android
-  //     .android.setAutoCancel(true); // To remove notification when tapped on it
-  //     return notification;
-  // };
 
   authListener(){
   
-   var name,start,end,close;
-   var user =fire.auth().currentUser;
-   if(user != null){
-     var id=user.uid;
-     this.setState({
-       id:id
-     })
+ 
+    const { navigation } = this.props;  
+    var id=navigation.getParam('idPatient');
+
+    this.setState({id:id})
      fire.database().ref("users").child(id).child("name").on('value',datasnapshot =>{
      name=datasnapshot.val();//
     this.setState({
@@ -102,16 +75,6 @@ class PatientProfile extends React.Component {
        email:datasnapshot.val()
    })
  })
-
- var today=new Date();
- const day   = today.getDate();
- const dayName=today.getDay();
- const  month = today.getMonth()+1;
- const  year  = today.getFullYear();
-
-    this.setState({
-        date:day+'-'+month+'-'+year
-    })
 
   fire.database().ref("users").child(id).child("appointment").on('value',(snapshot)=>{
     if(snapshot.val()){
@@ -147,7 +110,7 @@ class PatientProfile extends React.Component {
         })
     }
   })
-   }
+   
    
   
   }
@@ -159,50 +122,14 @@ class PatientProfile extends React.Component {
     return (
       <Block flex style={styles.profile}>
         <Block flex>
-          <ImageBackground
-            source={Images.ProfileBackground}
-            style={styles.profileContainer}
-            imageStyle={styles.profileBackground}
-          >
+         
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
               <Block flex style={styles.profileCard}>
-                <Block middle style={styles.avatarContainer}>
-                  <Image
-                    source={{ uri: Images.ProfilePicture }}
-                    style={styles.avatar}
-                  />
-                 <Block>
-                   
-                 </Block> 
-                </Block>
-                <Block style={styles.info}>
-                  <Block
-                    middle
-                    row
-                    space="evenly"
-                    style={{ marginTop: 20, paddingBottom: 24 }}
-                  >
-                    <Button
-                      small
-                      style={{ backgroundColor: argonTheme.COLORS.INFO }}
-                     // onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
-                    >
-                      Information
-                    </Button>
-                    <Button
-                      onPress={()=>this.props.navigation.navigate("Chat",{sender:this.state.id,name:this.state.username,email:this.state.email,receiver:"8HN5vu95CDd7Ez56XQg0c9U5mr63"})}
-                      small
-                      style={{ backgroundColor: argonTheme.COLORS.DEFAULT }}
-                    >
-
-                      MESSAGE 
-                    </Button>
-                  </Block>
-                  
-                </Block>
+               
+               
 
                 <Block flex>
                   <Block middle style={styles.nameInfo}>
@@ -290,55 +217,13 @@ class PatientProfile extends React.Component {
                   
 
 
-                  <Block
-                    row
-                    style={{ paddingVertical: 14, alignItems: "baseline" }}
-                  >
-                    
-                  </Block>
-                  <Block
-                    row
-                    style={{ paddingBottom: 20, justifyContent: "flex-end" }}
-                  >
-                    
-
-                  </Block>
-                  <Block style={{ paddingBottom: -HeaderHeight * 2 }}>
                   
-                  <Button
-                   onPress={() => this.props.navigation.navigate("PatientAppointment",{idPatient:this.state.id})}
-                       color="primary" style={styles.createButton} >
-                        
-                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
-                           Appointments
-                        </Text>
-                                
-                  </Button>
-
-                  <Button
-                   onPress={() => this.props.navigation.navigate("Search",{idPatient:this.state.id})}
-                       color="primary" style={styles.createButton} >
-                        
-                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
-                          make an appointment
-                        </Text>
-                                
-                  </Button>
-                   
-                  <Button
-                   onPress={() => this.props.navigation.navigate("ShowAllLocation")}
-                       color="primary" style={styles.createButton} >
-                        
-                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
-                         location
-                        </Text>
-                                
-                  </Button>
-                  </Block>
+                 
+                  
                 </Block>
               </Block>
             </ScrollView>
-          </ImageBackground>
+         
         </Block>
         
       </Block>
@@ -350,7 +235,8 @@ const styles = StyleSheet.create({
   profile: {
     marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
     // marginBottom: -HeaderHeight * 2,
-    flex: 1
+    flex: 1,
+    backgroundColor:'#eee'
   },
   profileContainer: {
     width: width,
@@ -406,4 +292,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PatientProfile;
+export default PatientAppointment;
