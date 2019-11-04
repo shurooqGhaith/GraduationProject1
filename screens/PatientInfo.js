@@ -46,6 +46,7 @@ class PatientInfo extends React.Component {
     this.showDatePicker=this.showDatePicker.bind(this);
 
     this.handleDate=this.handleDate.bind(this);
+    this.changeTime=this.changeTime.bind(this);
         this.state={
       username:"",
       idDoctor:"",
@@ -86,6 +87,7 @@ class PatientInfo extends React.Component {
       app:[],
       change:false,
       availableSlots:[],
+      flag:false,
       
       //next session
       nextSession:false,
@@ -156,44 +158,103 @@ this.setState({
      })
      
      this.hideDatePicker();
-
+//alert(this.state.daySelected);
      var ar=[];
      fire.database().ref("users").child(this.state.idDoctor).child("workingHours").on('value',(work)=>{
        let workHour=Object.values(work.val());
        workHour.map(w=>{
          if(w.days == this.state.daySelected && w.enable){
+           this.setState({change:true});
+           
           let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
-
+          ar=requiredArray;
+          requiredArray.map(v=>{ar.push({time:v})})
           requiredArray.map((slot,index)=>{
+            var flag=false;
+           
             fire.database().ref("users").child(this.state.idDoctor).child("appointment").on('value',(app)=>{
               let appointment=Object.values(app.val());
               appointment.map((ap)=>{
-                if(ap.dateSelected == this.state.dateToSearch && ap.timeSelected==slot && ap.available){
-                     ar.push({time:slot});
+                if(ap.dateSelected == this.state.dateToSearch && ap.timeSelected==slot && !ap.available){
+                  ar = ar.filter(function( obj ) {
+                    return obj.time !== slot;
+                });
                 }
-                if(ap.dateSelected == this.state.dateToSearch && ap.timeSelected!=slot && !ap.available){
-                  ar.push({time:slot});
-             }
+            //     if(ap.dateSelected == this.state.dateToSearch && ap.timeSelected==slot && ap.available){
+            //          ar.push({time:slot});
+            //     }
+            //     if(ap.dateSelected == this.state.dateToSearch && ap.timeSelected!=slot && !ap.available){
+            //       ar.push({time:slot});
+            //  }
+            //  if(ap.dateSelected != this.state.dateToSearch ){
+            //   flag=true;
+            //  }
 
               })//app map
             })//app fire
+
+            //if(flag){ar.push({time:slot}) }
           })//slot arrays
          }
-         else{
-           alert("noo")
-         }
+         
        })//work map
        
 
      })
+
+     var result = ar.reduce((unique, o) => {
+      if(!unique.some(obj => obj.time === o.time)) {
+        unique.push(o);
+      }
+      return unique;
+  },[]);
      this.setState({
       availableSlots:ar
     })
-    this.state.availableSlots.map((s)=>{
-      alert(s.time+"\n");
-    })
+    // this.state.availableSlots.map((s)=>{
+    //   alert(s.time+"\n");
+    // })
   }
 
+
+  changeTime(time){
+
+    fire.database().ref("users").child(this.state.idPatient).child("appointment").once('value',(snapshot)=>{
+      if(snapshot.val()){
+let appointments = Object.values(snapshot.val());
+this.setState({app:appointments});
+this.state.app.map((va,i)=>{
+if(va.idDoctor == this.state.idDoctor && va.dateSelected ==this.state.date && va.timeSelected==this.state.time){
+
+fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[i]).child("timeSelected").set(time);
+fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[i]).child("dateSelected").set(this.state.dateToSearch);
+fire.database().ref("users").child(this.state.idPatient).child("appointment").child(Object.keys(snapshot.val())[i]).child("daySelected").set(this.state.daySelected)
+.then(()=>{
+  fire.database().ref("users").child(this.state.idDoctor).child("appointment").once('value',(s)=>{
+    let appointments = Object.values(s.val());
+    this.setState({app:appointments});
+    this.state.app.map((v,ind)=>{
+      if(v.idPatient == this.state.idPatient && v.dateSelected ==this.state.date && v.timeSelected==this.state.time){//وصلت الموعد يلي بدي اغيره
+        fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(s.val())[ind]).child("timeSelected").set(time);
+        fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(s.val())[ind]).child("dateSelected").set(this.state.dateToSearch);
+        fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(s.val())[ind]).child("daySelected").set(this.state.daySelected);
+
+      }
+    })//app doctor map
+   
+  })//app doctor
+
+})
+
+}
+})//map app p
+      }
+
+    })//app patient
+
+    alert("The time is changed to "+this.state.dateToSearch+"\n"+this.state.timeToSearch);
+
+  }
   handleDatePicked =pickeddate=> {
     const day   = pickeddate.getDate();
     const dayName=pickeddate.getDay();
@@ -785,14 +846,7 @@ else{
                               <Text>{this.state.dateToSearch || "change time"} </Text>
                       </Button>
 
-                      <View style={{marginTop:20,flexDirection:'column'}}>
 
-                        {this.state.availableSlots.map((slot,index)=>{
-                                 <View>
-                             <Text>{slot.time}</Text>
-                                </View>
-                                       })}
-                      </View>
                       <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
 
                       <DateTimePicker
@@ -805,6 +859,25 @@ else{
 
 
                   </View>
+
+                  <View style={{marginTop:100,flexDirection:'column',alignItems:'center'}}>
+
+{!this.state.change && <View><Text style={{color:'#00897b'}}>No work at this day </Text></View>}
+ {this.state.change && this.state.availableSlots.map((slot,index)=>{
+   if(slot.time){
+    return(
+     <View>
+      <Button style={{backgroundColor:'#eee'}} small onPress={()=>this.changeTime(slot.time)}>
+      <Text style={{color:'#00897b'}}>{slot.time}</Text>
+      </Button>
+         </View>
+   )
+   }
+   
+          
+                })}
+</View>
+
 
                   {/* <View style={{width:width*0.4,marginTop:20,flex:1}}>
                              <Autocomplete
