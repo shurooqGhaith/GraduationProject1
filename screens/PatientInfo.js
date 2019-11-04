@@ -253,6 +253,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
     })//app patient
 
     alert("The time is changed to "+this.state.dateToSearch+"\n"+this.state.timeToSearch);
+    this.setState({availableSlots:[]});
 
   }
   handleDatePicked =pickeddate=> {
