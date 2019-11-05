@@ -134,11 +134,9 @@ class Info extends React.Component {
 
 
   render() {
-    if(this.state.type =="doctor"){
 
-      return (
-   
-        <Block flex style={styles.profile}>
+    return(
+    <Block flex style={styles.profile}>
         <Block flex>
          
 
@@ -161,7 +159,7 @@ class Info extends React.Component {
                   
                   <Block middle>
                     <View style={styles.itemsList} >
-                  { !this.state.noInfo && this.state.patientInfo.map((value,index)=>{
+                  {this.state.type=="doctor" && !this.state.noInfo && this.state.patientInfo.map((value,index)=>{
                       if(value.idPatient==this.state.idPatient){
                         var money,medicine,exam;
                         if(!value.money){money="no";}else{money=value.money}
@@ -183,21 +181,11 @@ class Info extends React.Component {
                    })}
                     </View>
                   </Block>
-                                  
-                </Block>
-              </Block>
-            </ScrollView>
-          
-        </Block>
-        
-      </Block>
-    );
 
-    }
-    if(this.state.type=="patient"){
-
-      if(!this.state.noSession){
-        return this.state.session.map((session,ind)=>{
+                  <Block middle>
+                    <View style={styles.itemsList} >
+                  
+                    {!this.state.noSession && this.state.type=="patient" && this.state.session.map((session,ind)=>{
           if(this.state.date == session.date && this.state.time== session.time && this.state.clinic ==session.clinic && this.state.idDoctor==session.idDoctor){
             if(!session.money){money="no";}else{money=session.money}
             if(!session.medicine){medicine="no medicine";}else{medicine=session.medicine}
@@ -215,24 +203,33 @@ class Info extends React.Component {
           
        </View>
        </Card>
-
-     
            )
           }
 
-          else{
-            return(
-              <View>
-                <Text>The appointment has not yet been made</Text>
-              </View>
-            )
-          }
+          
          
         })//end session map
       }
+                    </View>
+                  </Block>
+                                  
+                </Block>
+              </Block>
+            </ScrollView>
+          
+        </Block>
+        
+      </Block>
+
+    
+    
+    
+
+    )
     }
+  
   }
-}
+
 
 const styles = StyleSheet.create({
   
