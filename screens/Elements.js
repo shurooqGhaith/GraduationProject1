@@ -51,7 +51,8 @@ class Info extends React.Component {
     
       date:'',
       time:'',
-      clinic:''
+      clinic:'',
+      available:false
     }
   }
 
@@ -72,7 +73,9 @@ class Info extends React.Component {
     var date=navigation.getParam('date');
     var time=navigation.getParam('time');
     var clinic=navigation.getParam('clinic');
+    var av=navigation.getParam('available');
 
+    
 
      this.setState({
       idPatient:idP,
@@ -80,7 +83,8 @@ class Info extends React.Component {
       type:t,
       date:date,
       time:time,
-      clinic:clinic
+      clinic:clinic,
+      available:av
      })
      
    fire.database().ref("users").child(idP).child("name").on('value',(datasnapshot)=>{
@@ -185,8 +189,10 @@ class Info extends React.Component {
                   <Block middle>
                     <View style={styles.itemsList} >
                   
-                    {!this.state.noSession && this.state.type=="patient" && this.state.session.map((session,ind)=>{
+                    {this.state.available && !this.state.noSession && this.state.type=="patient" && this.state.session.map((session,ind)=>{
+                      var flag=false;
           if(this.state.date == session.date && this.state.time== session.time && this.state.clinic ==session.clinic && this.state.idDoctor==session.idDoctor){
+           flag=true;
             if(!session.money){money="no";}else{money=session.money}
             if(!session.medicine){medicine="no medicine";}else{medicine=session.medicine}
             if(!session.medicalExaminations){exam="no checkup needed";}else{exam=session.medicalExaminations}
@@ -204,12 +210,25 @@ class Info extends React.Component {
        </View>
        </Card>
            )
-          }
-
+          }//if 1
           
          
         })//end session map
+        
       }
+
+      {!this.state.available && this.state.type=="patient" && <View style={{marginTop:100}}><Text bold size={14}>Not been made yet</Text></View>}
+
+      <Button onPress={()=>{
+        if(this.state.type=="doctor"){
+          this.props.navigation.navigate("PatientAfterSession",{id:this.state.idDoctor})
+        }
+
+        if(this.state.type=="patient"){
+          this.props.navigation.navigate("PatientAppointment",{idPatient:this.state.idPatient})
+        }
+
+      }}><Text>Back</Text></Button>
                     </View>
                   </Block>
                                   

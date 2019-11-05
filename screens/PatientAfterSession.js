@@ -74,6 +74,7 @@ class PatientAfterSession extends React.Component {
     this.setState({
       username:datasnapshot.val()
     })
+    alert(datasnapshot.val())
  })
     
  fire.database().ref("users").child(idD).child("email").on('value',(datasnapshot)=>{
@@ -196,7 +197,7 @@ viewInfo(id){
                           <View style={{flexDirection:'row'}}>
                           <Text>{name}</Text>
                           <Button small style={{backgroundColor:'#fff',marginLeft:30}}
-                          onPress={()=>this.props.navigation.navigate("Info",{id:item.idPatient,idDoctor:this.state.idDoctor,type:"doctor",date:'',time:'',clinic:''})}
+                          onPress={()=>this.props.navigation.navigate("Info",{id:item.idPatient,idDoctor:this.state.idDoctor,type:"doctor",date:'',time:'',clinic:'',available:false})}
                           ><Text style={{color:'#000'}}>details</Text></Button>
                           </View>
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>

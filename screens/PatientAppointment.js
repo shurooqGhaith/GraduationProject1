@@ -147,13 +147,6 @@ class PatientAppointment extends React.Component {
                     
                   
                     {!this.state.nodata && this.state.appointment.map((item,index)=>{
-                      if(item.available){//اذا المريض راح ع الموعد يعرض متى كان و شو الدكتور عمله
-                         if(!this.state.noSession){
-                           return this.state.session.map((session,ind)=>{
-                             if(item.dateSelected == session.date && item.timeSelected== session.time && item.clinicName ==session.clinic && item.idDoctor==session.idDoctor){
-                               if(!session.money){money="no";}else{money=session.money}
-                               if(!session.medicine){medicine="no medicine";}else{medicine=session.medicine}
-                               if(!session.medicalExaminations){exam="no checkup needed";}else{exam=session.medicalExaminations}
 
                               return(
                                 <View key={index} style={{flexDirection:'column'}}>
@@ -166,57 +159,14 @@ class PatientAppointment extends React.Component {
                           
                           <Text style={{color:'#888'}}>{item.clinicName}</Text>
                           <Button small 
-                          onPress={()=>this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:item.idDoctor,type:"patient",date:item.dateSelected,time:item.timeSelected,clinic:item.clinicName})}
+                          onPress={()=>this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:item.idDoctor,type:"patient",date:item.dateSelected,time:item.timeSelected,clinic:item.clinicName,available:item.available})}
                           ><Text>Info</Text></Button>
-
-                          <View style={{flexDirection:'column'}}>
-                          <Text>{session.sessionNumber}</Text>
-                          <Text>{"process:"+session.process}</Text>
-                          <Text>medicine:{medicine}</Text>
-                             <Text>money:{money}</Text>
-                             <Text>checkup : {exam}</Text>
-                             <Button small 
-                             ><Text>cancel</Text></Button>
-                          </View>
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
 
                          </View> 
                               )
-                             }
-                            
-                           })//end session map
-                         }
-                       
-                      }//end appointemnt available
+                             
 
-
-                      if(!item.available){
-
-                                 return(
-                               <View key={index} style={{flexDirection:'column'}}>
-
-                               <View style={{flexDirection:'row'}}>
-                                         <Text style={{color:'#000'}}>{item.daySelected}</Text>
-                                         <Text style={{color:'#000'}}>-{item.dateSelected}</Text>
-                                         <Text style={{color:'#000'}}>-{item.timeSelected}</Text>
-                                       </View>
-
-
-                               <Text style={{color:'#888'}}>{item.clinicName}</Text>
-                               <Button small 
-                          onPress={()=>this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:item.idDoctor,type:"patient",date:item.dateSelected,time:item.timeSelected,clinic:item.clinicName})}
-                          ><Text>Info</Text></Button>
-
-                                           <View>
-                                            <Text>The appointment has not yet been made</Text>
-                                            <Button small onPress={()=>this.setState({showSession:false})}><Text>cancel</Text></Button>
-                                          </View>
-                                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
-
-                                                   </View>
-
-                                       )
-                                         } 
                                        })
                     }
                   </Block>
