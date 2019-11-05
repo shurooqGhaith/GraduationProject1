@@ -43,9 +43,15 @@ class Info extends React.Component {
       view:false,
       noInfo:false,
       process:[],
-      medicines:[]
-      
-      
+      medicines:[],
+      type:'',
+      session:[],
+      appointment:[],
+      noSession:false,
+    
+      date:'',
+      time:'',
+      clinic:''
     }
   }
 
@@ -61,11 +67,20 @@ class Info extends React.Component {
     const { navigation } = this.props;  
     var idP=navigation.getParam('id');
     var idD=navigation.getParam('idDoctor');
-    
+    var t=navigation.getParam('type');
+
+    var date=navigation.getParam('date');
+    var time=navigation.getParam('time');
+    var clinic=navigation.getParam('clinic');
+
 
      this.setState({
       idPatient:idP,
-      idDoctor:idD
+      idDoctor:idD,
+      type:t,
+      date:date,
+      time:time,
+      clinic:clinic
      })
      
    fire.database().ref("users").child(idP).child("name").on('value',(datasnapshot)=>{
@@ -97,6 +112,21 @@ class Info extends React.Component {
    })
  
 
+   fire.database().ref("users").child(idP).child("session").on('value',(snapshot)=>{
+    if(snapshot.val()){
+      let app=Object.values(snapshot.val());
+      this.setState({
+          session:app,
+          noSession:false
+      })
+    }
+    else{
+        this.setState({
+          noSession:true
+        })
+    }
+  })
+
   }
 
  
@@ -104,7 +134,9 @@ class Info extends React.Component {
 
 
   render() {
-    return (
+    if(this.state.type =="doctor"){
+
+      return (
    
         <Block flex style={styles.profile}>
         <Block flex>
@@ -150,16 +182,8 @@ class Info extends React.Component {
                              
                    })}
                     </View>
-                    
-                    
-                    
                   </Block>
-                  
-
-
-                  
-                  
-                  
+                                  
                 </Block>
               </Block>
             </ScrollView>
@@ -168,6 +192,45 @@ class Info extends React.Component {
         
       </Block>
     );
+
+    }
+    if(this.state.type=="patient"){
+
+      if(!this.state.noSession){
+        return this.state.session.map((session,ind)=>{
+          if(this.state.date == session.date && this.state.time== session.time && this.state.clinic ==session.clinic && this.state.idDoctor==session.idDoctor){
+            if(!session.money){money="no";}else{money=session.money}
+            if(!session.medicine){medicine="no medicine";}else{medicine=session.medicine}
+            if(!session.medicalExaminations){exam="no checkup needed";}else{exam=session.medicalExaminations}
+
+           return(
+             
+      
+<Card title={"session number :"+session.sessionNumber}> 
+       <View style={{flexDirection:'column'}}>
+       <Text>{"process:"+session.process}</Text>
+       <Text>medicine:{medicine}</Text>
+          <Text>money:{money}</Text>
+          <Text>checkup : {exam}</Text>
+          
+       </View>
+       </Card>
+
+     
+           )
+          }
+
+          else{
+            return(
+              <View>
+                <Text>The appointment has not yet been made</Text>
+              </View>
+            )
+          }
+         
+        })//end session map
+      }
+    }
   }
 }
 

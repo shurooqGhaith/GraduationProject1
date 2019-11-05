@@ -41,6 +41,7 @@ class PatientAppointment extends React.Component {
       nodata:false,
       session:[],
       noSession:false,
+      showSession:false,
       time:'',
       date:'',
       enableNotification:true
@@ -164,13 +165,18 @@ class PatientAppointment extends React.Component {
                           </View>
                           
                           <Text style={{color:'#888'}}>{item.clinicName}</Text>
-                          
+                          <Button small 
+                          onPress={()=>this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:item.idDoctor,type:"patient",date:item.dateSelected,time:item.timeSelected,clinic:item.clinicName})}
+                          ><Text>Info</Text></Button>
+
                           <View style={{flexDirection:'column'}}>
                           <Text>{session.sessionNumber}</Text>
-                          <Text>{session.process}</Text>
+                          <Text>{"process:"+session.process}</Text>
                           <Text>medicine:{medicine}</Text>
                              <Text>money:{money}</Text>
                              <Text>checkup : {exam}</Text>
+                             <Button small 
+                             ><Text>cancel</Text></Button>
                           </View>
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
 
@@ -197,9 +203,14 @@ class PatientAppointment extends React.Component {
 
 
                                <Text style={{color:'#888'}}>{item.clinicName}</Text>
+                               <Button small 
+                          onPress={()=>this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:item.idDoctor,type:"patient",date:item.dateSelected,time:item.timeSelected,clinic:item.clinicName})}
+                          ><Text>Info</Text></Button>
 
-
-                                           <Text>The appointment has not yet been made</Text>
+                                           <View>
+                                            <Text>The appointment has not yet been made</Text>
+                                            <Button small onPress={()=>this.setState({showSession:false})}><Text>cancel</Text></Button>
+                                          </View>
                                            <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
 
                                                    </View>
@@ -208,18 +219,7 @@ class PatientAppointment extends React.Component {
                                          } 
                                        })
                     }
-                    
-
-                    
-                    
-                    
                   </Block>
-                  
-
-
-                  
-                 
-                  
                 </Block>
               </Block>
             </ScrollView>
