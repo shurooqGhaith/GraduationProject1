@@ -72,7 +72,7 @@ class Chat extends React.Component {
     var id=navigation.getParam('sender');
     var name=navigation.getParam('name');
     var email=navigation.getParam('email');
-    var receiver=navigation.getParam('receiver'); 
+    var receiver=navigation.getParam('receiver'); //id
     var receiverName=navigation.getParam('nameR'); 
 
     
@@ -100,11 +100,14 @@ class Chat extends React.Component {
                                  user,
                                  idR,
                                 };
-               
-                                
-                                this.setState(previousState => ({
+                
+                               // alert("idR="+idR+"\n"+"idS="+user.id);
+                                if((idR==this.state.idR && user.id==this.state.id) || (idR==this.state.id && user.id==this.state.idR) ){
+                                  this.setState(previousState => ({
                                     messages: GiftedChat.append(previousState.messages, message),
                                   }))
+                                }
+                                
                             }
      });
 
