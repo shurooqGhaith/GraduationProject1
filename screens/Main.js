@@ -55,7 +55,20 @@ export default class Main extends React.Component{
         fire.database().ref("users").child(id).child("patients").on('value',(snap)=>{
           if(snap.val()){
             let names = Object.values(snap.val());
-            this.setState({users:names,nodata:false});
+          
+            names.map((value)=>{
+              array.push({idPatient:value.idPatient});
+            })
+
+            var result = array.reduce((unique, o) => {
+              if(!unique.some(obj => obj.time === o.time)) {
+                unique.push(o);
+              }
+              return unique;
+          },[]);
+
+            this.setState({users:result,nodata:false});
+
             // this.state.users.map((value,index)=>{
             //   alert("users map");
 
