@@ -193,7 +193,8 @@ class PatientProfile extends React.Component {
                       Information
                     </Button>
                     <Button
-                      onPress={()=>this.props.navigation.navigate("Chat",{sender:this.state.id,name:this.state.username,email:this.state.email,receiver:"8HN5vu95CDd7Ez56XQg0c9U5mr63"})}
+                     // onPress={()=>this.props.navigation.navigate("Chat",{sender:this.state.id,name:this.state.username,email:this.state.email,receiver:"8HN5vu95CDd7Ez56XQg0c9U5mr63"})}
+                      onPress={()=>this.props.navigation.navigate("Main",{sender:this.state.id,name:this.state.username,email:this.state.email,type:"patient"})}
                       small
                       style={{ backgroundColor: argonTheme.COLORS.DEFAULT }}
                     >
