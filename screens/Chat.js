@@ -101,8 +101,16 @@ class Chat extends React.Component {
                                  idR,
                                 };
                 
+                                //id sender=8H...  state.id
+                                //id receiver =Rr  state.idR
                                // alert("idR="+idR+"\n"+"idS="+user.id);
-                                if((idR==this.state.idR && user.id==this.state.id) || (idR==this.state.id && user.id==this.state.idR) ){
+                               //|| (idR==this.state.id && user.id==this.state.idR)
+                                if(idR==this.state.idR && user.id==this.state.id ){
+                                  this.setState(previousState => ({
+                                    messages: GiftedChat.append(previousState.messages, message),
+                                  }))
+                                }
+                                if(idR==this.state.id && user.id==this.state.idR ){
                                   this.setState(previousState => ({
                                     messages: GiftedChat.append(previousState.messages, message),
                                   }))
