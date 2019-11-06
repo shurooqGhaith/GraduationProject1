@@ -40,6 +40,7 @@ export default class App extends React.Component {
     isLoadingComplete: false,
   }
   
+  
   componentDidMount() {
     // this.createNotificationChannel();
     // this.checkPermission();

@@ -141,11 +141,12 @@ export default class Main extends React.Component{
         return(
             <Block flex >
             
+            <View style={{marginTop:20,marginLeft:5,backgroundColor:'#eee',width:width}}><Text bold size={16}>Users Lists</Text></View>
             <Block>
                 {!this.state.nodata && this.state.type=="doctor" && this.state.users.map((item,index)=>{
                   var name;
                   return(
-                    <View style={{marginTop:60}}>
+                    <View style={{marginTop:20}}>
                     <TouchableOpacity
                          style={styles.button}
                          onPress={()=>
@@ -157,9 +158,9 @@ export default class Main extends React.Component{
                            }
                           
                          }>
-                        <Text> {item.name} </Text>
+                        <Text bold size={16}> {item.name} </Text>
                       </TouchableOpacity>
-                      <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
+                      <Divider style={{backgroundColor:'#000000',width:width}}/>
                       </View>
                   )
                 })}
@@ -167,14 +168,14 @@ export default class Main extends React.Component{
                 {  this.state.type=="patient" && this.state.doctors.map((item,index)=>{
                   
                   return(
-                    <View style={{marginTop:60}}>
+                    <View style={{marginTop:20}}>
                     <TouchableOpacity
                          style={styles.button}
                          onPress={()=>this.props.navigation.navigate("Chat",{sender:this.state.senderID,name:this.state.name,email:this.state.email,receiver:item.id,nameR:item.name})
                     }>
-                        <Text>{item.name}</Text>
+                        <Text  bold size={16}>{item.name}</Text>
                       </TouchableOpacity>
-                      <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
+                      <Divider style={{backgroundColor:'#000000',width:width}}/>
                       </View>
                   )
                 })}
@@ -191,11 +192,11 @@ export default class Main extends React.Component{
 const styles =StyleSheet.create({
    
       button: {
-        alignItems: 'center',
-        backgroundColor: '#DDDDDD',
+       // alignItems: 'center',
+        backgroundColor: '#fff',
         padding: 10,
         width:width*0.5,
-        marginLeft:100
+        marginLeft:5
       },
      
       textStyle:{
