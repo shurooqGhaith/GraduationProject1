@@ -7,7 +7,8 @@ import {
   Image,
   ImageBackground,
   Platform,
-  Picker
+  Picker,
+  TouchableOpacity
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
@@ -17,7 +18,7 @@ import { HeaderHeight } from "../constants/utils";
 import fire from "../constants/firebaseConfigrations";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import MapView,{Marker} from "react-native-maps";
-import { Divider } from 'react-native-elements';
+import { Divider,Header } from 'react-native-elements';
 //import firebase from 'react-native-firebase';
 const { width, height } = Dimensions.get("screen");
 
@@ -164,6 +165,16 @@ class PatientProfile extends React.Component {
             style={styles.profileContainer}
             imageStyle={styles.profileBackground}
           >
+
+<Block style={{ marginBottom: theme.SIZES.BASE,marginTop:70 }}>
+<Header
+backgroundColor='#fff'
+  leftComponent={{ icon: 'home', color: '#000' }}
+  centerComponent={<Text style={{color:'#000'}}>{this.state.username}</Text>}
+  rightComponent={<TouchableOpacity style={{backgroundColor:'#fff'}} small onPress={()=>this.props.navigation.navigate("Login")}><Text style={{color:'#000'}}>Logout</Text></TouchableOpacity>}
+/>
+          </Block>
+
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}

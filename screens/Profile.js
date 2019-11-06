@@ -11,7 +11,8 @@ import {
   FlatList,
   Modal,
   TouchableHighlight,
-  Alert
+  Alert,
+  TouchableOpacity
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
@@ -32,6 +33,7 @@ class Profile extends React.Component {
   constructor(props){
     super(props);
     this.authListener=this.authListener.bind(this);
+    this.logout=this.logout.bind(this);
         this.state={
           modalVisible: false,
       user:[],
@@ -132,7 +134,9 @@ class Profile extends React.Component {
     this.setState({modalVisible: visible});
   }
 
- 
+ logout(){
+   fire.auth().signOut();
+ }
   render() {
     return (
       <Block flex style={styles.profile}>
@@ -148,7 +152,7 @@ class Profile extends React.Component {
 backgroundColor='#fff'
   leftComponent={{ icon: 'home', color: '#000' }}
   centerComponent={<Text style={{color:'#000'}}>{this.state.username}</Text>}
-  rightComponent={<Button style={{backgroundColor:'#fff'}} small onPress={()=>fire.auth().signOut()}><Text style={{color:'#000'}}>logout</Text></Button>}
+  rightComponent={<TouchableOpacity style={{backgroundColor:'#fff'}} small onPress={()=>this.props.navigation.navigate("Login")}><Text style={{color:'#000'}}>Logout</Text></TouchableOpacity>}
 />
           </Block>
        
