@@ -21,7 +21,7 @@ import { HeaderHeight } from "../constants/utils";
 import fire from "../constants/firebaseConfigrations";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import MapView,{Marker} from "react-native-maps";
-import { Divider,Icon } from 'react-native-elements';
+import { Divider,Icon ,Header} from 'react-native-elements';
 import { Table, TableWrapper, Row, Cell, Col } from 'react-native-table-component';
 const { width, height } = Dimensions.get("screen");
 
@@ -143,6 +143,14 @@ class Profile extends React.Component {
             imageStyle={styles.profileBackground}
           >
 
+<Block style={{ marginBottom: theme.SIZES.BASE,marginTop:70 }}>
+<Header
+backgroundColor='#fff'
+  leftComponent={{ icon: 'home', color: '#000' }}
+  centerComponent={<Text style={{color:'#000'}}>{this.state.username}</Text>}
+  rightComponent={<Button style={{backgroundColor:'#fff'}} small onPress={()=>fire.auth().signOut()}><Text style={{color:'#000'}}>logout</Text></Button>}
+/>
+          </Block>
        
             <ScrollView
               showsVerticalScrollIndicator={false}
