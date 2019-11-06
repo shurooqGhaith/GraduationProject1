@@ -12,12 +12,17 @@ class ShowAllLocation extends Component {
  constructor(props) {
     super(props);
     this.onRegionChange=this.onRegionChange.bind(this);
+    this.deg2Rad=this.deg2Rad.bind(this);
+    this.pythagorasEquirectangular =this.pythagorasEquirectangular.bind(this);
+    this.NearestCity=this.NearestCity.bind(this);
     this.state = {
         id:'',
         clinicNames:[],
         clinicName:'',
         clinics:[],
         nodata:true,
+        latitude:'',
+        longitude:'',
        region: {
          latitude: 32.22111,
          longitude: 35.25444,
@@ -31,6 +36,19 @@ class ShowAllLocation extends Component {
 
    
 	componentDidMount() {
+    const { navigation } = this.props;  
+    var id=navigation.getParam('id');
+    this.setState({
+        id:id
+    });
+    fire.database().ref("users").child(id).child("latitude").on('value',(snap)=>{
+      this.setState({latitude:snap.val()})
+    })
+
+    fire.database().ref("users").child(id).child("longitude").on('value',(snap)=>{
+      this.setState({longitude:snap.val()})
+    })
+
          var array=[];
          fire.database().ref("users").on('value',(snap)=>{
             var data=snap.val();
@@ -52,16 +70,31 @@ class ShowAllLocation extends Component {
                                   array.push({clinicName:value.clinic,latitude:value.latitude,longitude:value.longitude});
                                 })
                             }
-                        })
-                    }
+                        }) //clinic names fire
+                    }//doctor if
                 })
 
-            }
+            }//keys for
+           // alert(array.length);//8
+           var minDif = 99999;
+        var closest;
+      
+              for (var index = 0; index < array.length; ++index) {
+          var dif = this.PythagorasEquirectangular(this.state.latitude, this.state.longitude,array[index][1], array[index][2]).bind(this);
+          if (dif < minDif) {
+            closest =index;
+            minDif = dif;
+          }
+          alert(array[closest][0]);
+        // close=;
+        }
          })
          this.setState({
             clinics:array,
             nodata:false
         })
+
+        
 
          if(array.length>0){
             // var result = array.reduce((unique, o) => {
@@ -70,7 +103,6 @@ class ShowAllLocation extends Component {
             //     }
             //     return unique;
             // },[]);
-    alert("h");
             this.setState({
                 clinics:array,
                 nodata:false
@@ -80,8 +112,25 @@ class ShowAllLocation extends Component {
 	
 	
   }
-  
+  deg2Rad (deg) {
+  return deg * Math.PI / 180;
+}
 
+pythagorasEquirectangular = (lat1, lon1, lat2, lon2) => {
+  lat1 = Deg2Rad(lat1);
+  lat2 = Deg2Rad(lat2);
+  lon1 = Deg2Rad(lon1);
+  lon2 = Deg2Rad(lon2);
+  var R = 6371; // km
+  var x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
+  var y = (lat2 - lat1);
+  var d = Math.sqrt(x * x + y * y) * R;
+  return d;
+}
+
+NearestCity(latitude, longitude) {
+ 
+}
 onRegionChange(region){
   this.setState({ region:region });
 }	

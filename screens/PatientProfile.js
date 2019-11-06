@@ -9,6 +9,7 @@ import {
   Platform,
   Picker,
   TouchableOpacity
+  
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
@@ -227,80 +228,8 @@ backgroundColor='#fff'
                     <Block style={styles.divider} />
                   </Block>
                   <Block middle>
-                  
-                    
-                  
-                    {!this.state.nodata && this.state.appointment.map((item,index)=>{
-                      if(item.available){//اذا المريض راح ع الموعد يعرض متى كان و شو الدكتور عمله
-                         if(!this.state.noSession){
-                           return this.state.session.map((session,ind)=>{
-                             if(item.dateSelected == session.date && item.timeSelected== session.time && item.clinicName ==session.clinic && item.idDoctor==session.idDoctor){
-                               if(!session.money){money="no";}else{money=session.money}
-                               if(!session.medicine){medicine="no medicine";}else{medicine=session.medicine}
-                               if(!session.medicalExaminations){exam="no checkup needed";}else{exam=session.medicalExaminations}
-
-                              return(
-                                <View key={index} style={{flexDirection:'column'}}>
-                          
-                          <View style={{flexDirection:'row'}}>
-                          <Text style={{color:'#000'}}>{item.daySelected}</Text>
-                          <Text style={{color:'#000'}}>-{item.dateSelected}</Text>
-                          <Text style={{color:'#000'}}>-{item.timeSelected}</Text>
-                          </View>
-                          
-                          <Text style={{color:'#888'}}>{item.clinicName}</Text>
-                          
-                          <View style={{flexDirection:'column'}}>
-                          <Text>{session.sessionNumber}</Text>
-                          <Text>{session.process}</Text>
-                          <Text>medicine:{medicine}</Text>
-                             <Text>money:{money}</Text>
-                             <Text>checkup : {exam}</Text>
-                          </View>
-                          <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
-
-                         </View> 
-                              )
-                             }
-                            
-                           })//end session map
-                         }
-                       
-                      }//end appointemnt available
-
-
-                      if(!item.available){
-
-                                 return(
-                               <View key={index} style={{flexDirection:'column'}}>
-
-                               <View style={{flexDirection:'row'}}>
-                                         <Text style={{color:'#000'}}>{item.daySelected}</Text>
-                                         <Text style={{color:'#000'}}>-{item.dateSelected}</Text>
-                                         <Text style={{color:'#000'}}>-{item.timeSelected}</Text>
-                                       </View>
-
-
-                               <Text style={{color:'#888'}}>{item.clinicName}</Text>
-
-
-                                           <Text>The appointment has not yet been made</Text>
-                                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
-
-                                                   </View>
-
-                                       )
-                                         } 
-                                       })
-                    }
-                    
-
-                    
-                    
                     
                   </Block>
-                  
-
 
                   <Block
                     row
@@ -317,35 +246,54 @@ backgroundColor='#fff'
                   </Block>
                   <Block style={{ paddingBottom: -HeaderHeight * 2 }}>
                   
+                  <View style={{marginLeft:60}}>
                   <Button
                    onPress={() => this.props.navigation.navigate("PatientAppointment",{idPatient:this.state.id})}
-                       color="primary" style={styles.createButton} >
+                   color="transparent"
+                      style={{width:width*0.5}}
+                      textStyle={{
+                        color: "#233DD2",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }} >
                         
-                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                        <Text >
                            Appointments
                         </Text>
-                                
                   </Button>
-
+                   </View>
+                   <View style={{marginLeft:60,marginTop:10}}>
                   <Button
                    onPress={() => this.props.navigation.navigate("Search",{idPatient:this.state.id})}
-                       color="primary" style={styles.createButton} >
+                   color="transparent"
+                      style={{width:width*0.5}}
+                      textStyle={{
+                        color: "#233DD2",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }} >
                         
-                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                        <Text >
                           make an appointment
                         </Text>
-                                
                   </Button>
-                   
+                   </View>
+                   <View style={{marginLeft:60,marginTop:10}}>
                   <Button
-                   onPress={() => this.props.navigation.navigate("ShowAllLocation")}
-                       color="primary" style={styles.createButton} >
+                   onPress={() => this.props.navigation.navigate("ShowAllLocation",{id:this.state.id})}
+                   color="transparent"
+                      style={{width:width*0.5}}
+                      textStyle={{
+                        color: "#233DD2",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }} >
                         
-                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                        <Text>
                          location
                         </Text>
-                                
                   </Button>
+                  </View>
                   </Block>
                 </Block>
               </Block>
