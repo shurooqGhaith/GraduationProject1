@@ -79,15 +79,39 @@ class ShowAllLocation extends Component {
            var minDif = 99999;
         var closest;
       
-              for (var index = 0; index < array.length; ++index) {
-          var dif = this.PythagorasEquirectangular(this.state.latitude, this.state.longitude,array[index][1], array[index][2]).bind(this);
-          if (dif < minDif) {
-            closest =index;
-            minDif = dif;
-          }
-          alert(array[closest][0]);
+             // for (var index = 0; index < array.length; ++index) {
+               array.map((location,index)=>{
+                     // alert(location.latitude+"\n"+location.longitude+"\n"+location.clinicName)//طبعهم
+                     var lat1 = this.state.latitude * Math.PI / 180;
+                     var lat2 = location.latitude * Math.PI / 180;
+                     var lon1 = this.state.longitude * Math.PI / 180;
+                     var lon2 = location.longitude * Math.PI / 180;
+                      var R = 6371; // km
+                      var x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
+                      var y = (lat2 - lat1);
+                      var d = Math.sqrt(x * x + y * y) * R;
+                       if (d < minDif) {
+                            closest =location.clinicName;
+                             minDif = d;
+                             }
+               })
+
+               alert(closest);
+              
+
+              //  alert(d);//NaN
+            //  alert("lat="+array[index][1]+"long="+ array[index][2]);//undefined
+               // return d;
+              //  var dif = this.PythagorasEquirectangular.bind(this,this.state.latitude, this.state.longitude,array[index][1], array[index][2]);
+         //alert("1"); //طبعها
+          // if (d < minDif) {
+          //   closest =index;
+          //   minDif = dif;
+          // }
+          //alert(array[closest][0]);//undefined
+          //alert(closest);//undefined
         // close=;
-        }
+        //}//end for loop
          })
          this.setState({
             clinics:array,
