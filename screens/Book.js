@@ -28,6 +28,7 @@ class Book extends React.Component {
         this.showInfo=this.showInfo.bind(this);
         this.SearchFilterFunction=this.SearchFilterFunction.bind(this);
         this.handle=this.handle.bind(this);
+        this.sortData=this.sortData.bind(this);
         this.state={
             data:[],
             DrInfo:[],
@@ -39,7 +40,15 @@ class Book extends React.Component {
             nodata:false,
             dateTimeVisible:false,
             timeToSearch:'',
-            appointments:[]
+            appointments:[],
+
+            ///location
+            clinicNames:[],
+            clinics:[],
+            sort1:false,
+            latitude:'',
+            longitude:''
+
         }
     }
     componentDidMount(){
@@ -50,6 +59,17 @@ class Book extends React.Component {
                 idP:idP,
                 searchParameter:parameter
             })
+
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                  this.setState({
+                      latitude: position.coords.latitude,
+                      longitude: position.coords.longitude,                    
+                  });
+                },
+              (error) => console.log(error.message),
+              { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+              );
             this.retrieveData();
     }
 
@@ -84,22 +104,92 @@ class Book extends React.Component {
     }
 
 
-    
+    sortData(){
+        var array=[];
+        fire.database().ref("users").on('value',(snap)=>{
+           var data=snap.val();
+           var keys=Object.keys(data);
+           for(var i=0 ; i<keys.length;i++){
+               fire.database().ref("users").child(keys[i]).child("type").on('value',(snapshot)=>{
+                   var app=snapshot.val();//type of user
+                   if(app=="doctor"){
+                    fire.database().ref("users").child(keys[i]).child("name").on('value',(name)=>{
+                        var n=name.val();
+                    });
+                    fire.database().ref("users").child(keys[i]).child("email").on('value',(email)=>{
+                        var e=email.val();
+                    });
+                    fire.database().ref("users").child(keys[i]).child("Specialization").on('value',(sp)=>{
+                        var s=sp.val();
+                        if(s==this.state.search.toLowerCase()){
+                            fire.database().ref("users").child(keys[i]).child("clinicName").on('value',(result)=>{
+                                if(result.val()){
+                                    let names = Object.values(result.val());
+                                    this.setState({clinicNames:names})
+      
+                                    this.state.clinicNames.map((value,index)=>{
+                                      array.push({clinicName:value.clinic,latitude:value.latitude,longitude:value.longitude,
+                                    type:app,Specialization:sp.val(),name:name.val(),email:email.val()
+                                    });
+                                    })
+                                }
+                            }) //clinic names fire
+                        }
+                    })
+                       
+                   }//doctor if
+               })
+ 
+           }//keys for
+ 
+           var result = array.reduce((unique, o) => {
+               if(!unique.some(obj => obj.clinicName === o.clinicName )) {
+                 unique.push(o);
+               }
+               return unique;
+           },[]);
+           
+          var minDif = 99999;
+       var closest;
+     
+              result.map((location,index)=>{
+                    var lat1 = this.state.latitude * Math.PI / 180;
+                    var lat2 = location.latitude * Math.PI / 180;
+                    var lon1 = this.state.longitude * Math.PI / 180;
+                    var lon2 = location.longitude * Math.PI / 180;
+                     var R = 6371; // km
+                     var x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
+                     var y = (lat2 - lat1);
+                     var d = Math.sqrt(x * x + y * y) * R;
+                      if (d < minDif) {
+                           closest =location.clinicName;
+                            minDif = d;
+                            }
+              })
+ 
+              //alert(closest);
+              this.setState({
+               data:result,
+               nodata:false
+           })
+        })
+    }
     SearchFilterFunction () {
         if(this.state.search==""){
             alert("enter value to search about");
             this.retrieveData();
         }
         else{
-            
             if(this.state.searchParameter=="specialization"){
                 fire.database().ref("users").orderByChild('Specialization').equalTo(this.state.search.toLowerCase()).on('value',(snapshot)=>{
                     
                     if(snapshot.val()){
                         let items = Object.values(snapshot.val());
+                        
                         this.setState({
                             data:items,
-                            nodata:false
+                            nodata:false,
+                            //sort:false
                         })
                     }
                     else{
@@ -164,9 +254,7 @@ class Book extends React.Component {
         
         return(
             <Block flex style={{flex:1,backgroundColor:"#eee"}}>
-
-
-             
+   
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
@@ -174,7 +262,7 @@ class Book extends React.Component {
             
                   <Block>
              
-                  
+             <Button onPress={this.sortData}><Text>sort</Text></Button>     
                     </Block>
                     
                     <View style={{marginTop:5}}>
@@ -195,6 +283,16 @@ class Book extends React.Component {
                            
                                
             <View style={styles.itemsList}>
+            {this.state.sort1 && this.state.clinics.map((value)=>{
+                return(
+                    <View style={{flexDirection:'column'}}>
+                        <Text>{value.latitude}</Text>
+                        <Text>{value.longitude}</Text>
+                        <Text>{value.clinicName}</Text>
+
+                    </View>
+                )
+            })}
         {!this.state.nodata && this.state.data.map((item, index) => {
             if(item.type=="doctor"){
                 return(
