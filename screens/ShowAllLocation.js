@@ -76,11 +76,20 @@ class ShowAllLocation extends Component {
 
             }//keys for
            // alert(array.length);//8
+
+            var result = array.reduce((unique, o) => {
+                if(!unique.some(obj => obj.clinicName === o.clinicName )) {
+                  unique.push(o);
+                }
+                return unique;
+            },[]);
+            alert(result.length);//4
+            
            var minDif = 99999;
         var closest;
       
              // for (var index = 0; index < array.length; ++index) {
-               array.map((location,index)=>{
+               result.map((location,index)=>{
                      // alert(location.latitude+"\n"+location.longitude+"\n"+location.clinicName)//طبعهم
                      var lat1 = this.state.latitude * Math.PI / 180;
                      var lat2 = location.latitude * Math.PI / 180;
@@ -96,28 +105,15 @@ class ShowAllLocation extends Component {
                              }
                })
 
-               alert(closest);
-              
+              // alert(closest);
+               this.setState({
+                clinics:result,
+                nodata:false
+            })
+    
 
-              //  alert(d);//NaN
-            //  alert("lat="+array[index][1]+"long="+ array[index][2]);//undefined
-               // return d;
-              //  var dif = this.PythagorasEquirectangular.bind(this,this.state.latitude, this.state.longitude,array[index][1], array[index][2]);
-         //alert("1"); //طبعها
-          // if (d < minDif) {
-          //   closest =index;
-          //   minDif = dif;
-          // }
-          //alert(array[closest][0]);//undefined
-          //alert(closest);//undefined
-        // close=;
-        //}//end for loop
          })
-         this.setState({
-            clinics:array,
-            nodata:false
-        })
-
+         
         
 
          if(array.length>0){
