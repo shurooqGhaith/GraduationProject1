@@ -4,7 +4,7 @@ import fire from "../constants/firebaseConfigrations";
 const { width, height } = Dimensions.get("screen");
 import { StyleSheet, Text, View,  Alert, Dimensions,Picker } from 'react-native';
 import { Button } from "../components";
-
+import {NavigationEvents} from 'react-navigation';
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = 0.0421;
 
@@ -146,7 +146,7 @@ render () {
  // if(!this.state.clinics){this.retrieveData();}
 	return (
 		  <View style={styles.container} >
-
+<NavigationEvents onDidFocus={() => this.retrieveData()} />
 <MapView
            style={styles.mapStyle}
           initialRegion={this.state.region}
