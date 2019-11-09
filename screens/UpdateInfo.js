@@ -104,7 +104,7 @@ class UpdateInfo extends React.Component {
        
 
        fire.database().ref("users").child(this.state.id).child("name").set(this.state.username).then(()=>{
-        fire.database().ref("users").child(this.state.id).child("email").set(this.state.email);
+        // fire.database().ref("users").child(this.state.id).child("email").set(this.state.email);
         alert("Updated successfully !")
        }).catch((error)=>alert("an error happened !"))
 
