@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
 
-import {  Input } from "../components";
+import {  Button as ComponentButton } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 import {Card,Button,Icon,Header } from 'react-native-elements'; 
@@ -47,7 +47,8 @@ class Book extends React.Component {
             clinics:[],
             sort1:false,
             latitude:'',
-            longitude:''
+            longitude:'',
+            nearest:false
 
         }
     }
@@ -105,78 +106,8 @@ class Book extends React.Component {
 
 
     sortData(){
+        
         var array=[];
-    //     fire.database().ref("users").on('value',(snap)=>{
-    //        var data=snap.val();
-    //        var keys=Object.keys(data);
-    //        for(var i=0 ; i<keys.length;i++){
-    //            fire.database().ref("users").child(keys[i]).child("type").on('value',(snapshot)=>{
-    //                var app=snapshot.val();//type of user
-    //                if(app=="doctor"){
-                    
-    //                 fire.database().ref("users").child(keys[i]).child("Specialization").on('value',(sp)=>{
-    //                     var s=sp.val();
-    //                     if(s==this.state.search.toLowerCase()){
-    //                         fire.database().ref("users").child(keys[i]).child("clinicName").on('value',(result)=>{
-    //                             if(result.val()){
-    //                                 let names = Object.values(result.val());
-    //                                 this.setState({clinicNames:names})
-      
-    //                                 this.state.clinicNames.map((value,index)=>{
-    //                                     var n,e;
-    //                                     fire.database().ref("users").child(keys[i]).child("name").on('value',(name)=>{
-    //                                      n=name.val();
-    //                                     });
-    //                                     fire.database().ref("users").child(keys[i]).child("email").on('value',(email)=>{
-    //                                          e=email.val();
-    //                                     });
-    //                                   array.push({clinicName:value.clinic,latitude:value.latitude,longitude:value.longitude,
-    //                                 type:app,Specialization:sp.val(),name:n,email:e
-    //                                 });
-    //                                 })
-    //                             }
-    //                         }) //clinic names fire
-    //                     }
-    //                 })
-                       
-    //                }//doctor if
-    //            })
- 
-    //        }//keys for
- 
-    //        var result = array.reduce((unique, o) => {
-    //            if(!unique.some(obj => obj.clinicName === o.clinicName )) {
-    //              unique.push(o);
-    //            }
-    //            return unique;
-    //        },[]);
-
-           
-           
-    //       var minDif = 99999;
-    //    var closest;
-    //  alert(result.length);
-    //           result.map((location,index)=>{
-    //                 var lat1 = this.state.latitude * Math.PI / 180;
-    //                 var lat2 = location.latitude * Math.PI / 180;
-    //                 var lon1 = this.state.longitude * Math.PI / 180;
-    //                 var lon2 = location.longitude * Math.PI / 180;
-    //                  var R = 6371; // km
-    //                  var x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
-    //                  var y = (lat2 - lat1);
-    //                  var d = Math.sqrt(x * x + y * y) * R;
-    //                   if (d < minDif) {
-    //                        closest =location.clinicName;
-    //                         minDif = d;
-    //                         }
-    //           })
- 
-    //          // alert(closest);
-    //           this.setState({
-    //            data:result,
-    //            nodata:false
-    //        })
-    //     })
 
     this.state.data.map((value,index)=>{
         fire.database().ref("users").child(value.id).child("clinicName").on('value',(snap)=>{
@@ -254,7 +185,7 @@ class Book extends React.Component {
                         this.setState({
                             data:items,
                             nodata:false,
-                            //sort:false
+                            nearest:true
                         })
                     }
                     else{
@@ -327,7 +258,6 @@ class Book extends React.Component {
             
                   <Block>
              
-             <Button onPress={this.sortData}><Text>sort</Text></Button>     
                     </Block>
                     
                     <View style={{marginTop:5}}>
@@ -348,16 +278,7 @@ class Book extends React.Component {
                            
                                
             <View style={styles.itemsList}>
-            {this.state.sort1 && this.state.clinics.map((value)=>{
-                return(
-                    <View style={{flexDirection:'column'}}>
-                        <Text>{value.latitude}</Text>
-                        <Text>{value.longitude}</Text>
-                        <Text>{value.clinicName}</Text>
-
-                    </View>
-                )
-            })}
+            
         {!this.state.nodata && this.state.data.map((item, index) => {
             if(item.type=="doctor"){
                 return(
@@ -386,6 +307,10 @@ class Book extends React.Component {
             }
             
         })}
+
+        {this.state.nearest && <ComponentButton style={{width:width*0.5,marginTop:10,marginLeft:70}}  onPress={this.sortData}><Text>Nearest clinic</Text></ComponentButton>     
+}
+
       </View>
       </ScrollView>
       </Block>
