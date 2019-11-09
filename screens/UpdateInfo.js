@@ -45,6 +45,7 @@ class UpdateInfo extends React.Component {
       checked:false,
       nameEnable:false,
       emailEnable:false,
+      passwordEnable:false,
       currentPassword:'',
       newPassword:''
     }
@@ -147,7 +148,11 @@ class UpdateInfo extends React.Component {
                     enabled
                   >
                     <Block width={width * 0.8} style={{ marginBottom: 15}}>
-                    <View style={{flexDirection:'row'}}>
+                    <TouchableOpacity onPress={()=>this.setState({nameEnable:!this.state.nameEnable})}>
+                    <Text>Name</Text></TouchableOpacity>
+                    <View style={{flexDirection:'column'}}>
+                      {this.state.nameEnable && 
+                      <View>
                       <TextInput
                         placeholder="Name"
                         value={this.state.username}
@@ -156,27 +161,31 @@ class UpdateInfo extends React.Component {
                         //editable={this.state.nameEnable}
                        // underlineColorAndroid='transparent' 
                       />
-                           <View style={{marginLeft:20}}>
+                           
                            <ComponentButton
                            small
                            style={{backgroundColor:'#333'}}
                            onPress={this.update}
-                      >
+                           >
                       <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                         Save
                       </Text>  
                       </ComponentButton>
                       </View>
+                      }
                       </View>
                       
                     </Block>
                     
 
                     <Block width={width * 0.8} style={{ marginBottom: 15 }}>
-                    <View style={{flexDirection:'row'}}>
+                    <TouchableOpacity onPress={()=>this.setState({emailEnable:!this.state.emailEnable})}>
+                    <Text>Email</Text></TouchableOpacity>
 
-                      <TextInput
-                       
+                    <View style={{flexDirection:'column'}}>
+                         {this.state.emailEnable &&
+                         <View>
+                            <TextInput
                         placeholder="Email"
                         onChangeText= {email => this.setState({ email })}
                         value={this.state.email}
@@ -184,7 +193,7 @@ class UpdateInfo extends React.Component {
                         //  editable={this.state.emailEnable}
                        // underlineColorAndroid='transparent' 
                       />
-                      <View style={{marginLeft:20}}>
+                      
                       <ComponentButton
                            small
                            style={{backgroundColor:'#333'}}
@@ -195,12 +204,20 @@ class UpdateInfo extends React.Component {
                       </Text>  
                       </ComponentButton>
                       </View>
+                          }
+                      
                       </View>
                     </Block>
 
                     <Block width={width * 0.8}>
-                    
-                      <TextInput
+                    <TouchableOpacity onPress={()=>this.setState({passwordEnable:!this.state.passwordEnable})}>
+                    <Text>Password</Text>
+                    </TouchableOpacity>
+                   
+                       {this.state.passwordEnable && 
+                        <View style={{flexDirection:'column'}}>
+
+                        <TextInput
                         secureTextEntry={true}
                         autoCapitalize="none"
                         placeholder="Current Password"
@@ -227,6 +244,11 @@ class UpdateInfo extends React.Component {
                         Save
                       </Text>  
                       </ComponentButton>
+                      </View>
+
+                       }
+                      
+
                     </Block>
                     
 
