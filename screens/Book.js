@@ -106,53 +106,99 @@ class Book extends React.Component {
 
     sortData(){
         var array=[];
-        fire.database().ref("users").on('value',(snap)=>{
-           var data=snap.val();
-           var keys=Object.keys(data);
-           for(var i=0 ; i<keys.length;i++){
-               fire.database().ref("users").child(keys[i]).child("type").on('value',(snapshot)=>{
-                   var app=snapshot.val();//type of user
-                   if(app=="doctor"){
-                    fire.database().ref("users").child(keys[i]).child("name").on('value',(name)=>{
-                        var n=name.val();
-                    });
-                    fire.database().ref("users").child(keys[i]).child("email").on('value',(email)=>{
-                        var e=email.val();
-                    });
-                    fire.database().ref("users").child(keys[i]).child("Specialization").on('value',(sp)=>{
-                        var s=sp.val();
-                        if(s==this.state.search.toLowerCase()){
-                            fire.database().ref("users").child(keys[i]).child("clinicName").on('value',(result)=>{
-                                if(result.val()){
-                                    let names = Object.values(result.val());
-                                    this.setState({clinicNames:names})
+    //     fire.database().ref("users").on('value',(snap)=>{
+    //        var data=snap.val();
+    //        var keys=Object.keys(data);
+    //        for(var i=0 ; i<keys.length;i++){
+    //            fire.database().ref("users").child(keys[i]).child("type").on('value',(snapshot)=>{
+    //                var app=snapshot.val();//type of user
+    //                if(app=="doctor"){
+                    
+    //                 fire.database().ref("users").child(keys[i]).child("Specialization").on('value',(sp)=>{
+    //                     var s=sp.val();
+    //                     if(s==this.state.search.toLowerCase()){
+    //                         fire.database().ref("users").child(keys[i]).child("clinicName").on('value',(result)=>{
+    //                             if(result.val()){
+    //                                 let names = Object.values(result.val());
+    //                                 this.setState({clinicNames:names})
       
-                                    this.state.clinicNames.map((value,index)=>{
-                                      array.push({clinicName:value.clinic,latitude:value.latitude,longitude:value.longitude,
-                                    type:app,Specialization:sp.val(),name:name.val(),email:email.val()
-                                    });
-                                    })
-                                }
-                            }) //clinic names fire
-                        }
-                    })
+    //                                 this.state.clinicNames.map((value,index)=>{
+    //                                     var n,e;
+    //                                     fire.database().ref("users").child(keys[i]).child("name").on('value',(name)=>{
+    //                                      n=name.val();
+    //                                     });
+    //                                     fire.database().ref("users").child(keys[i]).child("email").on('value',(email)=>{
+    //                                          e=email.val();
+    //                                     });
+    //                                   array.push({clinicName:value.clinic,latitude:value.latitude,longitude:value.longitude,
+    //                                 type:app,Specialization:sp.val(),name:n,email:e
+    //                                 });
+    //                                 })
+    //                             }
+    //                         }) //clinic names fire
+    //                     }
+    //                 })
                        
-                   }//doctor if
-               })
+    //                }//doctor if
+    //            })
  
-           }//keys for
+    //        }//keys for
  
-           var result = array.reduce((unique, o) => {
-               if(!unique.some(obj => obj.clinicName === o.clinicName )) {
-                 unique.push(o);
-               }
-               return unique;
-           },[]);
+    //        var result = array.reduce((unique, o) => {
+    //            if(!unique.some(obj => obj.clinicName === o.clinicName )) {
+    //              unique.push(o);
+    //            }
+    //            return unique;
+    //        },[]);
+
            
-          var minDif = 99999;
+           
+    //       var minDif = 99999;
+    //    var closest;
+    //  alert(result.length);
+    //           result.map((location,index)=>{
+    //                 var lat1 = this.state.latitude * Math.PI / 180;
+    //                 var lat2 = location.latitude * Math.PI / 180;
+    //                 var lon1 = this.state.longitude * Math.PI / 180;
+    //                 var lon2 = location.longitude * Math.PI / 180;
+    //                  var R = 6371; // km
+    //                  var x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
+    //                  var y = (lat2 - lat1);
+    //                  var d = Math.sqrt(x * x + y * y) * R;
+    //                   if (d < minDif) {
+    //                        closest =location.clinicName;
+    //                         minDif = d;
+    //                         }
+    //           })
+ 
+    //          // alert(closest);
+    //           this.setState({
+    //            data:result,
+    //            nodata:false
+    //        })
+    //     })
+
+    this.state.data.map((value,index)=>{
+        fire.database().ref("users").child(value.id).child("clinicName").on('value',(snap)=>{
+            let clinics=Object.values(snap.val());
+            clinics.map((item)=>{
+                array.push({id:value.id,sp:value.Specialization,clinicName:item.clinic,latitude:item.latitude,longitude:item.longitude})
+            })
+        })
+    })
+
+        //    var result = array.reduce((unique, o) => {
+        //        if(!unique.some(obj => obj.clinicName === o.clinicName )) {
+        //          unique.push(o);
+        //        }
+        //        return unique;
+        //    },[]);
+          // alert(result.length);//طبع 3 بعد ما شال التكرار بيضل عندي 3 عيادات //when sp=general
+        //  alert(array.length);
+                  var minDif = 99999;
        var closest;
-     
-              result.map((location,index)=>{
+    
+              array.map((location,index)=>{
                     var lat1 = this.state.latitude * Math.PI / 180;
                     var lat2 = location.latitude * Math.PI / 180;
                     var lon1 = this.state.longitude * Math.PI / 180;
@@ -166,14 +212,33 @@ class Book extends React.Component {
                             minDif = d;
                             }
               })
- 
-              //alert(closest);
+
+            //  alert(closest);//safa dental clinic
+            var array2=[];
+            array.map((item,ind)=>{
+                var n,e;
+                if(item.clinicName==closest){
+                      fire.database().ref("users").child(item.id).child("name").on('value',(name)=>{
+                          n=name.val();
+                      })
+                      fire.database().ref("users").child(item.id).child("email").on('value',(email)=>{
+                        e=email.val();
+                    })
+                    array2.push({name:n,email:e,id:item.id,Specialization:item.sp,type:"doctor"})
+                }
+              })
+
+            //  alert(array2.length);//1
+
               this.setState({
-               data:result,
-               nodata:false
-           })
-        })
+                  data:array2,
+                  nodata:false
+              })
+
+
     }
+
+
     SearchFilterFunction () {
         if(this.state.search==""){
             alert("enter value to search about");
