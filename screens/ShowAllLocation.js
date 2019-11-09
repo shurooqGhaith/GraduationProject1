@@ -249,10 +249,7 @@ render () {
  // if(!this.state.clinics){this.retrieveData();}
 	return (
 		  <View style={styles.container} >
-<NavigationEvents onDidFocus={() =>{
-if(!this.state.clinics){this.retrieveData()}
-}
- } />
+<NavigationEvents onDidFocus={() =>this.retrieveData()} />
 <MapView
            style={styles.mapStyle}
           initialRegion={this.state.region}
