@@ -12,8 +12,10 @@ import {
   TextInput
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
-
-import { Button, Icon, Input } from "../components";
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import firebase from 'firebase';
+import { Button as ComponentButton, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 import * as Facebook from 'expo-facebook';
@@ -30,6 +32,8 @@ class UpdateInfo extends React.Component {
     this.authListener=this.authListener.bind(this);
     this.edit=this.edit.bind(this);
     this.update=this.update.bind(this);
+    this.reauthenticate=this.reauthenticate.bind(this);
+    this.changePassword=this.changePassword.bind(this);
     this.state={
         id:'',
         type:'',
@@ -39,7 +43,9 @@ class UpdateInfo extends React.Component {
       errorMessage:null,
       checked:false,
       nameEnable:false,
-      emailEnable:false
+      emailEnable:false,
+      currentPassword:'',
+      newPassword:''
     }
   }
   
@@ -70,14 +76,33 @@ class UpdateInfo extends React.Component {
     }
   
 
+    reauthenticate = (currentPassword) => {
+        var user = fire.auth().currentUser;
+        var cred = firebase.auth.EmailAuthProvider.credential(
+            user.email, currentPassword);
+        return user.reauthenticateWithCredential(cred);
+        
+      }
+
     edit(){
         this.setState({
             nameEnable:true,
             emailEnable:true
         })
     }
+    changePassword(){
+
+        this.reauthenticate(this.state.currentPassword).then(() => {
+            var user = fire.auth().currentUser;
+            user.updatePassword(this.state.newPassword).then(() => {
+             alert("Password updated!");
+            }).catch((error) => { alert(error); });
+          }).catch((error) => {alert(error); });
+    }
     update(){
        // alert("name:"+this.state.username+"\n"+"-email:"+this.state.email)
+       
+
        fire.database().ref("users").child(this.state.id).child("name").set(this.state.username).then(()=>{
         fire.database().ref("users").child(this.state.id).child("email").set(this.state.email);
         alert("Updated successfully !")
@@ -115,7 +140,8 @@ class UpdateInfo extends React.Component {
                     behavior="padding"
                     enabled
                   >
-                    <Block width={width * 0.8} style={{ marginBottom: 15 }}>
+                    <Block width={width * 0.8} style={{ marginBottom: 15}}>
+                     
                       <TextInput
                         borderless
                         placeholder="Name"
@@ -125,12 +151,15 @@ class UpdateInfo extends React.Component {
                         editable={this.state.nameEnable}
                         underlineColorAndroid='transparent' 
                       />
+
+                          
+                      
                     </Block>
                     
 
                     <Block width={width * 0.8} style={{ marginBottom: 15 }}>
                       <TextInput
-                        borderless
+                       // borderless
                         placeholder="Email"
                         onChangeText= {email => this.setState({ email })}
                         value={this.state.email}
@@ -140,21 +169,24 @@ class UpdateInfo extends React.Component {
                       />
                     </Block>
                     <Block width={width * 0.8}>
-                      <Input
-                        password
-                        borderless
-                        placeholder="Password"
-                        value={this.state.password}
-                        onChangeText={password => this.setState({ password })}
-                        iconContent={
-                          <Icon
-                            size={16}
-                            color={argonTheme.COLORS.ICON}
-                            name="padlock-unlocked"
-                            family="ArgonExtra"
-                            style={styles.inputIcons}
-                          />
-                        }
+                      <TextInput
+                        secureTextEntry={true}
+                        autoCapitalize="none"
+                        placeholder="Current Password"
+                        value={this.state.currentPassword}
+                        onChangeText={password => this.setState({currentPassword: password })}
+                        style={styles.TextInputStyle}
+                      />
+                        
+                    </Block>
+                    <Block width={width * 0.8}>
+                      <TextInput
+                        secureTextEntry={true}
+                        autoCapitalize="none"
+                        placeholder="New Password"
+                        value={this.state.newPassword}
+                        onChangeText={password => this.setState({newPassword: password })}
+                        style={styles.TextInputStyle}
                       />
                         
                     </Block>
@@ -166,20 +198,30 @@ class UpdateInfo extends React.Component {
                     
                     </Block>
 
-
                     <Block middle>
-                      <Button
+                      <ComponentButton
+                       onPress={this.changePassword}
+                       color="success" 
+                       style={styles.createButton}>
+                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                          change password
+                        </Text>
+                      </ComponentButton>
+                    </Block>
+                    
+                    <Block middle>
+                      <ComponentButton
                        onPress={this.edit}
                        color="success" 
                        style={styles.createButton}>
                         <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                           Edit
                         </Text>
-                      </Button>
+                      </ComponentButton>
                     </Block>
                     <Block middle>
                       
-                      <Button
+                      <ComponentButton
                         style={styles.createButton}
                         color="success"
                         onPress={this.update}
@@ -187,7 +229,7 @@ class UpdateInfo extends React.Component {
                       <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                         Update
                       </Text>  
-                      </Button>
+                      </ComponentButton>
                     </Block>
                     
                   </KeyboardAvoidingView>
@@ -221,9 +263,9 @@ const styles = StyleSheet.create({
   TextInputStyle: {  
     textAlign: 'center',  
     height: 40,  
-    borderRadius: 10,  
-    borderWidth: 2,  
-    borderColor: '#009688',  
+    // borderRadius: 10,  
+    // borderWidth: 2,  
+    // borderColor: '#009688',  
     marginBottom: 10  
 }  ,
   socialConnect: {

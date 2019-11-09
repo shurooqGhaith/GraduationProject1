@@ -38,7 +38,8 @@ class Login extends React.Component {
         //alert(datasnapshot.val());
         name=datasnapshot.val();
    
-      })
+      });
+      this.setState({errorMessage:''});
       if(name ==="doctor"){this.props.navigation.navigate('Profile',{id:id})}
       if(name =="patient"){this.props.navigation.navigate('PatientProfile')}
     })
