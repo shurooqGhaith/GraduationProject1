@@ -33,6 +33,8 @@ class SearchAboutTime extends React.Component {
         this.handleTimePicked=this.handleTimePicked.bind(this);
         this.filterResult=this.filterResult.bind(this);
         this.search=this.search.bind(this);
+
+        this.makeEmpty=this.makeEmpty.bind(this);
         this.state={
             data:[],
             DrInfo:[],
@@ -244,7 +246,7 @@ class SearchAboutTime extends React.Component {
       this.setState({
         timeToSearch:timeSelected
       })
-    alert(this.state.timeToSearch);
+    //alert(this.state.timeToSearch);
 
     this.hideDateTimePicker();
     }
@@ -304,7 +306,7 @@ if(dayName==6){
            this.setState({
             dateToSearch:day + '-' + month + '-' + year
            })
-            alert(this.state.dateToSearch);
+           // alert(this.state.dateToSearch);
            this.hideDatePicker();
         }
 
@@ -315,6 +317,15 @@ if(dayName==6){
         showDatePicker = () => {
             this.setState({ dateVisible: true });
           };
+
+          makeEmpty(){
+            this.setState({
+              data:[],
+              dateToSearch:'',
+              timeToSearch:'',
+              nodata:true
+            })
+          }
     render(){
         
         return(
@@ -369,7 +380,7 @@ if(dayName==6){
                     </ComponentButton>
                                <DateTimePicker
                        isVisible={this.state.dateTimeVisible}
-                       onConfirm={this.search}
+                       onConfirm={(t)=>this.search(t)}
                        onCancel={this.hideDateTimePicker}
                        mode='time'
                       //datePickerModeAndroid={'calendar'}
@@ -476,6 +487,7 @@ if(dayName==6){
                                                            });
                                                     alert("success !");
                                                    // this.search(this.state.timeToSearch); 
+                                                   this.makeEmpty();
                                                  }
                                                        }
                                       icon={<Icon name='code' color='#ffffff' />}
@@ -524,6 +536,7 @@ if(dayName==6){
                                                 'available':false
                                                            });
                                                     alert("success !");
+                                                    this.makeEmpty();
                                                     //this.search(this.state.timeToSearch);
                                                  }
                                                        }
