@@ -18,8 +18,8 @@ import firebase from 'firebase';
 import { Button as ComponentButton, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
-import * as Facebook from 'expo-facebook';
-
+import Panel from 'react-native-panel';
+ 
 const { width, height } = Dimensions.get("screen");
 
 
@@ -34,6 +34,7 @@ class UpdateInfo extends React.Component {
     this.update=this.update.bind(this);
     this.reauthenticate=this.reauthenticate.bind(this);
     this.changePassword=this.changePassword.bind(this);
+    this.changeEmail=this.changeEmail.bind(this);
     this.state={
         id:'',
         type:'',
@@ -99,6 +100,15 @@ class UpdateInfo extends React.Component {
             }).catch((error) => { alert(error); });
           }).catch((error) => {alert(error); });
     }
+    changeEmail = () => {
+        this.reauthenticate(this.state.currentPassword).then(() => {
+          var user = fire.auth().currentUser;
+          user.updateEmail(this.state.email).then(() => {
+            alert("Email updated!");
+          }).catch((error) => { alert(error); });
+        }).catch((error) => { alert(error); });
+      }
+
     update(){
        // alert("name:"+this.state.username+"\n"+"-email:"+this.state.email)
        
@@ -109,24 +119,20 @@ class UpdateInfo extends React.Component {
        }).catch((error)=>alert("an error happened !"))
 
     }
+    
+
   render() {
     return (
       <Block flex middle>
         <StatusBar hidden />
-        <ImageBackground
-          source={Images.RegisterBackground}
-          style={{ width, height, zIndex: 1 }}
-        >
+        
           <Block flex middle>
-            <Block style={styles.registerContainer}>
-              <Block flex={0.25} middle style={styles.socialConnect}>
-                <Text color="#8898AA" size={12}>
+            <Block >
+              <Block flex={0.25} middle >
+                <Text  size={12}>
                   Your Information
                 </Text>
-                <Block row style={{ marginTop: theme.SIZES.BASE }}>
-                  
-                 
-                </Block>
+                
               </Block>
               <Block flex>
                 
@@ -141,34 +147,59 @@ class UpdateInfo extends React.Component {
                     enabled
                   >
                     <Block width={width * 0.8} style={{ marginBottom: 15}}>
-                     
+                    <View style={{flexDirection:'row'}}>
                       <TextInput
-                        borderless
                         placeholder="Name"
                         value={this.state.username}
                         onChangeText={username => this.setState({username})}
                         style={styles.TextInputStyle}
-                        editable={this.state.nameEnable}
-                        underlineColorAndroid='transparent' 
+                        //editable={this.state.nameEnable}
+                       // underlineColorAndroid='transparent' 
                       />
-
-                          
+                           <View style={{marginLeft:20}}>
+                           <ComponentButton
+                           small
+                           style={{backgroundColor:'#333'}}
+                           onPress={this.update}
+                      >
+                      <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                        Save
+                      </Text>  
+                      </ComponentButton>
+                      </View>
+                      </View>
                       
                     </Block>
                     
 
                     <Block width={width * 0.8} style={{ marginBottom: 15 }}>
+                    <View style={{flexDirection:'row'}}>
+
                       <TextInput
-                       // borderless
+                       
                         placeholder="Email"
                         onChangeText= {email => this.setState({ email })}
                         value={this.state.email}
                         style={styles.TextInputStyle}
-                        editable={this.state.emailEnable}
-                        underlineColorAndroid='transparent' 
+                        //  editable={this.state.emailEnable}
+                       // underlineColorAndroid='transparent' 
                       />
+                      <View style={{marginLeft:20}}>
+                      <ComponentButton
+                           small
+                           style={{backgroundColor:'#333'}}
+                           onPress={this.changeEmail}
+                      >
+                      <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                        Save
+                      </Text>  
+                      </ComponentButton>
+                      </View>
+                      </View>
                     </Block>
+
                     <Block width={width * 0.8}>
+                    
                       <TextInput
                         secureTextEntry={true}
                         autoCapitalize="none"
@@ -178,8 +209,7 @@ class UpdateInfo extends React.Component {
                         style={styles.TextInputStyle}
                       />
                         
-                    </Block>
-                    <Block width={width * 0.8}>
+                    
                       <TextInput
                         secureTextEntry={true}
                         autoCapitalize="none"
@@ -188,49 +218,20 @@ class UpdateInfo extends React.Component {
                         onChangeText={password => this.setState({newPassword: password })}
                         style={styles.TextInputStyle}
                       />
-                        
-                    </Block>
-                    <Block width={width * 0.8} style={{ marginBottom: 15 }}>
-                    
-                    </Block>
-
-                    <Block middle>
-                    
-                    </Block>
-
-                    <Block middle>
-                      <ComponentButton
-                       onPress={this.changePassword}
-                       color="success" 
-                       style={styles.createButton}>
-                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
-                          change password
-                        </Text>
-                      </ComponentButton>
-                    </Block>
-                    
-                    <Block middle>
-                      <ComponentButton
-                       onPress={this.edit}
-                       color="success" 
-                       style={styles.createButton}>
-                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
-                          Edit
-                        </Text>
-                      </ComponentButton>
-                    </Block>
-                    <Block middle>
-                      
-                      <ComponentButton
-                        style={styles.createButton}
-                        color="success"
-                        onPress={this.update}
+                        <ComponentButton
+                           small
+                           style={{backgroundColor:'#333'}}
+                           onPress={this.changePassword}
                       >
                       <Text bold size={14} color={argonTheme.COLORS.WHITE}>
-                        Update
+                        Save
                       </Text>  
                       </ComponentButton>
                     </Block>
+                    
+
+                    
+                    
                     
                   </KeyboardAvoidingView>
                 </Block>
@@ -238,13 +239,20 @@ class UpdateInfo extends React.Component {
               </Block>
             </Block>
           </Block>
-        </ImageBackground>
       </Block>
     );
   }
 }
 
 const styles = StyleSheet.create({
+    firstHeader: {
+        marginHorizontal: 10,
+        backgroundColor: 'gray',
+        alignItems: 'center',
+        justifyContent: 'center',
+        // borderRadius: 15,
+        height: 50,
+      },
   registerContainer: {
     width: width * 0.9,
     height: height * 0.78,
@@ -258,7 +266,12 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOpacity: 0.1,
     elevation: 1,
-    overflow: "hidden"
+    //overflow: "hidden"
+  },
+  firstHeaderContainer:{
+      backgroundColor:'#ccc',
+      overflow:"hidden",
+      height:height*0.5
   },
   TextInputStyle: {  
     textAlign: 'center',  
@@ -302,7 +315,7 @@ const styles = StyleSheet.create({
   createButton: {
     width: width * 0.5,
     marginTop: 25,
-    borderRadius:15
+    borderRadius:15,
   }
 });
 
