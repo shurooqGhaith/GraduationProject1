@@ -12,8 +12,7 @@ import {
   TextInput
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
-import { Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Icon } from 'react-native-elements';
 import firebase from 'firebase';
 import { Button as ComponentButton, Input } from "../components";
 import { Images, argonTheme } from "../constants";
@@ -148,8 +147,22 @@ class UpdateInfo extends React.Component {
                     enabled
                   >
                     <Block width={width * 0.8} style={{ marginBottom: 15}}>
-                    <TouchableOpacity onPress={()=>this.setState({nameEnable:!this.state.nameEnable})}>
-                    <Text>Name</Text></TouchableOpacity>
+                    <TouchableOpacity 
+                    style={{
+                        flexDirection: 'row',
+    alignItems: 'stretch',
+    alignSelf: 'stretch'
+                    }}
+                    onPress={()=>this.setState({nameEnable:!this.state.nameEnable})}>
+                    <View style={{flex: 1,
+                          flexDirection: 'row',
+                        alignItems: 'stretch',
+                        alignSelf: 'stretch'}}>
+                    <Text size={25}>Name</Text>
+                    <Icon  style={{marginLeft:20,marginTop:2,alignItems:'flex-end'}} name="chevron-down" type="font-awesome" size={20} />
+
+                    </View>
+                    </TouchableOpacity>
                     <View style={{flexDirection:'column'}}>
                       {this.state.nameEnable && 
                       <View>
