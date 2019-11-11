@@ -12,7 +12,7 @@ import {
   TextInput
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
-import { Icon } from 'react-native-elements';
+import { Icon,Divider } from 'react-native-elements';
 import firebase from 'firebase';
 import { Button as ComponentButton, Input } from "../components";
 import { Images, argonTheme } from "../constants";
@@ -101,12 +101,14 @@ class UpdateInfo extends React.Component {
           }).catch((error) => {alert(error); });
     }
     changeEmail = () => {
+        //alert("change email method !");
         this.reauthenticate(this.state.currentPassword).then(() => {
           var user = fire.auth().currentUser;
           user.updateEmail(this.state.email).then(() => {
+            fire.database().ref("users").child(this.state.id).child("email").set(this.state.email);
             alert("Email updated!");
-          }).catch((error) => { alert(error); });
-        }).catch((error) => { alert(error); });
+          }).catch((error) => { console.log(error); });
+        }).catch((error) => { console.log(error); });
       }
 
     update(){
@@ -114,26 +116,22 @@ class UpdateInfo extends React.Component {
        
 
        fire.database().ref("users").child(this.state.id).child("name").set(this.state.username).then(()=>{
-        // fire.database().ref("users").child(this.state.id).child("email").set(this.state.email);
+        
         alert("Updated successfully !")
        }).catch((error)=>alert("an error happened !"))
+
 
     }
     
 
   render() {
     return (
-      <Block flex middle>
+      <Block style={{backgroundColor:'#eee'}} flex middle>
         <StatusBar hidden />
         
-          <Block flex middle>
+         
             <Block >
-              <Block flex={0.25} middle >
-                <Text  size={12}>
-                  Your Information
-                </Text>
-                
-              </Block>
+             
               <Block flex>
                 
                 <ScrollView 
@@ -141,29 +139,25 @@ class UpdateInfo extends React.Component {
                 style={{ width:width*0.9, marginTop: '25%' }}
                 >
                 <Block flex center>
+               
+                    
                   <KeyboardAvoidingView
                     style={{ flex: 1 }}
                     behavior="padding"
                     enabled
                   >
-                    <Block width={width * 0.8} style={{ marginBottom: 15}}>
-                    <TouchableOpacity 
-                    style={{
-                        flexDirection: 'row',
-    alignItems: 'stretch',
-    alignSelf: 'stretch'
-                    }}
-                    onPress={()=>this.setState({nameEnable:!this.state.nameEnable})}>
-                    <View style={{flex: 1,
-                          flexDirection: 'row',
-                        alignItems: 'stretch',
-                        alignSelf: 'stretch'}}>
-                    <Text size={25}>Name</Text>
-                    <Icon  style={{marginLeft:20,marginTop:2,alignItems:'flex-end'}} name="chevron-down" type="font-awesome" size={20} />
+                   <Text style={{alignContent:'center',marginLeft:80}}  size={20} bold>
+                  Edit Your Information
+                </Text>
+                <Divider style={{backgroundColor:'#444',width:width}}/>
 
-                    </View>
+                    <Block  width={width * 0.8} style={{ marginBottom: 15,marginTop:50}}>
+                    <TouchableOpacity 
+                    onPress={()=>this.setState({nameEnable:!this.state.nameEnable})}>
+                    <Text style={{marginLeft:20}} size={20}>Edit Name</Text>
+
                     </TouchableOpacity>
-                    <View style={{flexDirection:'column'}}>
+                    <View style={{flexDirection:'column',alignItems:'center'}}>
                       {this.state.nameEnable && 
                       <View>
                       <TextInput
@@ -174,61 +168,79 @@ class UpdateInfo extends React.Component {
                         //editable={this.state.nameEnable}
                        // underlineColorAndroid='transparent' 
                       />
-                           
-                           <ComponentButton
+                      
+                          
+                             <ComponentButton
                            small
-                           style={{backgroundColor:'#333'}}
+                           style={{backgroundColor:'#333',marginLeft:50}}
                            onPress={this.update}
-                           >
+                      >
                       <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                         Save
                       </Text>  
-                      </ComponentButton>
+                      </ComponentButton>        
                       </View>
+                      
+                     
                       }
                       </View>
                       
                     </Block>
-                    
+                    <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
+                    <Block  width={width * 0.8} style={{ marginBottom: 15,marginTop:30}}>
+                    <TouchableOpacity 
+                    onPress={()=>this.setState({emailEnable:!this.state.emailEnable})}>
+                    <Text style={{marginLeft:20}} size={20}>Edit Email</Text>
 
-                    <Block width={width * 0.8} style={{ marginBottom: 15 }}>
-                    <TouchableOpacity onPress={()=>this.setState({emailEnable:!this.state.emailEnable})}>
-                    <Text>Email</Text></TouchableOpacity>
-
-                    <View style={{flexDirection:'column'}}>
-                         {this.state.emailEnable &&
-                         <View>
-                            <TextInput
+                    </TouchableOpacity>
+                    <View style={{flexDirection:'column',alignItems:'center'}}>
+                      {this.state.emailEnable && 
+                      <View>
+                      
+                      <TextInput
+                        secureTextEntry={true}
+                        autoCapitalize="none"
+                        placeholder="Current Password"
+                        value={this.state.currentPassword}
+                        onChangeText={password => this.setState({currentPassword: password })}
+                        style={styles.TextInputStyle}
+                      />
+                      <TextInput
                         placeholder="Email"
                         onChangeText= {email => this.setState({ email })}
                         value={this.state.email}
                         style={styles.TextInputStyle}
+                        keyboardType='email-address'
                         //  editable={this.state.emailEnable}
                        // underlineColorAndroid='transparent' 
-                      />
-                      
-                      <ComponentButton
+                      />     
+                             <ComponentButton
                            small
-                           style={{backgroundColor:'#333'}}
+                           style={{backgroundColor:'#333',marginLeft:50}}
                            onPress={this.changeEmail}
                       >
                       <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                         Save
                       </Text>  
-                      </ComponentButton>
+                      </ComponentButton>        
                       </View>
-                          }
                       
+                     
+                      }
                       </View>
+                      
                     </Block>
+                    
+                    <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
 
-                    <Block width={width * 0.8}>
+                    <Block width={width * 0.8} style={{marginTop:30,marginBottom: 15}}>
                     <TouchableOpacity onPress={()=>this.setState({passwordEnable:!this.state.passwordEnable})}>
-                    <Text>Password</Text>
+                    <Text style={{marginLeft:20}} size={20}> Change Password</Text>
                     </TouchableOpacity>
-                   
+                    <View style={{flexDirection:'column',alignItems:'center'}}>
+
                        {this.state.passwordEnable && 
-                        <View style={{flexDirection:'column'}}>
+                        <View >
 
                         <TextInput
                         secureTextEntry={true}
@@ -250,7 +262,7 @@ class UpdateInfo extends React.Component {
                       />
                         <ComponentButton
                            small
-                           style={{backgroundColor:'#333'}}
+                           style={{backgroundColor:'#333',marginLeft:50}}
                            onPress={this.changePassword}
                       >
                       <Text bold size={14} color={argonTheme.COLORS.WHITE}>
@@ -261,9 +273,10 @@ class UpdateInfo extends React.Component {
 
                        }
                       
-
+                </View>
                     </Block>
-                    
+                    <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
+
 
                     
                     
@@ -273,7 +286,7 @@ class UpdateInfo extends React.Component {
                 </ScrollView>
               </Block>
             </Block>
-          </Block>
+          
       </Block>
     );
   }
@@ -309,12 +322,16 @@ const styles = StyleSheet.create({
       height:height*0.5
   },
   TextInputStyle: {  
-    textAlign: 'center',  
     height: 40,  
-    // borderRadius: 10,  
-    // borderWidth: 2,  
-    // borderColor: '#009688',  
-    marginBottom: 10  
+     borderRadius: 5,  
+     borderWidth: 0.5,  
+     borderColor: '#000',  
+    marginBottom: 10 ,
+    marginTop:10 ,
+    alignContent:'center',
+    paddingLeft:20,
+    width:width*.8,
+    marginLeft:50
 }  ,
   socialConnect: {
     backgroundColor: argonTheme.COLORS.WHITE,
