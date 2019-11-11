@@ -69,8 +69,6 @@ class UpdateInfo extends React.Component {
         fire.database().ref("users").child(id).child("email").on('value',(email)=>{
             this.setState({email:email.val()})
         })
-
-
     }
    
   
@@ -155,6 +153,7 @@ class UpdateInfo extends React.Component {
                     <TouchableOpacity 
                     onPress={()=>this.setState({nameEnable:!this.state.nameEnable})}>
                     <Text style={{marginLeft:20}} size={20}>Edit Name</Text>
+                    <Text style={{marginLeft:80,color:'#888'}} size={20}>{this.state.username}</Text>
 
                     </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
@@ -191,6 +190,7 @@ class UpdateInfo extends React.Component {
                     <TouchableOpacity 
                     onPress={()=>this.setState({emailEnable:!this.state.emailEnable})}>
                     <Text style={{marginLeft:20}} size={20}>Edit Email</Text>
+                    <Text style={{marginLeft:40,color:'#888'}} size={20}>{this.state.email}</Text>
 
                     </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>

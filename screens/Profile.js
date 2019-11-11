@@ -183,7 +183,7 @@ backgroundColor='#fff'
                     <Button
                       small
                       style={{ backgroundColor: argonTheme.COLORS.INFO }}
-                      onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
+                      onPress={()=> this.props.navigation.navigate("UpdateInfo",{id:this.state.id,type:'doctor'})}
                     >
                       Edit
                     </Button>

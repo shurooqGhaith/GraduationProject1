@@ -172,7 +172,7 @@ class PatientProfile extends React.Component {
 backgroundColor='#fff'
   leftComponent={{ icon: 'home', color: '#000' }}
   centerComponent={<Text style={{color:'#000'}}>{this.state.username}</Text>}
-  rightComponent={<TouchableOpacity style={{backgroundColor:'#fff'}} small onPress={()=>this.props.navigation.navigate("Login")}><Text style={{color:'#000'}}>Logout</Text></TouchableOpacity>}
+  rightComponent={<TouchableOpacity style={{backgroundColor:'#fff'}} small onPress={()=>fire.auth().signOut()}><Text style={{color:'#000'}}>Logout</Text></TouchableOpacity>}
 />
           </Block>
 

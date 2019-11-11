@@ -7,16 +7,36 @@ import {
   Dimensions
 } from "react-native";
 import { Block, Button, Text, theme } from "galio-framework";
-
+import fire from "../constants/firebaseConfigrations";
 const { height, width } = Dimensions.get("screen");
+import PatientProfile from "../screens/PatientProfile";
 
 import argonTheme from "../constants/Theme";
 import Images from "../constants/Images";
 
 class Onboarding extends React.Component {
+  
+  state={
+    authenticated:false
+  }
+  
+  componentDidMount(){
+    fire.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({  authenticated: true });
+        console.log(user);
+      } else {
+        this.setState({ authenticated: false });
+      }
+    });
+  }
+
   render() {
     const { navigation } = this.props;
 
+    if (this.state.authenticated) {
+      return <PatientProfile/>;
+    }
     return (
       <Block flex style={styles.container}>
         <StatusBar hidden />
