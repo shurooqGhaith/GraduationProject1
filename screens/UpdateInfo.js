@@ -9,7 +9,8 @@ import {
   CheckBox,
   ScrollView,
   TouchableOpacity ,
-  TextInput
+  TextInput,
+  ToastAndroid
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
 import { Icon,Divider } from 'react-native-elements';
@@ -20,7 +21,19 @@ import fire from "../constants/firebaseConfigrations";
 import Panel from 'react-native-panel';
  
 const { width, height } = Dimensions.get("screen");
-
+const Toast = (props) => {
+    if (props.visible) {
+      ToastAndroid.showWithGravityAndOffset(
+        props.message,
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      );
+      return null;
+    }
+    return null;
+  };
 
 
 class UpdateInfo extends React.Component {
@@ -34,10 +47,12 @@ class UpdateInfo extends React.Component {
     this.reauthenticate=this.reauthenticate.bind(this);
     this.changePassword=this.changePassword.bind(this);
     this.changeEmail=this.changeEmail.bind(this);
+    this.updateSpecialization=this.updateSpecialization.bind(this);
     this.state={
         id:'',
         type:'',
       username:'',
+      name:'',
       email:'',
       password:'',
       errorMessage:null,
@@ -46,7 +61,14 @@ class UpdateInfo extends React.Component {
       emailEnable:false,
       passwordEnable:false,
       currentPassword:'',
-      newPassword:''
+      newPassword:'',
+      Specialization:'',
+      SpecializationEnable:false,
+      sp:'',
+      isShow:false,
+      isShowEmail:false,
+      isShowPass:false,
+      isShowSpecialization:false
     }
   }
   
@@ -62,13 +84,17 @@ class UpdateInfo extends React.Component {
         id:id,
         type:type
     })
-    if(type=='patient'){
+   
         fire.database().ref("users").child(id).child("name").on('value',(name)=>{
-            this.setState({username:name.val()})
+            this.setState({username:name.val(),name:name.val()})
         })
         fire.database().ref("users").child(id).child("email").on('value',(email)=>{
             this.setState({email:email.val()})
         })
+        if(type=='doctor'){
+            fire.database().ref("users").child(id).child("Specialization").on('value',(sp)=>{
+                this.setState({Specialization:sp.val(),sp:sp.val()})
+            })
     }
    
   
@@ -94,7 +120,11 @@ class UpdateInfo extends React.Component {
         this.reauthenticate(this.state.currentPassword).then(() => {
             var user = fire.auth().currentUser;
             user.updatePassword(this.state.newPassword).then(() => {
-             alert("Password updated!");
+             //alert("Password updated!");
+             this.setState({isShowPass:true,name:this.state.username});
+        setTimeout(function(){
+            this.setState({isShowPass:false});
+       }.bind(this),5000);
             }).catch((error) => { alert(error); });
           }).catch((error) => {alert(error); });
     }
@@ -104,7 +134,12 @@ class UpdateInfo extends React.Component {
           var user = fire.auth().currentUser;
           user.updateEmail(this.state.email).then(() => {
             fire.database().ref("users").child(this.state.id).child("email").set(this.state.email);
-            alert("Email updated!");
+            //alert("Email updated!");
+            this.setState({isShowEmail:true,name:this.state.username});
+        setTimeout(function(){
+            this.setState({isShowEmail:false});
+       }.bind(this),5000);
+
           }).catch((error) => { console.log(error); });
         }).catch((error) => { console.log(error); });
       }
@@ -114,13 +149,25 @@ class UpdateInfo extends React.Component {
        
 
        fire.database().ref("users").child(this.state.id).child("name").set(this.state.username).then(()=>{
-        
-        alert("Updated successfully !")
+        this.setState({isShow:true,name:this.state.username});
+        setTimeout(function(){
+            this.setState({isShow:false});
+       }.bind(this),5000);
+        //alert("Updated successfully !")
        }).catch((error)=>alert("an error happened !"))
 
 
     }
+    updateSpecialization(){
+        fire.database().ref("users").child(this.state.id).child("Specialization").set(this.state.Specialization).then(()=>{
+            this.setState({isShowSpecialization:true,sp:this.state.Specialization});
+            setTimeout(function(){
+                this.setState({isShowSpecialization:false});
+           }.bind(this),5000);
+            //alert("Updated successfully !")
+           }).catch((error)=>alert("an error happened !"))
     
+    }
 
   render() {
     return (
@@ -152,8 +199,14 @@ class UpdateInfo extends React.Component {
                     <Block  width={width * 0.8} style={{ marginBottom: 15,marginTop:50}}>
                     <TouchableOpacity 
                     onPress={()=>this.setState({nameEnable:!this.state.nameEnable})}>
-                    <Text style={{marginLeft:20}} size={20}>Edit Name</Text>
-                    <Text style={{marginLeft:80,color:'#888'}} size={20}>{this.state.username}</Text>
+                    <Text style={{marginLeft:20}} size={15}>Edit Name
+                    <Text style={{marginLeft:100,color:'#888'}} size={15}>
+                    {"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"
+                    +this.state.name}
+                    </Text>
+
+                    </Text>
+                    
 
                     </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
@@ -177,7 +230,8 @@ class UpdateInfo extends React.Component {
                       <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                         Save
                       </Text>  
-                      </ComponentButton>        
+                      </ComponentButton>  
+                      <Toast visible={this.state.isShow} message="Name is Updated successfully"/>      
                       </View>
                       
                      
@@ -189,8 +243,10 @@ class UpdateInfo extends React.Component {
                     <Block  width={width * 0.8} style={{ marginBottom: 15,marginTop:30}}>
                     <TouchableOpacity 
                     onPress={()=>this.setState({emailEnable:!this.state.emailEnable})}>
-                    <Text style={{marginLeft:20}} size={20}>Edit Email</Text>
-                    <Text style={{marginLeft:40,color:'#888'}} size={20}>{this.state.email}</Text>
+                    <Text style={{marginLeft:20}} size={15}>Edit Email
+                    <Text style={{marginLeft:100,color:'#888'}} size={11}>
+                    {"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"+this.state.email}</Text>
+</Text>
 
                     </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
@@ -222,7 +278,9 @@ class UpdateInfo extends React.Component {
                       <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                         Save
                       </Text>  
-                      </ComponentButton>        
+                      </ComponentButton>    
+                      <Toast visible={this.state.isShowEmail} message="Email is Updated successfully"/>      
+    
                       </View>
                       
                      
@@ -235,7 +293,7 @@ class UpdateInfo extends React.Component {
 
                     <Block width={width * 0.8} style={{marginTop:30,marginBottom: 15}}>
                     <TouchableOpacity onPress={()=>this.setState({passwordEnable:!this.state.passwordEnable})}>
-                    <Text style={{marginLeft:20}} size={20}> Change Password</Text>
+                    <Text style={{marginLeft:20}} size={15}> Change Password</Text>
                     </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
 
@@ -269,6 +327,8 @@ class UpdateInfo extends React.Component {
                         Save
                       </Text>  
                       </ComponentButton>
+                      <Toast visible={this.state.isShowPass} message="Password is changed successfully"/>      
+
                       </View>
 
                        }
@@ -277,9 +337,49 @@ class UpdateInfo extends React.Component {
                     </Block>
                     <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
 
+                    {this.state.type=="doctor" &&
+                    <Block width={width * 0.8} style={{marginTop:30,marginBottom: 15}}>
+                    <TouchableOpacity onPress={()=>this.setState({SpecializationEnable:!this.state.SpecializationEnable})}>
+                    <Text style={{marginLeft:20}} size={15}>Edit Specialization
+                    <Text style={{marginLeft:100,color:'#888'}} size={11}>
+                    {"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"+this.state.sp}</Text>
+</Text>                    </TouchableOpacity>
+                    <View style={{flexDirection:'column',alignItems:'center'}}>
 
+                       {this.state.SpecializationEnable && 
+                        <View >
+
+                        <TextInput
+                        
+                        autoCapitalize="none"
+                        placeholder="new Specialization"
+                        value={this.state.Specialization}
+                        onChangeText={Specialization => this.setState({Specialization: Specialization })}
+                        style={styles.TextInputStyle}
+                      />
+                        
                     
-                    
+                     
+                        <ComponentButton
+                           small
+                           style={{backgroundColor:'#333',marginLeft:50}}
+                           onPress={this.updateSpecialization}
+                      >
+                      <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                        Save
+                      </Text>  
+                      </ComponentButton>
+                      <Toast visible={this.state.isShowSpecialization} message="Specialization is changed successfully"/>      
+
+                      </View>
+
+                       }
+                      
+                </View>
+                    </Block>
+                    }
+                    <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
+   
                     
                   </KeyboardAvoidingView>
                 </Block>

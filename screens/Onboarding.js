@@ -21,22 +21,23 @@ class Onboarding extends React.Component {
   }
   
   componentDidMount(){
-    fire.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.setState({  authenticated: true });
-        console.log(user);
-      } else {
-        this.setState({ authenticated: false });
-      }
-    });
+    // fire.auth().onAuthStateChanged((user) => {
+    //   if (user) {
+    //     this.setState({  authenticated: true });
+    //     console.log(user);
+    //   } else {
+    //     this.setState({ authenticated: false });
+    //   }
+    // });
   }
 
   render() {
     const { navigation } = this.props;
 
-    if (this.state.authenticated) {
-      return <PatientProfile/>;
-    }
+    // if (this.state.authenticated) {
+    //   return <PatientProfile/>;
+    // }
+    
     return (
       <Block flex style={styles.container}>
         <StatusBar hidden />

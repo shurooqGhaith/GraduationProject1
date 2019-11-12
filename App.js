@@ -38,6 +38,7 @@ function cacheImages(images) {
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
+   
   }
   
   
@@ -47,10 +48,9 @@ export default class App extends React.Component {
     BackHandler.addEventListener('hardwareBackPress', function() {
       // this.onMainScreen and this.goBack are just examples, you need to use your own implementation here
       // Typically you would use the navigator here to go to the last state.
-    
-      
       return false;
     });
+    
   
   }
 
@@ -87,6 +87,7 @@ export default class App extends React.Component {
 
 
   render() {
+    
     if(!this.state.isLoadingComplete) {
       return (
 
