@@ -11,7 +11,9 @@ import {
   Switch,
   Picker,
   Modal,
-  TouchableHighlight
+  TouchableHighlight,
+  ToastAndroid
+
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 import { Ionicons } from '@expo/vector-icons';
@@ -27,7 +29,19 @@ import moment from 'moment';
 import { element } from "prop-types";
 
 const { width, height } = Dimensions.get("screen");
-
+const Toast = (props) => {
+  if (props.visible) {
+    ToastAndroid.showWithGravityAndOffset(
+      props.message,
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50,
+    );
+    return null;
+  }
+  return null;
+};
 const thumbMeasure = (width - 48 - 32) / 3;
 
 export default class SelectTime extends React.Component {
@@ -35,7 +49,7 @@ export default class SelectTime extends React.Component {
   constructor(props){
     super(props);
     this.authListener=this.authListener.bind(this);
-    this.determineAvailableSlot=this.determineAvailableSlot.bind(this);
+    this.changeTime=this.changeTime.bind(this);
     this.state={
       user:[],
       info:[],
@@ -61,7 +75,9 @@ export default class SelectTime extends React.Component {
       noAppointment:false,
       stop:false,
       buttonColor:'#4527A0',
-      availableSlots:[]
+      availableSlots:[],
+      isShow:false,
+      message:''
 
     }
   }
@@ -76,11 +92,15 @@ export default class SelectTime extends React.Component {
     var idP=navigation.getParam("idPatient");
     var day=navigation.getParam("selectedDay");
     var date =navigation.getParam("selectedDate");
+    var clinic =navigation.getParam("clinic");
+
+    
     this.setState({
         idDoctor:id,
         idPatient:idP,
         daySelected:day,
-        dateSelected:date
+        dateSelected:date,
+        clinicSelected:clinic
     })
 
     var ar=[];
@@ -174,13 +194,14 @@ export default class SelectTime extends React.Component {
         nodata:false
           })
 
-          this.state.workingHours.map((value,index)=>{
-            if(value.days==this.state.daySelected  && value.enable){
-                this.setState({
-                  clinicSelected:value.selectedClinic
-                })
-            }
-      })
+      //     this.state.workingHours.map((value,index)=>{
+      //       if(value.days==this.state.daySelected  && value.enable){
+      //         alert("clinic");
+      //           this.setState({
+      //             clinicSelected:value.selectedClinic
+      //           })
+      //       }
+      // }) ع الفاضي هاي م بيدخل عليها 
   
      }
     else{
@@ -196,9 +217,42 @@ export default class SelectTime extends React.Component {
   }
 
   
-determineAvailableSlot(){
+  changeTime(time){
 
-}
+    fire.database().ref("users").child(this.state.idDoctor).child("appointment").push().set({
+      'idPatient':this.state.idPatient,
+      'daySelected':this.state.daySelected,
+      'dateSelected':this.state.dateSelected,
+      'timeSelected':time,
+      'clinicName':this.state.clinicSelected,
+      'available':false
+  }).then(()=>{
+    fire.database().ref("users").child(this.state.idPatient).child("appointment").push().set({
+      'idDoctor':this.state.idDoctor,
+      'daySelected':this.state.daySelected,
+      'dateSelected':this.state.dateSelected,
+      'timeSelected':time,
+      'clinicName':this.state.clinicSelected,
+      'available':false
+  });
+  
+  this.setState({isShow:true,message:'Added successfully !'});
+  setTimeout(function(){
+   this.setState({isShow:false});
+  }.bind(this),5000);
+
+  }).catch((error)=>{
+    this.setState({isShow:true,message:error.message});
+    setTimeout(function(){
+     this.setState({isShow:false});
+    }.bind(this),5000);
+  })
+
+   // alert("The time is changed to "+this.state.dateToSearch+"\n"+this.state.timeToSearch);
+   // this.setState({availableSlots:[]});
+  
+  }
+
   
 
 
@@ -230,7 +284,7 @@ determineAvailableSlot(){
                   >
                   <View  style={{ marginTop: 10,flexDirection:'column' }}>
                   <Text bold size={14} >Doctor name : {this.state.username}</Text>
-                  <Text>The appointment will be on :   {this.state.dateSelected}-{this.state.daySelected}</Text>
+                  <Text>The appointment will be on : {this.state.dateSelected+"\n"}{this.state.daySelected}</Text>
                   <Text bold size={14} color="#000000">The appointment is at :{this.state.clinicSelected}</Text>
                     </View>
                   </Block>
@@ -244,7 +298,7 @@ determineAvailableSlot(){
    if(slot.time){
     return(
      <View>
-      <Button style={{backgroundColor:'#eee',marginTop:10}} small onPress={()=>alert(slot.time)}>
+      <Button style={{backgroundColor:'#eee',marginTop:10}} small onPress={()=>this.changeTime(slot.time)}>
       <Text style={{color:'#00897b'}}>{slot.time}</Text>
       </Button>
          </View>
@@ -259,7 +313,8 @@ determineAvailableSlot(){
                     
                   </Block>
                   <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
-                
+                  <Toast visible={this.state.isShow} message={this.state.message}/> 
+
                 
               </Block>
             </ScrollView>

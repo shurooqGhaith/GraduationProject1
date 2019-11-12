@@ -43,6 +43,7 @@ export default class Appointment extends React.Component {
       idDoctor:'',
       idPatient:'',
       Specialization:'',
+      clinic:'',
       clinicName:[],
       workingHours:[],
       nodata:false,
@@ -116,7 +117,7 @@ export default class Appointment extends React.Component {
 
   continue(){
     if(this.state.available){
-       this.props.navigation.navigate("SelectTime",{idDoctor:this.state.idDoctor,idPatient:this.state.idPatient,selectedDay:this.state.daySelected,selectedDate:this.state.dateSelected});
+       this.props.navigation.navigate("SelectTime",{idDoctor:this.state.idDoctor,idPatient:this.state.idPatient,selectedDay:this.state.daySelected,selectedDate:this.state.dateSelected,clinic:this.state.clinic});
 
     }
     else {
@@ -181,7 +182,8 @@ if(dayName==6){
 this.state.workingHours.map((value,index)=>{
     if(value.days==this.state.daySelected && value.enable){
        this.setState({
-           available:true
+           available:true,
+           clinic:value.selectedClinic
        }) 
     }
    
