@@ -50,6 +50,7 @@ export default class SelectTime extends React.Component {
     super(props);
     this.authListener=this.authListener.bind(this);
     this.changeTime=this.changeTime.bind(this);
+    this.update=this.update.bind(this);
     this.state={
       user:[],
       info:[],
@@ -212,7 +213,6 @@ export default class SelectTime extends React.Component {
     
   })
 
-    
   
   }
 
@@ -251,9 +251,48 @@ export default class SelectTime extends React.Component {
    // alert("The time is changed to "+this.state.dateToSearch+"\n"+this.state.timeToSearch);
    // this.setState({availableSlots:[]});
   
+   this.update();
   }
 
+  update(){
+    var ar=[];
+    var id=this.state.idDoctor;
+    var day=this.state.daySelected;
+    var date=this.state.dateSelected;
+    fire.database().ref("users").child(id).child("workingHours").on('value',(work)=>{
+      let workHour=Object.values(work.val());
+      workHour.map(w=>{
+        if(w.days == day && w.enable){
+          this.setState({change:true});
+          
+         let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
+         ar=requiredArray;
+         requiredArray.map(v=>{ar.push({time:v})})
+         requiredArray.map((slot,index)=>{
+           var flag=false;
+          
+           fire.database().ref("users").child(id).child("appointment").on('value',(app)=>{
+             let appointment=Object.values(app.val());
+             appointment.map((ap)=>{
+               if(ap.dateSelected == date && ap.timeSelected==slot && !ap.available){
+                 ar = ar.filter(function( obj ) {
+                   return obj.time !== slot;
+               });
+               }
+             })//app map
+           })//app fire
   
+         })//slot arrays
+        }
+        
+      })//work map
+   // alert("1");
+      this.setState({
+        availableSlots:ar
+      })
+  
+    })//working hour database
+  }
 
 
   
