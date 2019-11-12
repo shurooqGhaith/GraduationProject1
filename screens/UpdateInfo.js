@@ -129,7 +129,7 @@ class UpdateInfo extends React.Component {
        }.bind(this),5000);
             }).catch((error) => {
                  console.log(error); 
-                this.setState({message:"error",isShow:true});
+                this.setState({message:error.message,isShow:true});
                 setTimeout(function(){
                     this.setState({isShow:false});
                }.bind(this),5000);
@@ -139,7 +139,7 @@ class UpdateInfo extends React.Component {
              // alert(error);
              console.log(error); 
  
-             this.setState({message:"error",isShow:true});
+             this.setState({message:error.message,isShow:true});
              setTimeout(function(){
                 this.setState({isShow:false});
            }.bind(this),5000);
@@ -160,7 +160,7 @@ class UpdateInfo extends React.Component {
 
           }).catch((error) => { 
              // console.log(error); 
-             this.setState({message:"error"});
+             this.setState({message:error.message});
              setTimeout(function(){
                 this.setState({isShow:false});
            }.bind(this),5000);
@@ -168,7 +168,7 @@ class UpdateInfo extends React.Component {
             });
         }).catch((error) => { 
             //console.log(error); 
-            this.setState({message:"error"});
+            this.setState({message:error.message});
             setTimeout(function(){
                 this.setState({isShow:false});
            }.bind(this),5000);
@@ -188,7 +188,7 @@ class UpdateInfo extends React.Component {
         //alert("Updated successfully !")
        }).catch((error)=>{
 // alert("an error happened !")
-this.setState({message:'an error happened !',isShow:true});
+this.setState({message:error.message,isShow:true});
 setTimeout(function(){
   this.setState({isShow:false});
 }.bind(this),5000);
@@ -207,7 +207,7 @@ setTimeout(function(){
             //alert("Updated successfully !")
            }).catch((error)=>{
             // alert("an error happened !")
-            this.setState({message:'an error happened !',isShow:true});
+            this.setState({message:error.message,isShow:true});
             setTimeout(function(){
               this.setState({isShow:false});
             }.bind(this),5000);
