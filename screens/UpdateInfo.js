@@ -68,7 +68,9 @@ class UpdateInfo extends React.Component {
       isShow:false,
       isShowEmail:false,
       isShowPass:false,
-      isShowSpecialization:false
+      isShowSpecialization:false,
+
+      message:''
     }
   }
   
@@ -121,12 +123,28 @@ class UpdateInfo extends React.Component {
             var user = fire.auth().currentUser;
             user.updatePassword(this.state.newPassword).then(() => {
              //alert("Password updated!");
-             this.setState({isShowPass:true,name:this.state.username});
+             this.setState({isShow:true,name:this.state.username,message:'Password updated!'});
         setTimeout(function(){
-            this.setState({isShowPass:false});
+            this.setState({isShow:false});
        }.bind(this),5000);
-            }).catch((error) => { alert(error); });
-          }).catch((error) => {alert(error); });
+            }).catch((error) => {
+                 console.log(error); 
+                this.setState({message:"error",isShow:true});
+                setTimeout(function(){
+                    this.setState({isShow:false});
+               }.bind(this),5000);
+
+                });
+          }).catch((error) => {
+             // alert(error);
+             console.log(error); 
+ 
+             this.setState({message:"error",isShow:true});
+             setTimeout(function(){
+                this.setState({isShow:false});
+           }.bind(this),5000);
+
+            });
     }
     changeEmail = () => {
         //alert("change email method !");
@@ -135,13 +153,27 @@ class UpdateInfo extends React.Component {
           user.updateEmail(this.state.email).then(() => {
             fire.database().ref("users").child(this.state.id).child("email").set(this.state.email);
             //alert("Email updated!");
-            this.setState({isShowEmail:true,name:this.state.username});
+            this.setState({isShow:true,name:this.state.username,message:'Email updated!'});
         setTimeout(function(){
-            this.setState({isShowEmail:false});
+            this.setState({isShow:false});
        }.bind(this),5000);
 
-          }).catch((error) => { console.log(error); });
-        }).catch((error) => { console.log(error); });
+          }).catch((error) => { 
+             // console.log(error); 
+             this.setState({message:"error"});
+             setTimeout(function(){
+                this.setState({isShow:false});
+           }.bind(this),5000);
+
+            });
+        }).catch((error) => { 
+            //console.log(error); 
+            this.setState({message:"error"});
+            setTimeout(function(){
+                this.setState({isShow:false});
+           }.bind(this),5000);
+
+        });
       }
 
     update(){
@@ -149,23 +181,39 @@ class UpdateInfo extends React.Component {
        
 
        fire.database().ref("users").child(this.state.id).child("name").set(this.state.username).then(()=>{
-        this.setState({isShow:true,name:this.state.username});
+        this.setState({isShow:true,name:this.state.username,message:'Name is Updated successfully ! '});
         setTimeout(function(){
             this.setState({isShow:false});
        }.bind(this),5000);
         //alert("Updated successfully !")
-       }).catch((error)=>alert("an error happened !"))
+       }).catch((error)=>{
+// alert("an error happened !")
+this.setState({message:'an error happened !',isShow:true});
+setTimeout(function(){
+  this.setState({isShow:false});
+}.bind(this),5000);
+       }
+      
+       )
 
 
     }
     updateSpecialization(){
         fire.database().ref("users").child(this.state.id).child("Specialization").set(this.state.Specialization).then(()=>{
-            this.setState({isShowSpecialization:true,sp:this.state.Specialization});
+            this.setState({isShow:true,sp:this.state.Specialization,message:'Specialization is Updated successfully ! '});
             setTimeout(function(){
-                this.setState({isShowSpecialization:false});
+                this.setState({isShow:false});
            }.bind(this),5000);
             //alert("Updated successfully !")
-           }).catch((error)=>alert("an error happened !"))
+           }).catch((error)=>{
+            // alert("an error happened !")
+            this.setState({message:'an error happened !',isShow:true});
+            setTimeout(function(){
+              this.setState({isShow:false});
+            }.bind(this),5000);
+                   }
+
+           )
     
     }
 
@@ -231,7 +279,7 @@ class UpdateInfo extends React.Component {
                         Save
                       </Text>  
                       </ComponentButton>  
-                      <Toast visible={this.state.isShow} message="Name is Updated successfully"/>      
+                      {/* <Toast visible={this.state.isShow} message="Name is Updated successfully"/>       */}
                       </View>
                       
                      
@@ -279,7 +327,7 @@ class UpdateInfo extends React.Component {
                         Save
                       </Text>  
                       </ComponentButton>    
-                      <Toast visible={this.state.isShowEmail} message="Email is Updated successfully"/>      
+                      {/* <Toast visible={this.state.isShowEmail} message="Email is Updated successfully"/>       */}
     
                       </View>
                       
@@ -327,7 +375,7 @@ class UpdateInfo extends React.Component {
                         Save
                       </Text>  
                       </ComponentButton>
-                      <Toast visible={this.state.isShowPass} message="Password is changed successfully"/>      
+                      {/* <Toast visible={this.state.isShowPass} message="Password is changed successfully"/>       */}
 
                       </View>
 
@@ -342,8 +390,10 @@ class UpdateInfo extends React.Component {
                     <TouchableOpacity onPress={()=>this.setState({SpecializationEnable:!this.state.SpecializationEnable})}>
                     <Text style={{marginLeft:20}} size={15}>Edit Specialization
                     <Text style={{marginLeft:100,color:'#888'}} size={11}>
-                    {"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"+this.state.sp}</Text>
-</Text>                    </TouchableOpacity>
+                    {"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"+this.state.sp}
+                    </Text>
+                     </Text>                   
+                    </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
 
                        {this.state.SpecializationEnable && 
@@ -369,7 +419,7 @@ class UpdateInfo extends React.Component {
                         Save
                       </Text>  
                       </ComponentButton>
-                      <Toast visible={this.state.isShowSpecialization} message="Specialization is changed successfully"/>      
+                      {/* <Toast visible={this.state.isShowSpecialization} message="Specialization is changed successfully"/>       */}
 
                       </View>
 
@@ -380,7 +430,7 @@ class UpdateInfo extends React.Component {
                     }
                     <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
    
-                    
+                    <Toast visible={this.state.isShow} message={this.state.message}/> 
                   </KeyboardAvoidingView>
                 </Block>
                 </ScrollView>
