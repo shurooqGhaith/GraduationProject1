@@ -111,7 +111,7 @@ export default class SelectTime extends React.Component {
         }
         
       })//work map
-    alert("1");
+   // alert("1");
       this.setState({
         availableSlots:ar
       })
@@ -244,7 +244,7 @@ determineAvailableSlot(){
    if(slot.time){
     return(
      <View>
-      <Button style={{backgroundColor:'#eee'}} small onPress={()=>alert(slot.time)}>
+      <Button style={{backgroundColor:'#eee',marginTop:10}} small onPress={()=>alert(slot.time)}>
       <Text style={{color:'#00897b'}}>{slot.time}</Text>
       </Button>
          </View>
@@ -254,7 +254,7 @@ determineAvailableSlot(){
           
                 })}
                 </View>
-                <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
+
 
                     
                   </Block>
