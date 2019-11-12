@@ -10,7 +10,8 @@ import {
   Picker,
   TextInput,
   CheckBox,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
@@ -200,7 +201,7 @@ this.setState({
        })//work map
        
 
-     })
+     })//working hour database
 
      var result = ar.reduce((unique, o) => {
       if(!unique.some(obj => obj.time === o.time)) {
@@ -877,6 +878,14 @@ else{
    
           
                 })}
+            {/* <View style={{height:587,flex:1}}>
+            <FlatList
+            data={this.state.availableSlots}
+            renderItem={({item}) => <Text >{item.time}</Text>}
+          />
+            </View> */}
+            
+                
 </View>
 
 

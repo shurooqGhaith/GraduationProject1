@@ -128,7 +128,7 @@ class UpdateInfo extends React.Component {
             this.setState({isShow:false});
        }.bind(this),5000);
             }).catch((error) => {
-                 console.log(error); 
+                // console.log(error); 
                 this.setState({message:error.message,isShow:true});
                 setTimeout(function(){
                     this.setState({isShow:false});
@@ -137,7 +137,7 @@ class UpdateInfo extends React.Component {
                 });
           }).catch((error) => {
              // alert(error);
-             console.log(error); 
+           //  console.log(error); 
  
              this.setState({message:error.message,isShow:true});
              setTimeout(function(){
@@ -187,11 +187,11 @@ class UpdateInfo extends React.Component {
        }.bind(this),5000);
         //alert("Updated successfully !")
        }).catch((error)=>{
-// alert("an error happened !")
-this.setState({message:error.message,isShow:true});
-setTimeout(function(){
-  this.setState({isShow:false});
-}.bind(this),5000);
+                  // alert("an error happened !")
+                 this.setState({message:error.message,isShow:true});
+                 setTimeout(function(){
+                       this.setState({isShow:false});
+                      }.bind(this),5000);
        }
       
        )

@@ -35,7 +35,7 @@ export default class SelectTime extends React.Component {
   constructor(props){
     super(props);
     this.authListener=this.authListener.bind(this);
-    
+    this.determineAvailableSlot=this.determineAvailableSlot.bind(this);
     this.state={
       user:[],
       info:[],
@@ -60,7 +60,8 @@ export default class SelectTime extends React.Component {
       appointment:[],
       noAppointment:false,
       stop:false,
-      buttonColor:'#4527A0'
+      buttonColor:'#4527A0',
+      availableSlots:[]
 
     }
   }
@@ -82,6 +83,43 @@ export default class SelectTime extends React.Component {
         dateSelected:date
     })
 
+    var ar=[];
+    fire.database().ref("users").child(id).child("workingHours").on('value',(work)=>{
+      let workHour=Object.values(work.val());
+      workHour.map(w=>{
+        if(w.days == day && w.enable){
+          this.setState({change:true});
+          
+         let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
+         ar=requiredArray;
+         requiredArray.map(v=>{ar.push({time:v})})
+         requiredArray.map((slot,index)=>{
+           var flag=false;
+          
+           fire.database().ref("users").child(id).child("appointment").on('value',(app)=>{
+             let appointment=Object.values(app.val());
+             appointment.map((ap)=>{
+               if(ap.dateSelected == date && ap.timeSelected==slot && !ap.available){
+                 ar = ar.filter(function( obj ) {
+                   return obj.time !== slot;
+               });
+               }
+             })//app map
+           })//app fire
+  
+         })//slot arrays
+        }
+        
+      })//work map
+    alert("1");
+      this.setState({
+        availableSlots:ar
+      })
+  
+    })//working hour database
+  
+     
+  
     fire.database().ref("users").child(id).child("Specialization").on('value',(datasnapshot)=>{
         this.setState({
           Specialization:datasnapshot.val()
@@ -153,13 +191,14 @@ export default class SelectTime extends React.Component {
     
   })
 
-
     
   
   }
 
   
+determineAvailableSlot(){
 
+}
   
 
 
@@ -200,124 +239,22 @@ export default class SelectTime extends React.Component {
                  
                 
                     <Divider style={{backgroundColor:'#000000'}}/>
-                  
-                  
-                     <View style={{flexDirection: 'column',marginTop:50}}>
-                     <Text bold size={16}>select time </Text>
-                          {!this.state.nodata && this.state.workingHours.map((value,index)=>{
-                            var x=true;
-                             
-                                  if(value.enable){
-                                            
-                                      //let requiredArray1 = slotCreator.createSlot(value.start,value.end,"30");
-                                      if(value.days==this.state.daySelected){
-
-                                        return  this.state.slots.map((item,ind)=>{
-                                            //return !this.state.noAppointment && this.state.appointment.map((element,i)=>{
-                                                if(item.daySelected==this.state.daySelected){
-                                            return(
-                                       <View>
-                                     <View style={{flexDirection:'row',marginTop:10}}>
-                                       
-                                      
-                                   </View>
-                                           <Button
-                                           onPress={()=>{
-                                               
-                                               
-                                               if(!this.state.noAppointment){
-                                                var x=0;
-                                               this.state.appointment.map((element,i)=>{
-                                                   
-                                                  if(!item.available && !element.available && element.dateSelected==this.state.dateSelected && item.slot==element.timeSelected)
-                                               {x=x+1;
-                                               alert(" not available ! ");
-                                               
-                                               }
-
-                                            })//appointment map
-                                               //ازا دخل ع اول اف و تحقق الشروط معناها هاد الموعد محجوز
-                                               //و مش لازم يحجز يعني مش لازم اضيف ع الداتا بيز 
-                                               //مشان هيك ضفت زي فلاغ ازا دخل ع اول اف يعمله ترو و ما يدخل ع التانية " يعني ما يضيف "
-                                           if(x==0)
-                                                 //else
-                                                   {
-                                              // alert(x);
-                                               fire.database().ref("users").child(this.state.idDoctor).child("appointment").push().set({
-                                                   'idPatient':this.state.idPatient,
-                                                   'daySelected':this.state.daySelected,
-                                                   'dateSelected':this.state.dateSelected,
-                                                   'timeSelected':item.slot,
-                                                   'clinicName':value.selectedClinic,
-                                                   'available':false
-                                               });
-                                               fire.database().ref("users").child(this.state.idDoctor).child("slots").once('value',(snapshot)=>{
-                                         // alert(Object.keys(snapshot.val())[0])
-                                         fire.database().ref("users").child(this.state.idDoctor).child("slots").child(Object.keys(snapshot.val())[ind]).child("available").set(false)
-                                      });
-
-                                      fire.database().ref("users").child(this.state.idPatient).child("appointment").push().set({
-                                                   'idDoctor':this.state.idDoctor,
-                                                   'daySelected':this.state.daySelected,
-                                                   'dateSelected':this.state.dateSelected,
-                                                   'timeSelected':item.slot,
-                                                   'clinicName':value.selectedClinic,
-                                                   'available':false
-                                               });
-                                           
-                                           x=x+1;
-                                           alert("added successfully");
-                                           }//else if(x==0)
-                                               
-                                               
-                                               }
-                                               else{
-                                                fire.database().ref("users").child(this.state.idDoctor).child("appointment").push().set({
-                                                   'idPatient':this.state.idPatient,
-                                                   'daySelected':this.state.daySelected,
-                                                   'dateSelected':this.state.dateSelected,
-                                                   'timeSelected':item.slot,
-                                                   'clinicName':value.selectedClinic,
-                                                   'available':false
-                                               });
-                                               fire.database().ref("users").child(this.state.idDoctor).child("slots").once('value',(snapshot)=>{
-                                         // alert(Object.keys(snapshot.val())[0])
-                                         fire.database().ref("users").child(this.state.idDoctor).child("slots").child(Object.keys(snapshot.val())[ind]).child("available").set(false)
-                                      });
-
-                                      fire.database().ref("users").child(this.state.idPatient).child("appointment").push().set({
-                                                   'idDoctor':this.state.idDoctor,
-                                                   'daySelected':this.state.daySelected,
-                                                   'dateSelected':this.state.dateSelected,
-                                                   'timeSelected':item.slot,
-                                                   'clinicName':value.selectedClinic,
-                                                   'available':false
-                                               });
-                                               }//else no appointment
-                                           
-                                           }//onPress
-                                           }//onPress
-                                           small
-                                           style={{ backgroundColor: this.state.buttonColor }}
-                                            >{item.slot}</Button>
-                                           </View> 
-                                       )
-                                        }
-                                           // })//end appointment
-                                     
-                                      
-                                       x=false;    
-                                     })//end slots
-                                      }
-                                    
-                                     
-                                  }
-                                        
-                                
-
-                              })
-                          }
-                     </View>
+                    <View style={{marginTop:100,flexDirection:'column',alignItems:'center'}}>
+                    { this.state.availableSlots.map((slot,index)=>{
+   if(slot.time){
+    return(
+     <View>
+      <Button style={{backgroundColor:'#eee'}} small onPress={()=>alert(slot.time)}>
+      <Text style={{color:'#00897b'}}>{slot.time}</Text>
+      </Button>
+         </View>
+   )
+   }
+   
+          
+                })}
+                </View>
+                <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
 
                     
                   </Block>
