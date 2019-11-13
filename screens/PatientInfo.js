@@ -1041,10 +1041,11 @@ else{
 
 
                   <Modal transparent={true} visible={this.state.showModal}>
-                  <View style={{backgroundColor:'#ffffff80',marginTop:150,flexDirection:'column',alignItems:'center',justifyContent:'center',height:height}}>
-                  <View style={{backgroundColor: '#fff', padding: 20}}>
+                  <View style={{backgroundColor:'#ffffff80',flexDirection:'column',marginTop:170,alignItems:'center',justifyContent:'center',height:height*0.3}}>
+                  <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 20,width:width*0.6,height:height*0.3}}>
+                  <Text>Available times </Text>
                   <ScrollView showsVerticalScrollIndicator={true}>
-
+                      
                   {this.state.change && this.state.availableSlots.map((slot,index)=>{
                       if(slot.time){
                            return(
@@ -1056,7 +1057,7 @@ else{
                               )
                             }
                 })}
-                <Button small onPress={()=>this.setState({showModal:false})}><Text>cancel</Text></Button>
+                <Button small style={{marginTop:5}} onPress={()=>this.setState({showModal:false})}><Text>cancel</Text></Button>
                   </ScrollView>
                       </View>
                  </View>
