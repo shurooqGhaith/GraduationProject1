@@ -1041,7 +1041,7 @@ else{
 
 
                   <Modal transparent={true} visible={this.state.showModal}>
-                  <View style={{backgroundColor:'#ffffff80',flexDirection:'column',marginTop:170,alignItems:'center',justifyContent:'center',height:height*0.3}}>
+                  <View style={{backgroundColor:'#ffffff80',flexDirection:'column',marginTop:200,alignItems:'center',justifyContent:'center',height:height*0.3}}>
                   <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 20,width:width*0.6,height:height*0.3}}>
                   <Text>Available times </Text>
                   <ScrollView showsVerticalScrollIndicator={true}>
