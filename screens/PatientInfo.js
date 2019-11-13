@@ -12,7 +12,8 @@ import {
   CheckBox,
   TouchableOpacity,
   FlatList,
-  ToastAndroid
+  ToastAndroid,
+  Modal
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
@@ -113,7 +114,11 @@ class PatientInfo extends React.Component {
       sessionTime:'',
       nextEnable:false,
       sessionAvailable:[],
-      isShow:false
+      isShow:false,
+
+      showModal:false,
+      showModal2:false
+
     }
   }
 
@@ -203,11 +208,11 @@ this.setState({
             //if(flag){ar.push({time:slot}) }
           })//slot arrays
          }
-         else{
-          this.setState({nextEnable:false});
-              //alert("no");طبعها
-       }
-         
+      //    else{
+      //     this.setState({nextEnable:false});
+      //         //alert("no");طبعها
+      //  } ف ما بيجي ع جملط الالس صارت تعطيني ع ايام الدوام انه ما في دوام مشان الستيت بتضل تتغير يعني  السبت دوام
+         // بس لما يلف ع باقي الايام مثلا عند الاحد لا يساوي السبت يلي اخترته انا ف بعمل الستيت فولس ز بعطيني ما في دوام
        })//work map
        
        if(!this.state.nextEnable){
@@ -219,7 +224,8 @@ this.setState({
      })//working hour database
 
      this.setState({
-      sessionAvailable:ar
+      sessionAvailable:ar,
+      showModal2:true
     })
 
 
@@ -262,12 +268,12 @@ this.setState({
   }
 
   handleDate =pickeddate=> {
-
+  
     const day   = pickeddate.getDate();
     const dayName=pickeddate.getDay();
     const  month = pickeddate.getMonth()+1;
     const  year  = pickeddate.getFullYear();
-
+  
     if(dayName==0){
       this.setState({
           daySelected:"sunday"
@@ -353,20 +359,20 @@ this.setState({
             //if(flag){ar.push({time:slot}) }
           })//slot arrays
          }
-         else{
-            this.setState({change:false});
-                //alert("no");طبعها
-         }
+        //  else{
+        //     this.setState({change:false});
+        //         //alert("no");طبعها
+        //  }
          
        })//work map
        
 
-       if(!this.state.change){
-        this.setState({flag:true,msg:"No work at this day "});
-        setTimeout(function(){
-         this.setState({flag:false});
-        }.bind(this),5000);
-       }
+      //  if(!this.state.change){
+      //   this.setState({flag:true,msg:"No work at this day "});
+      //   setTimeout(function(){
+      //    this.setState({flag:false});
+      //   }.bind(this),5000);
+      //  }
 
 
      })//working hour database
@@ -378,7 +384,9 @@ this.setState({
       return unique;
   },[]);
      this.setState({
-      availableSlots:ar
+      availableSlots:ar,
+      showModal:true
+
     })
     // this.state.availableSlots.map((s)=>{
     //   alert(s.time+"\n");
@@ -422,7 +430,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
     })//app patient
 
     alert("The time is changed to "+this.state.dateToSearch+"\n"+this.state.timeToSearch);
-    this.setState({availableSlots:[]});
+    this.setState({showModal:false});
 
   }
   handleDatePicked =pickeddate=> {
@@ -1031,25 +1039,30 @@ else{
                   <View style={{marginTop:100,flexDirection:'column',alignItems:'center'}}>
                   <Toast visible={this.state.flag} message={this.state.msg}/> 
 
- {this.state.change && this.state.availableSlots.map((slot,index)=>{
-   if(slot.time){
-    return(
-     <View>
-      <Button style={{backgroundColor:'#eee'}} small onPress={()=>this.changeTime(slot.time)}>
-      <Text style={{color:'#00897b'}}>{slot.time}</Text>
-      </Button>
-         </View>
-   )
-   }
-   
-          
+
+                  <Modal transparent={true} visible={this.state.showModal}>
+                  <View style={{backgroundColor:'#ffffff80',marginTop:150,flexDirection:'column',alignItems:'center',justifyContent:'center',height:height}}>
+                  <View style={{backgroundColor: '#fff', padding: 20}}>
+                  <ScrollView showsVerticalScrollIndicator={true}>
+
+                  {this.state.change && this.state.availableSlots.map((slot,index)=>{
+                      if(slot.time){
+                           return(
+                                   <View>
+                                     <Button style={{backgroundColor:'#eee',marginTop:5}} small onPress={()=>this.changeTime(slot.time)}>
+                                     <Text style={{color:'#00897b'}}>{slot.time}</Text>
+                                      </Button>
+                                      </View>
+                              )
+                            }
                 })}
-            {/* <View style={{height:587,flex:1}}>
-            <FlatList
-            data={this.state.availableSlots}
-            renderItem={({item}) => <Text >{item.time}</Text>}
-          />
-            </View> */}
+                <Button small onPress={()=>this.setState({showModal:false})}><Text>cancel</Text></Button>
+                  </ScrollView>
+                      </View>
+                 </View>
+                  </Modal>
+ 
+           
             
                 
 </View>
