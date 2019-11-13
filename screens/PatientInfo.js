@@ -215,12 +215,12 @@ this.setState({
          // بس لما يلف ع باقي الايام مثلا عند الاحد لا يساوي السبت يلي اخترته انا ف بعمل الستيت فولس ز بعطيني ما في دوام
        })//work map
        
-       if(!this.state.nextEnable){
-        this.setState({isShow:true,msg:"No work at this day "});
-        setTimeout(function(){
-         this.setState({isShow:false});
-        }.bind(this),5000);
-       }
+      //  if(!this.state.nextEnable){
+      //   this.setState({isShow:true,msg:"No work at this day "});
+      //   setTimeout(function(){
+      //    this.setState({isShow:false});
+      //   }.bind(this),5000);
+      //  }
      })//working hour database
 
      this.setState({
@@ -264,7 +264,7 @@ this.setState({
    // alert("The time is changed to "+this.state.dateToSearch+"\n"+this.state.timeToSearch);
    // this.setState({availableSlots:[]});
   
-   this.setState({sessionAvailable:[]});
+   this.setState({showModal2:false});
   }
 
   handleDate =pickeddate=> {
@@ -1038,8 +1038,6 @@ else{
 
                   <View style={{marginTop:100,flexDirection:'column',alignItems:'center'}}>
                   <Toast visible={this.state.flag} message={this.state.msg}/> 
-
-
                   <Modal transparent={true} visible={this.state.showModal}>
                   <View style={{backgroundColor:'#ffffff80',flexDirection:'column',marginTop:200,alignItems:'center',justifyContent:'center',height:height*0.3}}>
                   <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 20,width:width*0.6,height:height*0.3}}>
@@ -1062,10 +1060,6 @@ else{
                       </View>
                  </View>
                   </Modal>
- 
-           
-            
-                
 </View>
 
 
@@ -1220,26 +1214,35 @@ else{
                        datePickerModeAndroid={'spinner'}
                              />
 
-<View style={{marginTop:20,flexDirection:'column',alignItems:'center'}}>
+<View style={{marginTop:100,flexDirection:'column',alignItems:'center'}}>
 <Toast visible={this.state.isShow} message={this.state.msg}/> 
-
- {this.state.nextEnable && this.state.sessionAvailable.map((slot,index)=>{
-   if(slot.time){
-    return(
-     <View>
-      <Button style={{backgroundColor:'#eee'}} small onPress={()=>this.makeNextSessionAppointment(slot.time)}>
-      <Text style={{color:'#00897b'}}>{slot.time}</Text>
-      </Button>
-         </View>
-   )
-   }
+                  <Modal transparent={true} visible={this.state.showModal2}>
+                  <View style={{backgroundColor:'#ffffff80',flexDirection:'column',marginTop:200,alignItems:'center',justifyContent:'center',height:height*0.3}}>
+                  <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 20,width:width*0.6,height:height*0.3}}>
+                  <Text>Available times </Text>
+                  <ScrollView showsVerticalScrollIndicator={true}>
+                      
+                  {this.state.nextEnable && this.state.sessionAvailable.map((slot,index)=>{
+                       if(slot.time){
+                               return(
+                                   <View>
+                             <Button style={{backgroundColor:'#eee',marginTop:5}} small onPress={()=>this.makeNextSessionAppointment(slot.time)}>
+                                  <Text style={{color:'#00897b'}}>{slot.time}</Text>
+                                 </Button>
+                                            </View>
+                                                       )
+                                            }
    
           
                 })}
-           
-            
-                
+
+                <Button small style={{marginTop:5}} onPress={()=>this.setState({showModal:false})}><Text>cancel</Text></Button>
+                  </ScrollView>
+                      </View>
+                 </View>
+                  </Modal>
 </View>
+
                     </View>
 
                
