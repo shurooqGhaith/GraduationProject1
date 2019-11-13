@@ -33,7 +33,7 @@ const Toast = (props) => {
     ToastAndroid.showWithGravityAndOffset(
       props.message,
       ToastAndroid.LONG,
-      ToastAndroid.CENTER,
+      ToastAndroid.TOP,
       25,
       50,
     );
@@ -62,6 +62,7 @@ class PatientInfo extends React.Component {
     this.handleDate=this.handleDate.bind(this);
     this.changeTime=this.changeTime.bind(this);
     this.handleNextSession=this.handleNextSession.bind(this);
+    this.makeNextSessionAppointment=this.makeNextSessionAppointment.bind(this);
         this.state={
       username:"",
       idDoctor:"",
@@ -111,7 +112,8 @@ class PatientInfo extends React.Component {
       sessionDay:'',
       sessionTime:'',
       nextEnable:false,
-      sessionAvailable:[]
+      sessionAvailable:[],
+      isShow:false
     }
   }
 
@@ -201,10 +203,19 @@ this.setState({
             //if(flag){ar.push({time:slot}) }
           })//slot arrays
          }
+         else{
+          this.setState({nextEnable:false});
+              //alert("no");طبعها
+       }
          
        })//work map
        
-
+       if(!this.state.nextEnable){
+        this.setState({isShow:true,msg:"No work at this day "});
+        setTimeout(function(){
+         this.setState({isShow:false});
+        }.bind(this),5000);
+       }
      })//working hour database
 
      this.setState({
@@ -213,6 +224,43 @@ this.setState({
 
 
   }
+  makeNextSessionAppointment(time){
+
+    fire.database().ref("users").child(this.state.idDoctor).child("appointment").push().set({
+      'idPatient':this.state.idPatient,
+      'daySelected':this.state.sessionDay,
+      'dateSelected':this.state.sessionDate,
+      'timeSelected':time,
+      'clinicName':this.state.clinic,
+      'available':false
+  }).then(()=>{
+    fire.database().ref("users").child(this.state.idPatient).child("appointment").push().set({
+      'idDoctor':this.state.idDoctor,
+      'daySelected':this.state.sessionDay,
+      'dateSelected':this.state.sessionDate,
+      'timeSelected':time,
+      'clinicName':this.state.clinic,
+      'available':false
+  });
+  
+  this.setState({isShow:true,msg:'Added successfully !'});
+  setTimeout(function(){
+   this.setState({isShow:false});
+  }.bind(this),5000);
+
+  }).catch((error)=>{
+    this.setState({isShow:true,msg:error.message});
+    setTimeout(function(){
+     this.setState({isShow:false});
+    }.bind(this),5000);
+  });
+
+   // alert("The time is changed to "+this.state.dateToSearch+"\n"+this.state.timeToSearch);
+   // this.setState({availableSlots:[]});
+  
+   this.setState({sessionAvailable:[]});
+  }
+
   handleDate =pickeddate=> {
 
     const day   = pickeddate.getDate();
@@ -273,7 +321,7 @@ this.setState({
        let workHour=Object.values(work.val());
        workHour.map(w=>{
          if(w.days == this.state.daySelected && w.enable){
-           this.setState({change:true,flag:false});
+           this.setState({change:true});
            
           let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
           ar=requiredArray;
@@ -306,15 +354,20 @@ this.setState({
           })//slot arrays
          }
          else{
-            this.setState({flag:true,msg:"No work at this day "});
-           setTimeout(function(){
-            this.setState({flag:false});
-           }.bind(this),5000);
+            this.setState({change:false});
                 //alert("no");طبعها
          }
          
        })//work map
        
+
+       if(!this.state.change){
+        this.setState({flag:true,msg:"No work at this day "});
+        setTimeout(function(){
+         this.setState({flag:false});
+        }.bind(this),5000);
+       }
+
 
      })//working hour database
 
@@ -1154,13 +1207,13 @@ else{
                              />
 
 <View style={{marginTop:20,flexDirection:'column',alignItems:'center'}}>
+<Toast visible={this.state.isShow} message={this.state.msg}/> 
 
-{!this.state.nextEnable && <View><Text style={{color:'#00897b'}}>No time available at this day </Text></View>}
  {this.state.nextEnable && this.state.sessionAvailable.map((slot,index)=>{
    if(slot.time){
     return(
      <View>
-      <Button style={{backgroundColor:'#eee'}} small onPress={()=>alert(slot.time)}>
+      <Button style={{backgroundColor:'#eee'}} small onPress={()=>this.makeNextSessionAppointment(slot.time)}>
       <Text style={{color:'#00897b'}}>{slot.time}</Text>
       </Button>
          </View>

@@ -49,7 +49,7 @@ export default class SelectTime extends React.Component {
   constructor(props){
     super(props);
     this.authListener=this.authListener.bind(this);
-    this.changeTime=this.changeTime.bind(this);
+    this.makeAppointment=this.makeAppointment.bind(this);
     this.update=this.update.bind(this);
     this.state={
       user:[],
@@ -217,7 +217,7 @@ export default class SelectTime extends React.Component {
   }
 
   
-  changeTime(time){
+  makeAppointment(time){
 
     fire.database().ref("users").child(this.state.idDoctor).child("appointment").push().set({
       'idPatient':this.state.idPatient,
@@ -337,7 +337,7 @@ export default class SelectTime extends React.Component {
    if(slot.time){
     return(
      <View>
-      <Button style={{backgroundColor:'#eee',marginTop:10}} small onPress={()=>this.changeTime(slot.time)}>
+      <Button style={{backgroundColor:'#eee',marginTop:10}} small onPress={()=>this.makeAppointment(slot.time)}>
       <Text style={{color:'#00897b'}}>{slot.time}</Text>
       </Button>
          </View>
