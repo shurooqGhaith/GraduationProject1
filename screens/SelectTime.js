@@ -109,7 +109,7 @@ export default class SelectTime extends React.Component {
       let workHour=Object.values(work.val());
       workHour.map(w=>{
         if(w.days == day && w.enable){
-          this.setState({change:true});
+         // this.setState({change:true});
           
          let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
          ar=requiredArray;
@@ -263,7 +263,7 @@ export default class SelectTime extends React.Component {
       let workHour=Object.values(work.val());
       workHour.map(w=>{
         if(w.days == day && w.enable){
-          this.setState({change:true});
+         // this.setState({change:true});
           
          let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
          ar=requiredArray;
