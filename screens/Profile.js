@@ -291,7 +291,7 @@ backgroundColor='#fff'
                         fontSize: 16
                       }}
                     >
-                       table
+                       table 
                     </Button>
                     </View>
                   <View style={{marginLeft:60,marginTop:10}}>

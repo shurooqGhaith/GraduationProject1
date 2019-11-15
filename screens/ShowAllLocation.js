@@ -201,6 +201,7 @@ retrieveData(){
              // for (var index = 0; index < array.length; ++index) {
                result.map((location,index)=>{
                      // alert(location.latitude+"\n"+location.longitude+"\n"+location.clinicName)//طبعهم
+                     
                      var lat1 = this.state.latitude * Math.PI / 180;
                      var lat2 = location.latitude * Math.PI / 180;
                      var lon1 = this.state.longitude * Math.PI / 180;

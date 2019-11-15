@@ -118,14 +118,17 @@ export default class SelectTime extends React.Component {
            var flag=false;
           
            fire.database().ref("users").child(id).child("appointment").on('value',(app)=>{
-             let appointment=Object.values(app.val());
-             appointment.map((ap)=>{
-               if(ap.dateSelected == date && ap.timeSelected==slot && !ap.available){
-                 ar = ar.filter(function( obj ) {
-                   return obj.time !== slot;
-               });
-               }
-             })//app map
+             if(app.val()){
+              let appointment=Object.values(app.val());
+              appointment.map((ap)=>{
+                if(ap.dateSelected == date && ap.timeSelected==slot && !ap.available){
+                  ar = ar.filter(function( obj ) {
+                    return obj.time !== slot;
+                });
+                }
+              })//app map
+             }
+             
            })//app fire
   
          })//slot arrays

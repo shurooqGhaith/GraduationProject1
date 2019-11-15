@@ -173,8 +173,6 @@ class Search extends React.Component {
                  <Text style={{marginBottom: 10}}>
                  Specialization:{item.Specialization}
                  </Text>
-                  
-                  
                      <Button
                           onPress={()=>this.props.navigation.navigate("Appointment",{id:item.id,idPatient:this.state.idP})}
                            icon={<Icon name='code' color='#ffffff' />}

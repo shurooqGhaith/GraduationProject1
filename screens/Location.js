@@ -172,7 +172,7 @@ render () {
 			region={this.state.region}
 			style={styles.mapStyle}
             showsUserLocation
-            onRegionChange={this.callGps}
+           // onRegionChange={()=>this.callGps}
             >
 				
             
@@ -181,7 +181,20 @@ render () {
 				title={this.state.clinicName}
 			    draggable = {true}
 				coordinate={this.state.region}
-				onDragEnd={(e) => this.setState({ region: e.nativeEvent.coordinate })}
+				onDragEnd={(e) => {
+          this.setState({ region: e.nativeEvent.coordinate });
+          this.state.clinicNames.map((value,index)=>{
+            if(value.clinic == this.state.clinicName){
+                fire.database().ref("users").child(this.state.id).child("clinicName").orderByChild("clinic").equalTo(this.state.clinicName).on('value',(snap)=>{
+                    if(snap.val()){
+                       fire.database().ref("users").child(this.state.id).child("clinicName").child(Object.keys(snap.val())[index]).child("latitude").set(this.state.region.latitude);
+                       fire.database().ref("users").child(this.state.id).child("clinicName").child(Object.keys(snap.val())[index]).child("longitude").set(this.state.region.longitude);
+                    }
+              })
+            }
+        })
+         
+        }}
 			  />
 				<MapView.Circle
 

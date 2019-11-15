@@ -103,7 +103,7 @@ export default class Appointment extends React.Component {
      }
     else{
       this.setState({
-        nodata:true
+        nodata:true // لسه مش محدد اوقات عمله
       })
     }
     
@@ -121,7 +121,7 @@ export default class Appointment extends React.Component {
 
     }
     else {
-        alert("fail");
+        alert("No work at this day !");
     }
   }
 
@@ -283,7 +283,9 @@ this.state.workingHours.map((value,index)=>{
                     </Button>
                   </Block>
                 
+                {this.state.nodata && <View style={{marginTop:60}}><Text>Working days of this doctor undetermined yet !
                 
+                </Text></View>}
               </Block>
             </ScrollView>
           </ImageBackground>

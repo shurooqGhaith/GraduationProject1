@@ -141,7 +141,7 @@ class DoctorInfo extends React.Component {
     
        var id=this.state.id;
        //fire.database().ref("users").child(id).child("from").set(this.state.from);
-       alert("selected time :"+timeSelected);
+      // alert("selected time :"+timeSelected);
     
     this.hideDateTimePicker();
   };
@@ -160,7 +160,7 @@ class DoctorInfo extends React.Component {
     
        var id=this.state.id;
       // fire.database().ref("users").child(id).child("to").set(this.state.to);
-      alert("selected time :"+timeSelected);
+     // alert("selected time :"+timeSelected);
     
     this.hideDateTimePickerTo();
   }
