@@ -84,7 +84,7 @@ class PatientAfterSession extends React.Component {
  })
  fire.database().ref("users").child(idD).child("appointment").on('value',(snapshot)=>{
      if(snapshot.val()){
-        let data = Object.values(snapshot.val());
+    let data = Object.values(snapshot.val());
     this.setState({
         patientData:data,
         nodata:false

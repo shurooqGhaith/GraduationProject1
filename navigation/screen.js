@@ -24,9 +24,16 @@ import ShowAllLocation from "../screens/ShowAllLocation";
 import AppointmentTable from "../screens/Table";
 import PatientAppointment from "../screens/PatientAppointment";
 import UpdateInfo from "../screens/UpdateInfo";
+import EmailVerify from "../screens/VerifyEmail";
 const AppNavigator = createStackNavigator(
     {
 
+       
+      EmailVerify:{screen:EmailVerify,
+        navigationOptions: {
+          header: null,
+        }
+      },
       UpdateInfo:{screen:UpdateInfo,
         navigationOptions: {
           header: null,

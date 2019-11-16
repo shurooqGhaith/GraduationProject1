@@ -45,7 +45,8 @@ class PatientProfile extends React.Component {
       noSession:false,
       time:'',
       date:'',
-      enableNotification:true
+      enableNotification:true,
+      isVerified:false
     };
   }
 
@@ -87,6 +88,17 @@ class PatientProfile extends React.Component {
    var name,start,end,close;
    var user =fire.auth().currentUser;
    if(user != null){
+     if(user.emailVerified){
+        this.setState({isVerified:true});
+     }
+     else{
+       user.sendEmailVerification().then(()=>{
+         console.log("sent");
+        if(user.emailVerified){
+        this.setState({isVerified:true});
+     }
+       }).catch(()=>console.log("error"))
+     }
      var id=user.uid;
      this.setState({
        id:id
@@ -222,6 +234,12 @@ backgroundColor='#fff'
                     <Text bold size={28} color="#32325D" id="name">
                       {this.state.username}
                     </Text>
+                   
+                  </Block>
+                  <Block middle style={{marginTop: 30}}>
+                   
+                      {this.state.isVerified && <Text>Verified</Text>}
+                    
                    
                   </Block>
                   <Block middle style={{ marginTop: 30, marginBottom: 16 }}>

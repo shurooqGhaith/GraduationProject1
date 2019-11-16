@@ -34,7 +34,8 @@ class SearchAboutTime extends React.Component {
         this.filterResult=this.filterResult.bind(this);
         this.search=this.search.bind(this);
 
-        this.makeEmpty=this.makeEmpty.bind(this);
+        this.makeApp=this.makeApp.bind(this);
+        this.do=this.do.bind(this);
         this.state={
             data:[],
             DrInfo:[],
@@ -62,22 +63,11 @@ class SearchAboutTime extends React.Component {
             this.setState({
                 idP:idP
             })
-            this.retrieveData();
+        
     }
 
-    retrieveData(){
-       
     
-            fire.database().ref("users").on('value', (snapshot) => {
-                    let data = snapshot.val();
-                    var id=snapshot.key;//id = users
-                    let items = Object.values(data);
-                  //  this.setState({data:items,nodata:false});
-                 }
-            )
-    }
-    search = time =>{
-  
+    search  (time) {
     const hours = time.getHours();
     const minutes = time.getMinutes();
     var h=`${hours}`;
@@ -91,54 +81,48 @@ class SearchAboutTime extends React.Component {
         timeToSearch:timeSelected
       })
 
-        var array=[];
-        fire.database().ref("users").on('value',(snap)=>{
-            var data=snap.val();
-            var keys=Object.keys(data);
-           // alert(keys[0]);
-            for(var i=0 ; i<keys.length;i++){
-               fire.database().ref("users").child(keys[i]).child("type").on('value',(snapshot)=>{
-                   var app=snapshot.val();//type of user
-                   //alert(app);
-                   if(app=="doctor"){
-                       fire.database().ref("users").child(keys[i]).child("appointment").on('value',(result)=>{
-                           //لما ما يكون ما في مواعيد عند الدكتور افحصي مواعيد الدوام ا
-                           //ازا الوقت يلي اختاره و اليوم ضمن مواعيد الدوام ، بقدر يحجز عنده
-                           // ما بعرض داتا الا لما احط فلتر لازم ازبط هاي الشغلة
-                           if(result.val()){
-                               let appointment = Object.values(result.val());
-                               this.setState({appointments:appointment})
+      var t="time:"+this.state.timeToSearch;
+      console.log(t);
+       
+      this.hideDateTimePicker();
+      this.do();
+    }
+  
+    do(){
+      console.log(this.state.timeToSearch);
+      console.log(this.state.dateToSearch!=null);
+      if(this.state.timeToSearch!=='' && this.state.dateToSearch !==''){
+        console.log("if");
+      var array=[];
+      fire.database().ref("users").on('value',(snap)=>{
+          var data=snap.val();
+          var keys=Object.keys(data);
+         // alert(keys[0]);
+          for(var i=0 ; i<keys.length;i++){
+             fire.database().ref("users").child(keys[i]).child("type").on('value',(snapshot)=>{
+                 var app=snapshot.val();//type of user
+                 //alert(app);
+                 if(app=="doctor"){
+                     fire.database().ref("users").child(keys[i]).child("appointment").on('value',(result)=>{
+                         //لما ما يكون ما في مواعيد عند الدكتور افحصي مواعيد الدوام ا
+                         //ازا الوقت يلي اختاره و اليوم ضمن مواعيد الدوام ، بقدر يحجز عنده
+                         // ما بعرض داتا الا لما احط فلتر لازم ازبط هاي الشغلة
+                         if(result.val()){
+                             let appointment = Object.values(result.val());
+                             this.setState({appointments:appointment})
 
-                               //map appointments state
-                               this.state.appointments.map((element,index)=>{////////////////////////
-                               // alert(this.state.dateToSearch + "\ntime:"+this.state.timeToSearch);
-                                   if(element.timeSelected==this.state.timeToSearch && element.available && element.dateSelected==this.state.dateToSearch ){
-                                      // alert(element.dateSelected+element.daySelected);
-                                      
+                             //map appointments state
+                             this.state.appointments.map((element,index)=>{////////////////////////
+                             // alert(this.state.dateToSearch + "\ntime:"+this.state.timeToSearch);
+                                 if(element.timeSelected==this.state.timeToSearch && element.available && element.dateSelected==this.state.dateToSearch ){
+                                    // alert(element.dateSelected+element.daySelected);
+                                    
 
-                                      fire.database().ref("users").child(keys[i]).child("workingHours").on('value',(workHours)=>{
-                                          if(workHours.val()){
-                                            let work = Object.values(workHours.val());
-                                            this.setState({workingHour:work}) 
-                                            this.state.workingHour.map((w,ind)=>{
-                                                if(w.days==this.state.daySelected && w.enable && this.state.timeToSearch >= w.start && this.state.timeToSearch <= w.end ){
-                                                    array.push({id:keys[i],clinic:w.selectedClinic});
-                                                }
-                                                
-                                            })
-                                          }
-                                            
-                                       })
-
-                                   }
-                                   if(element.timeSelected !=this.state.timeToSearch || element.dateSelected !=this.state.dateToSearch ){
-                                      
-                                       fire.database().ref("users").child(keys[i]).child("workingHours").on('value',(workHours)=>{//////
+                                    fire.database().ref("users").child(keys[i]).child("workingHours").on('value',(workHours)=>{
                                         if(workHours.val()){
                                           let work = Object.values(workHours.val());
                                           this.setState({workingHour:work}) 
                                           this.state.workingHour.map((w,ind)=>{
-
                                               if(w.days==this.state.daySelected && w.enable && this.state.timeToSearch >= w.start && this.state.timeToSearch <= w.end ){
                                                   array.push({id:keys[i],clinic:w.selectedClinic});
                                               }
@@ -147,79 +131,100 @@ class SearchAboutTime extends React.Component {
                                         }
                                           
                                      })
-                                   }
-                                   else{
-                                       alert("no doctor available at this time");
-                                       array=[];
-                                       this.setState({
-                                           data:array
-                                       })
-                                   }
 
-                               })
-                           }//appointment end
-
-
-                          ///no appointment yet 
-                           if(!result.val()){
-                           //get working hour
-                           fire.database().ref("users").child(keys[i]).child("workingHours").on('value',(workHours)=>{
-                            if(workHours.val()){
-                                let work = Object.values(workHours.val());
-                                this.setState({workingHour:work}) 
-                                this.state.workingHour.map((w,ind)=>{
-                                    if(w.days==this.state.daySelected && w.enable && this.state.timeToSearch >= w.start && this.state.timeToSearch <= w.end ){
-                                        array.push({id:keys[i],clinic:w.selectedClinic});
-                                    }
+                                 }
+                                 if(element.timeSelected !=this.state.timeToSearch || element.dateSelected !=this.state.dateToSearch ){
                                     
-                                })
-                              }
-                           })
-    
-                        }//no appointment end
-                       })
-                     
-                   }//app==doctor
+                                     fire.database().ref("users").child(keys[i]).child("workingHours").on('value',(workHours)=>{//////
+                                      if(workHours.val()){
+                                        let work = Object.values(workHours.val());
+                                        this.setState({workingHour:work}) 
+                                        this.state.workingHour.map((w,ind)=>{
+
+                                            if(w.days==this.state.daySelected && w.enable && this.state.timeToSearch >= w.start && this.state.timeToSearch <= w.end ){
+                                                array.push({id:keys[i],clinic:w.selectedClinic});
+                                            }
+                                            
+                                        })
+                                      }
+                                        
+                                   })
+                                 }
+                                 else{
+                                    // console.log("no doctor available at this time");
+                                    //  array=[];
+                                    //  this.setState({
+                                    //      data:[],
+                                    //      //nodata:true
+                                    //  })
+                                 }
+
+                             })
+                         }//appointment end
+
+
+                        ///no appointment yet 
+                         if(!result.val()){
+                         //get working hour
+                         fire.database().ref("users").child(keys[i]).child("workingHours").on('value',(workHours)=>{
+                          if(workHours.val()){
+                              let work = Object.values(workHours.val());
+                              this.setState({workingHour:work}) 
+                              this.state.workingHour.map((w,ind)=>{
+                                  if(w.days==this.state.daySelected && w.enable && this.state.timeToSearch >= w.start && this.state.timeToSearch <= w.end ){
+                                      array.push({id:keys[i],clinic:w.selectedClinic});
+                                  }
+                                  
+                              })
+                            }
+                         })
+  
+                      }//no appointment end
+                     })
                    
-               })
-            }
+                 }//app==doctor
+                 
+             })
+          }
 
-        })//end the outer ref
-   this.hideDateTimePicker();
-   
-   if(array.length>0){
-    var result = array.reduce((unique, o) => {
-        if(!unique.some(obj => obj.id === o.id && obj.clinic === o.clinic)) {
-          unique.push(o);
-        }
-        return unique;
-    },[]);
+      })//end the outer ref
+ 
+ if(array.length>0){
+  var result = array.reduce((unique, o) => {
+      if(!unique.some(obj => obj.id === o.id && obj.clinic === o.clinic)) {
+        unique.push(o);
+      }
+      return unique;
+  },[]);
 
-    this.setState({
-        data:result,
-        nodata:false
-    })
+  this.setState({
+      data:result,
+      nodata:false
+  })
 
-    var sp=[];
-    this.state.data.map((value,index)=>{
-        fire.database().ref("users").child(value.id).child("Specialization").on('value',(snap)=>{
-            sp.push({sp:snap.val()});
-        })
-    })
-    
-    var result2 = sp.reduce((unique, o) => {
-        if(!unique.some(obj => obj.sp === o.sp)) {
-          unique.push(o);
-        }
-        return unique;
-    },[]);
-        this.setState({
-            Specialties:result2
-        })
-   }
+  var sp=[];
+  this.state.data.map((value,index)=>{
+      fire.database().ref("users").child(value.id).child("Specialization").on('value',(snap)=>{
+          sp.push({sp:snap.val()});
+      })
+  })
   
+  var result2 = sp.reduce((unique, o) => {
+      if(!unique.some(obj => obj.sp === o.sp)) {
+        unique.push(o);
+      }
+      return unique;
+  },[]);
+      this.setState({
+          Specialties:result2
+      })
+ }
+}
+
+else{
+  alert("enter values");
+}
     }
-  
     filterResult(){
              this.setState({
                  filterEnable:true
@@ -318,13 +323,36 @@ if(dayName==6){
             this.setState({ dateVisible: true });
           };
 
-          makeEmpty(){
-            this.setState({
-              data:[],
-              dateToSearch:'',
-              timeToSearch:'',
-              nodata:true
-            })
+         
+
+          makeApp(id,clinic){
+            fire.database().ref("users").child(this.state.idP).child("appointment").push().set({
+              'idDoctor':id,
+               'daySelected':this.state.daySelected,
+                'dateSelected':this.state.dateToSearch,
+               'timeSelected':this.state.timeToSearch,
+                'clinicName':clinic,
+                     'available':false
+                   }).then(()=>{
+                    fire.database().ref("users").child(id).child("appointment").push().set({
+                      'idPatient':this.state.idP,
+                      'daySelected':this.state.daySelected,
+                       'dateSelected':this.state.dateToSearch,
+                    'timeSelected':this.state.timeToSearch,
+                     'clinicName':clinic,
+                    'available':false
+                               });
+                        console.log("success !");
+                        
+                       
+                        //  this.setState({dateToSearch:'',
+                        //  timeToSearch:'',
+                      //   data:[],
+                      // nodata:true})
+                      //console.log(this.state.idP);
+                     //this.props.navigation.navigate("Search",{idPatient:this.state.idP})
+                   }).catch((error)=>alert("error !"))
+          
           }
     render(){
         
@@ -380,7 +408,7 @@ if(dayName==6){
                     </ComponentButton>
                                <DateTimePicker
                        isVisible={this.state.dateTimeVisible}
-                       onConfirm={(t)=>this.search(t)}
+                       onConfirm={this.search}
                        onCancel={this.hideDateTimePicker}
                        mode='time'
                       //datePickerModeAndroid={'calendar'}
@@ -393,7 +421,7 @@ if(dayName==6){
                          <View style={{flexDirection:'column'}}>
                 <Picker 
                    
-                    style={{height: 60, width: width*0.2,marginLeft:70,borderWidth:5}} 
+                    style={{height: 60, width: width*0.8,marginLeft:70,borderWidth:5}} 
                     selectedValue = {this.state.spSelected} 
                     onValueChange = {(value) => {this.setState({spSelected: value});
                     }}>
@@ -404,6 +432,7 @@ if(dayName==6){
                     })}
                          
                     </Picker>
+                    <ComponentButton style={{marginTop:25,width:width*0.5}} onPress={this.do}><Text>Search</Text></ComponentButton>
                     <View style={{flexDirection:'row'}}>
                       <ComponentButton
                       small
@@ -436,8 +465,8 @@ if(dayName==6){
                     </View>
 
                      <View style={styles.itemsList}>
+                     {this.state.nodata && <View style={{marginTop:70,marginLeft:140}}><Text size={20} bold >No data </Text></View> }
                          {!this.state.nodata && this.state.data.map((value,index)=>{
-                             if(!this.state.data){return(<View><Text>No data </Text></View>)}
                              var name,specialization,email;
                              fire.database().ref("users").child(value.id).child("name").on('value',(snap)=>{
                                   name=snap.val();
@@ -467,32 +496,10 @@ if(dayName==6){
                                           </Text>
 
                                            <Button
-                                                    onPress={()=>
-                                                 {
-                                       fire.database().ref("users").child(this.state.idP).child("appointment").push().set({
-                                            'idDoctor':value.id,
-                                             'daySelected':this.state.daySelected,
-                                              'dateSelected':this.state.dateToSearch,
-                                             'timeSelected':this.state.timeToSearch,
-                                              'clinicName':value.clinic,
-                                                   'available':false
-                                                 });
-                                        fire.database().ref("users").child(value.id).child("appointment").push().set({
-                                                  'idPatient':this.state.idP,
-                                                  'daySelected':this.state.daySelected,
-                                                    'dateSelected':this.state.dateToSearch,
-                                                'timeSelected':this.state.timeToSearch,
-                                                 'clinicName':value.clinic,
-                                                'available':false
-                                                           });
-                                                    alert("success !");
-                                                   // this.search(this.state.timeToSearch); 
-                                                   this.makeEmpty();
-                                                 }
-                                                       }
+                                                    onPress={()=>this.makeApp(value.id,value.clinic) }
                                       icon={<Icon name='code' color='#ffffff' />}
                                       buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor:"#444"}}
-                                      title='VIEW NOW' />
+                                      title='Book Now' />
                                               </Card>
                                                     </View>
 
@@ -517,32 +524,10 @@ if(dayName==6){
                                           </Text>
 
                                            <Button
-                                                    onPress={()=>
-                                                 {
-                                       fire.database().ref("users").child(this.state.idP).child("appointment").push().set({
-                                            'idDoctor':value.id,
-                                             'daySelected':this.state.daySelected,
-                                              'dateSelected':this.state.dateToSearch,
-                                             'timeSelected':this.state.timeToSearch,
-                                              'clinicName':value.clinic,
-                                                   'available':false
-                                                 });
-                                        fire.database().ref("users").child(value.id).child("appointment").push().set({
-                                                  'idPatient':this.state.idP,
-                                                  'daySelected':this.state.daySelected,
-                                                    'dateSelected':this.state.dateToSearch,
-                                                'timeSelected':this.state.timeToSearch,
-                                                 'clinicName':value.clinic,
-                                                'available':false
-                                                           });
-                                                    alert("success !");
-                                                    this.makeEmpty();
-                                                    //this.search(this.state.timeToSearch);
-                                                 }
-                                                       }
+                                                    onPress={()=>this.makeApp(value.id,value.clinic)}
                                       icon={<Icon name='code' color='#ffffff' />}
                                       buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor:"#444"}}
-                                      title='VIEW NOW' />
+                                      title='Book NOW' />
                                               </Card>
                                                     </View>
 
