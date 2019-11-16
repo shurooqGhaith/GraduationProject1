@@ -34,7 +34,8 @@ class Register extends React.Component {
       email:'',
       password:'',
       errorMessage:null,
-      checked:false
+      checked:false,
+      
     }
   }
   

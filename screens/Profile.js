@@ -80,13 +80,18 @@ class Profile extends React.Component {
   authListener(){
   
     const { navigation } = this.props;  
-    var id=navigation.getParam('id');
+   // var id=navigation.getParam('id');
     var name,start,end,close;
   
-     this.setState({
-         id:id
-     })
-     fire.database().ref("users").child(id).child("Specialization").on('value',(datasnapshot)=>{
+    
+     var user =fire.auth().currentUser;
+
+     if(user != null){
+      var id=user.uid;
+      this.setState({
+        id:id
+    })
+    fire.database().ref("users").child(id).child("Specialization").on('value',(datasnapshot)=>{
       this.setState({
         Specialization:datasnapshot.val()
       })
@@ -111,22 +116,28 @@ class Profile extends React.Component {
  })
 
  fire.database().ref("users").child(id).child("workingHours").on('value',(datasnapshot) =>{
-   if(datasnapshot.val()){
-    let items = Object.values(datasnapshot.val());
+  if(datasnapshot.val()){
+   let items = Object.values(datasnapshot.val());
 
-    this.setState({
-      workingHours:items,
-      nodata:false
-        })
+   this.setState({
+     workingHours:items,
+     nodata:false
+       })
 
-   }
-  else{
-    this.setState({
-      nodata:true
-    })
   }
-  
+ else{
+   this.setState({
+     nodata:true
+   })
+ }
+ 
 })
+
+     }
+    
+
+ 
+ 
   }
 
 

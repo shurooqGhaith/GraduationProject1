@@ -97,6 +97,7 @@ class PatientProfile extends React.Component {
         if(user.emailVerified){
         this.setState({isVerified:true});
      }
+     
        }).catch(()=>console.log("error"))
      }
      var id=user.uid;
