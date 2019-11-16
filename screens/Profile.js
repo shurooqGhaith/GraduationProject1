@@ -50,7 +50,9 @@ class Profile extends React.Component {
       showmap:false,
       nodata:false,
       Specialization:'',
-      patientInfo:[]
+      patientInfo:[],
+
+      isVerified:false
       
     }
   }
@@ -87,10 +89,26 @@ class Profile extends React.Component {
      var user =fire.auth().currentUser;
 
      if(user != null){
+      if(user.emailVerified){
+        this.setState({isVerified:true});
+        console.log("verified");
+     }
+     else{
+       user.sendEmailVerification().then(()=>{
+         console.log("sent");
+        if(user.emailVerified){
+        this.setState({isVerified:true});
+        console.log("verified");
+
+     }
+     
+       }).catch(()=>console.log("error"))
+     }
       var id=user.uid;
       this.setState({
         id:id
     })
+    
     fire.database().ref("users").child(id).child("Specialization").on('value',(datasnapshot)=>{
       this.setState({
         Specialization:datasnapshot.val()
