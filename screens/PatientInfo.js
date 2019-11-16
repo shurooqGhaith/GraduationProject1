@@ -115,7 +115,8 @@ class PatientInfo extends React.Component {
       isShow:false,
 
       showModal:false,
-      showModal2:false
+      showModal2:false,
+      showForm:false
 
     }
   }
@@ -641,7 +642,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                   <View style={{flexDirection:'row'}}>
               <Button
                       onPress={this.showDatePicker}
-                      style={{backgroundColor:'#00897B',marginLeft:80,marginTop:80,width:width*0.5}}
+                      style={{backgroundColor:'#00897B',marginLeft:10,marginTop:60,width:width*0.4}}
                       textStyle={{
                         color: "#fff",
                         fontWeight: "500",
@@ -649,6 +650,18 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                       }}
                       >
                               <Text>{this.state.dateToSearch || "change time"} </Text>
+                      </Button>
+
+                      <Button
+                      onPress={()=>this.setState({showForm:true})}
+                      style={{backgroundColor:'#00897B',marginLeft:20,marginTop:60,width:width*0.4}}
+                      textStyle={{
+                        color: "#fff",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }}
+                      >
+                              <Text>Enter Info </Text>
                       </Button>
 
 
@@ -705,17 +718,25 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                                             )}
                                                     />
                              </View> */}
-                  <View style={{flexDirection:'column',marginTop:50,marginLeft:50}}>
-                   
+                 {this.state.showForm && <View style={{flexDirection:'column',marginTop:20}}>
+                   <View style={{flexDirection:'row'}}>
                        <Input  
-                             borderless
-                             placeholder="Enter session Number"   
-                             style={{width:width*0.5,marginLeft:50}}  
+                             value={this.state.session}
+                             placeholder="session Number"   
+                             style={{width:width*0.4,marginLeft:20,borderRadius: 5,borderWidth: 0.5,borderColor: '#000' }}  
                              onChangeText={value => this.setState({session:value})}
                              keyboardType = 'numeric'
                              
                               />
 
+                        <Input
+                                 style={{marginLeft:10,width:width*0.4,borderRadius: 5,borderWidth: 0.5,borderColor: '#000'}}  
+                                  keyboardType = 'numeric'
+                                 placeholder="Money paid"
+                                 onChangeText={(money)=>this.setState({money})}
+                                 value={this.state.money}
+                               /> 
+                               </View>
                               <View style={{flexDirection:'column',marginLeft:10}}>
                               <View style={{flexDirection:'row' }}>
                               <CheckBox
@@ -749,42 +770,19 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                                   </View>
                               </View>
                               </View>
-                              <View style={{flexDirection:'row',marginLeft:50}}>
-                             {/* <View style={{flexDirection:'row'}}>
-                             <CheckBox
-                                       value={this.state.checkedMoney}
-                                       onValueChange={() => this.setState({ checkedMoney: !this.state.checkedMoney })}
-                                 />
-                                  <Text style={{marginTop: 5}}>Paid </Text>
-                             </View> */}
-                             <Input
-                                 style={{marginTop:10,width:width*0.5}}  
-                         keyboardType = 'numeric'
-                        placeholder="Amount paid"
-                        onChangeText={(money)=>this.setState({money})}
-                        value={this.state.money}
-                      /> 
-                             </View>
+                              
+                             
+                            
                              
                               {this.state.medicinesName.map((name,index)=>{
                       return(
                           <View key={index} style={{marginLeft:50,width:width*0.5}}>
                           <Input
                         
-                        borderless
+                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000'}}
                         placeholder="medicine name"
                         onChangeText={(Mname)=>this.handleChange(Mname,index)}
                         value={name}
-                        iconContent={
-                            <Icon
-                            size={16}
-                            color={argonTheme.COLORS.ICON}
-                            name="shop"
-                            family="ArgonExtra"
-                            style={styles.inputIcons}
-                          />
-                          
-                        }
                       />
                           </View>
                       )
@@ -802,19 +800,10 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                           <View style={{marginLeft:50,width:width*0.5}}>
                           <Input
                         
-                        borderless
+                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000'}}
                         placeholder="medical examinations"
                         onChangeText={value => this.setState({medicalExaminationName:value})}
                         value={this.state.medicalExaminationName}
-                        iconContent={
-                            <Icon
-                            size={16}
-                            color={argonTheme.COLORS.ICON}
-                            name="shop"
-                            family="ArgonExtra"
-                            style={styles.inputIcons}
-                          />
-                        }
                         />
 
                                   </View>
@@ -873,7 +862,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 </View>
 
                     </View>
-
+                 }
                
             </ScrollView>
           

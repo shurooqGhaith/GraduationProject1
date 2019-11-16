@@ -82,18 +82,11 @@ class PatientAfterSession extends React.Component {
       email:datasnapshot.val()
     })
  })
- var array=[];
 
  fire.database().ref("users").child(idD).child("appointment").on('value',(snapshot)=>{
      if(snapshot.val()){
     let data = Object.values(snapshot.val());
-    array=data;
-    var result = array.reduce((unique, o) => {
-      if(!unique.some(obj => obj.id === o.id )) {
-        unique.push(o);
-      }
-      return unique;
-  },[]);
+    
 
     this.setState({
         patientData:data,
