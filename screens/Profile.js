@@ -47,7 +47,6 @@ class Profile extends React.Component {
       closedAt:"",
       latitude:0,
       longitude:0,
-      showmap:false,
       nodata:false,
       Specialization:'',
       patientInfo:[],
@@ -59,26 +58,9 @@ class Profile extends React.Component {
 
   componentDidMount(){
     this.authListener();
-    //this.getLocation();
   }
 
-  getLocation(){
-    navigator.geolocation.getCurrentPosition(position=> {
-      this.setState({
-        latitude:position.coords.latitude,
-        longitude:position.coords.longitude
-      })
 
-      },
-      error=>alert(error.message),
-      {enableHighAccuracy:true,timeout:20000,maximumAge:2000}
-      );
-  }
-  showMap(){
-     this.setState({
-       showmap:true
-     })
-  }
   authListener(){
   
     const { navigation } = this.props;  
@@ -94,6 +76,7 @@ class Profile extends React.Component {
         console.log("verified");
      }
      else{
+      this.setState({isVerified:false});
        user.sendEmailVerification().then(()=>{
          console.log("sent");
         if(user.emailVerified){
@@ -189,6 +172,31 @@ backgroundColor='#fff'
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
+
+            {!this.state.isVerified && <Block flex style={styles.profileCard}>
+
+              <Block middle style={styles.avatarContainer}>
+                    <Image
+                      source={{ uri: Images.ProfilePicture }}
+                      style={styles.avatar}
+                    />
+                   <Block>
+                   <Block middle style={styles.nameInfo}>
+                   <View style={{flexDirection:'column'}}>
+                      <Text bold size={10} color="#32325D" id="name">
+                        Your email is not verified 
+                      </Text>
+                      <Text bold size={10} color="#32325D" id="name">
+                        check your email inbox and verify your email 
+                      </Text>
+                      </View>
+                    </Block>
+                   </Block> 
+                  </Block>
+
+              </Block> }
+
+            {this.state.isVerified && 
               <Block flex style={styles.profileCard}>
                 <Block middle style={styles.avatarContainer}>
                   <Image
@@ -385,7 +393,7 @@ backgroundColor='#fff'
                     
                   </Block>
                 </Block>
-              </Block>
+              </Block>}
             </ScrollView>
           </ImageBackground>
         </Block>

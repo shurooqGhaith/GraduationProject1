@@ -809,7 +809,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                              </View>
                             
                              
-                              {this.state.medicinesName.map((name,index)=>{
+                              {/* {this.state.medicinesName.map((name,index)=>{
                       return(
                           <View key={index} style={{marginLeft:70,width:width*0.5}}>
                           <TextInput
@@ -849,7 +849,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                       onPress={this.addMedicalExaminations}
                     >
                      other check up
-                    </Button>
+                    </Button> */}
 
 
                    

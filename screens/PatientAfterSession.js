@@ -97,7 +97,7 @@ class PatientAfterSession extends React.Component {
       }
     })
 
-    console.log(array.length);//3 يلي الافيلبل الهم تروو 
+    //console.log(array.length);//3 يلي الافيلبل الهم تروو 
     var len=array.length;
   if(len == 0){
     this.setState({noPatient:true});

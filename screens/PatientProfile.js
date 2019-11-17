@@ -92,6 +92,7 @@ class PatientProfile extends React.Component {
         this.setState({isVerified:true});
      }
      else{
+      this.setState({isVerified:false});
        user.sendEmailVerification().then(()=>{
          console.log("sent");
         if(user.emailVerified){
@@ -171,157 +172,191 @@ class PatientProfile extends React.Component {
   
   
   render() {
-    return (
-      <Block flex style={styles.profile}>
-        <Block flex>
-          <ImageBackground
-            source={Images.ProfileBackground}
-            style={styles.profileContainer}
-            imageStyle={styles.profileBackground}
-          >
 
-<Block style={{ marginBottom: theme.SIZES.BASE,marginTop:70 }}>
-<Header
-backgroundColor='#fff'
-  leftComponent={{ icon: 'home', color: '#000' }}
-  centerComponent={<Text style={{color:'#000'}}>{this.state.username}</Text>}
-  rightComponent={<TouchableOpacity style={{backgroundColor:'#fff'}} small onPress={()=>fire.auth().signOut()}><Text style={{color:'#000'}}>Logout</Text></TouchableOpacity>}
-/>
-          </Block>
+    
 
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={{ width, marginTop: '25%' }}
+      return (
+        <Block flex style={styles.profile}>
+          <Block flex>
+            <ImageBackground
+              source={Images.ProfileBackground}
+              style={styles.profileContainer}
+              imageStyle={styles.profileBackground}
             >
-              <Block flex style={styles.profileCard}>
-                <Block middle style={styles.avatarContainer}>
-                  <Image
-                    source={{ uri: Images.ProfilePicture }}
-                    style={styles.avatar}
-                  />
-                 <Block>
+  
+  <Block style={{ marginBottom: theme.SIZES.BASE,marginTop:70 }}>
+  <Header
+  backgroundColor='#fff'
+    leftComponent={{ icon: 'home', color: '#000' }}
+    centerComponent={<Text style={{color:'#000'}}>{this.state.username}</Text>}
+    rightComponent={<TouchableOpacity style={{backgroundColor:'#fff'}} small onPress={()=>fire.auth().signOut()}><Text style={{color:'#000'}}>Logout</Text></TouchableOpacity>}
+  />
+            </Block>
+  
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                style={{ width, marginTop: '25%' }}
+              >
+
+              {!this.state.isVerified && <Block flex style={styles.profileCard}>
+
+              <Block middle style={styles.avatarContainer}>
+                    <Image
+                      source={{ uri: Images.ProfilePicture }}
+                      style={styles.avatar}
+                    />
+                   <Block>
+                     
+                   <Block middle style={styles.nameInfo}>
+                   <View style={{flexDirection:'column'}}>
+                      <Text bold size={10} color="#32325D" id="name">
+                        Your email is not verified 
+                      </Text>
+                      <Text bold size={10} color="#32325D" id="name">
+                        check your email inbox and verify your email 
+                      </Text>
+                      </View>
+                    </Block>
+                   </Block> 
+                  </Block>
+
+              </Block> }
+
+                {this.state.isVerified && <Block flex style={styles.profileCard}>
+                  <Block middle style={styles.avatarContainer}>
+                    <Image
+                      source={{ uri: Images.ProfilePicture }}
+                      style={styles.avatar}
+                    />
+                   <Block>
+
                    
-                 </Block> 
-                </Block>
-                <Block style={styles.info}>
-                  <Block
-                    middle
-                    row
-                    space="evenly"
-                    style={{ marginTop: 20, paddingBottom: 24 }}
-                  >
-                    <Button
-                      small
-                      style={{ backgroundColor: argonTheme.COLORS.INFO }}
-                     onPress={()=> this.props.navigation.navigate("UpdateInfo",{id:this.state.id,type:'patient'})}
+                     
+                   </Block> 
+                  </Block>
+                  <Block style={styles.info}>
+                    <Block
+                      middle
+                      row
+                      space="evenly"
+                      style={{ marginTop: 20, paddingBottom: 24 }}
                     >
-                      Edit
-                    </Button>
-                    <Button
-                     // onPress={()=>this.props.navigation.navigate("Chat",{sender:this.state.id,name:this.state.username,email:this.state.email,receiver:"8HN5vu95CDd7Ez56XQg0c9U5mr63"})}
-                      onPress={()=>this.props.navigation.navigate("Main",{sender:this.state.id,name:this.state.username,email:this.state.email,type:"patient"})}
-                      small
-                      style={{ backgroundColor: argonTheme.COLORS.DEFAULT }}
+                      <Button
+                        small
+                        style={{ backgroundColor: argonTheme.COLORS.INFO }}
+                       onPress={()=> this.props.navigation.navigate("UpdateInfo",{id:this.state.id,type:'patient'})}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                       // onPress={()=>this.props.navigation.navigate("Chat",{sender:this.state.id,name:this.state.username,email:this.state.email,receiver:"8HN5vu95CDd7Ez56XQg0c9U5mr63"})}
+                        onPress={()=>this.props.navigation.navigate("Main",{sender:this.state.id,name:this.state.username,email:this.state.email,type:"patient"})}
+                        small
+                        style={{ backgroundColor: argonTheme.COLORS.DEFAULT }}
+                      >
+  
+                        MESSAGE 
+                      </Button>
+                    </Block>
+                    
+                  </Block>
+  
+                  <Block flex>
+                    <Block middle style={styles.nameInfo}>
+                      <Text bold size={28} color="#32325D" id="name">
+                        {this.state.username}
+                      </Text>
+                     
+                    </Block>
+                    <Block middle style={{marginTop: 30}}>
+                     
+                      
+                     
+                    </Block>
+                    <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
+                      <Block style={styles.divider} />
+                    </Block>
+                    <Block middle>
+                      
+                    </Block>
+  
+                    <Block
+                      row
+                      style={{ paddingVertical: 14, alignItems: "baseline" }}
                     >
-
-                      MESSAGE 
+                      
+                    </Block>
+                    <Block
+                      row
+                      style={{ paddingBottom: 20, justifyContent: "flex-end" }}
+                    >
+                      
+  
+                    </Block>
+                    <Block style={{ paddingBottom: -HeaderHeight * 2 }}>
+                    
+                    <View style={{marginLeft:60}}>
+                    <Button
+                     onPress={() => this.props.navigation.navigate("PatientAppointment",{idPatient:this.state.id})}
+                     color="transparent"
+                        style={{width:width*0.5}}
+                        textStyle={{
+                          color: "#233DD2",
+                          fontWeight: "500",
+                          fontSize: 16
+                        }} >
+                          
+                          <Text >
+                             Appointments
+                          </Text>
                     </Button>
-                  </Block>
-                  
-                </Block>
-
-                <Block flex>
-                  <Block middle style={styles.nameInfo}>
-                    <Text bold size={28} color="#32325D" id="name">
-                      {this.state.username}
-                    </Text>
-                   
-                  </Block>
-                  <Block middle style={{marginTop: 30}}>
-                   
-                      {this.state.isVerified && <Text>Verified</Text>}
-                    
-                   
-                  </Block>
-                  <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
-                    <Block style={styles.divider} />
-                  </Block>
-                  <Block middle>
-                    
-                  </Block>
-
-                  <Block
-                    row
-                    style={{ paddingVertical: 14, alignItems: "baseline" }}
-                  >
-                    
-                  </Block>
-                  <Block
-                    row
-                    style={{ paddingBottom: 20, justifyContent: "flex-end" }}
-                  >
-                    
-
-                  </Block>
-                  <Block style={{ paddingBottom: -HeaderHeight * 2 }}>
-                  
-                  <View style={{marginLeft:60}}>
-                  <Button
-                   onPress={() => this.props.navigation.navigate("PatientAppointment",{idPatient:this.state.id})}
-                   color="transparent"
-                      style={{width:width*0.5}}
-                      textStyle={{
-                        color: "#233DD2",
-                        fontWeight: "500",
-                        fontSize: 16
-                      }} >
-                        
-                        <Text >
-                           Appointments
-                        </Text>
-                  </Button>
-                   </View>
-                   <View style={{marginLeft:60,marginTop:10}}>
-                  <Button
-                   onPress={() => this.props.navigation.navigate("Search",{idPatient:this.state.id})}
-                   color="transparent"
-                      style={{width:width*0.5}}
-                      textStyle={{
-                        color: "#233DD2",
-                        fontWeight: "500",
-                        fontSize: 16
-                      }} >
-                        
-                        <Text >
-                          make an appointment
-                        </Text>
-                  </Button>
-                   </View>
-                   <View style={{marginLeft:60,marginTop:10}}>
-                  <Button
-                   onPress={() => this.props.navigation.navigate("ShowAllLocation",{id:this.state.id})}
-                   color="transparent"
-                      style={{width:width*0.5}}
-                      textStyle={{
-                        color: "#233DD2",
-                        fontWeight: "500",
-                        fontSize: 16
-                      }} >
-                        
-                        <Text>
-                         location
-                        </Text>
-                  </Button>
-                  </View>
+                     </View>
+                     <View style={{marginLeft:60,marginTop:10}}>
+                    <Button
+                     onPress={() => this.props.navigation.navigate("Search",{idPatient:this.state.id})}
+                     color="transparent"
+                        style={{width:width*0.5}}
+                        textStyle={{
+                          color: "#233DD2",
+                          fontWeight: "500",
+                          fontSize: 16
+                        }} >
+                          
+                          <Text >
+                            make an appointment
+                          </Text>
+                    </Button>
+                     </View>
+                     <View style={{marginLeft:60,marginTop:10}}>
+                    <Button
+                     onPress={() => this.props.navigation.navigate("ShowAllLocation",{id:this.state.id})}
+                     color="transparent"
+                        style={{width:width*0.5}}
+                        textStyle={{
+                          color: "#233DD2",
+                          fontWeight: "500",
+                          fontSize: 16
+                        }} >
+                          
+                          <Text>
+                           location
+                          </Text>
+                    </Button>
+                    </View>
+                    </Block>
                   </Block>
                 </Block>
-              </Block>
-            </ScrollView>
-          </ImageBackground>
+                }
+              </ScrollView>
+            </ImageBackground>
+          </Block>
+          
         </Block>
-        
-      </Block>
-    );
+      );
+
+      
+    
+    
   }
 }
 
