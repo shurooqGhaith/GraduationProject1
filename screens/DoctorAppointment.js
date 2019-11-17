@@ -216,7 +216,9 @@ class DoctorAppointment extends React.Component {
                               idDoctor:this.state.id,
                               idPatient:item.idPatient,
                               date:item.dateSelected,
-                              time:item.timeSelected
+                              time:item.timeSelected,
+                              clinic:item.clinicName
+
                               })
                           }}
                           ><Text style={{color:'#000'}}>edit</Text></Button>

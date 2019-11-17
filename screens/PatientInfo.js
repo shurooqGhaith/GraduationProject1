@@ -22,8 +22,6 @@ import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
 import fire from "../constants/firebaseConfigrations";
 import DateTimePicker from "react-native-modal-datetime-picker";
-import MapView,{Marker} from "react-native-maps";
-import { Col, Row, Grid } from "react-native-easy-grid";
 import { Divider,Header } from 'react-native-elements';
 import Autocomplete from 'react-native-autocomplete-input';
 import { slotCreator } from "react-native-slot-creator";
@@ -116,7 +114,8 @@ class PatientInfo extends React.Component {
 
       showModal:false,
       showModal2:false,
-      showForm:false
+      showForm:false,
+      notes:''
 
     }
   }
@@ -493,8 +492,9 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
           if(!this.state.session ){alert("ensure you have entered the session number !  ");return;}
           else{
             var m="";
-          if(this.state.medicinesName){
+         // if(this.state.medicinesName){
             var array=this.state.medicinesName;
+            if(this.state.medicine){array.push(this.state.medicine)}
             array.forEach((value,index)=>{
               if(value !== ""){
                 fire.database().ref("medicines").orderByChild("medicine").equalTo(value.toLowerCase()).on('value',(snap)=>{
@@ -506,20 +506,33 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                 })
               }
             })
-          }
+         // } // medicines if 
           if(!this.state.medicinesName){
             m+="no medicine";
           }
-          if(this.state.medicalExaminationName){
+          //if(this.state.medicalExaminations){
+            var array=this.state.medicalExaminations;
+            if(this.state.medicalExaminationName){array.push(this.state.medicalExaminationName)}
+            array.forEach((value,index)=>{
+              if(value !== ""){
+                fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(value.toLowerCase()).on('value',(snap)=>{
+                  //alert("1");
+                  m+=value.trim()+"\n";
+                  if(!snap.val()){
+                    fire.database().ref("medicalExaminations").push().set({ 'exam':value.toLowerCase().trim()})
+                  }
+                })
+              }
+            })
+        //  } //medical exam if
+          // if(this.state.medicalExaminationName){
            
-              fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(this.state.medicalExaminationName.trim()).on('value',(snap)=>{
-                if(!snap.val()){
-                  fire.database().ref("medicalExaminations").push().set({ 'exam':this.state.medicalExaminationName.trim()})
-                }
-              })
-              
-            
-          }
+          //     fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(this.state.medicalExaminationName.trim()).on('value',(snap)=>{
+          //       if(!snap.val()){
+          //         fire.database().ref("medicalExaminations").push().set({ 'exam':this.state.medicalExaminationName.trim()})
+          //       }
+          //     })
+          // }
          
          
           
@@ -583,7 +596,8 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
             'medicalExaminations':this.state.medicalExaminationName ,
             'time':this.state.time,
             'date':this.state.date,
-            'clinic':this.state.clinic
+            'clinic':this.state.clinic,
+            'notes':this.state.notes
             
           }
           )
@@ -597,8 +611,9 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
             'medicalExaminations':this.state.medicalExaminationName ,
             'time':this.state.time,
             'date':this.state.date,
-            'clinic':this.state.clinic
-              
+            'clinic':this.state.clinic,
+            'notes':this.state.notes
+
             }
             )
             alert("added successfully!")
@@ -612,28 +627,21 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
   render() {
     return (
       <Block flex style={styles.profile}>
-
-      
         <Block flex>
-
-         
-        
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
-              
-
                   <Block style={{marginLeft:5}}>
                   <View style={{flexDirection:'column',marginTop:40}}>
                   <View style={{flexDirection:'row'}}>
-                  <Text style={{color:"#004D40"}}>name:</Text>
-                  <Text style={{color:"#004D40"}}>{this.state.username}</Text>
+                  <Text style={{color:"#263238"}}>name:</Text>
+                  <Text style={{color:"#263238"}}>{this.state.username}</Text>
                   
                   </View>
                   <View style={{flexDirection:'row'}}>
-                    <Text style={{color:"#004D40"}}>email:</Text>
-                    <Text style={{color:"#004D40"}}>{this.state.email}</Text>
+                    <Text style={{color:"#263238"}}>email:</Text>
+                    <Text style={{color:"#263238"}}>{this.state.email}</Text>
                   </View>
                   </View>
                   </Block>
@@ -642,7 +650,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                   <View style={{flexDirection:'row'}}>
               <Button
                       onPress={this.showDatePicker}
-                      style={{backgroundColor:'#00897B',marginLeft:10,marginTop:60,width:width*0.4}}
+                      style={{backgroundColor:'#455A64',marginLeft:30,marginTop:60,width:width*0.4}}
                       textStyle={{
                         color: "#fff",
                         fontWeight: "500",
@@ -654,7 +662,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 
                       <Button
                       onPress={()=>this.setState({showForm:true})}
-                      style={{backgroundColor:'#00897B',marginLeft:20,marginTop:60,width:width*0.4}}
+                      style={{backgroundColor:'#37474F',marginLeft:20,marginTop:60,width:width*0.4}}
                       textStyle={{
                         color: "#fff",
                         fontWeight: "500",
@@ -720,24 +728,24 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                              </View> */}
                  {this.state.showForm && <View style={{flexDirection:'column',marginTop:20}}>
                    <View style={{flexDirection:'row'}}>
-                       <Input  
+                       <TextInput  
                              value={this.state.session}
                              placeholder="session Number"   
-                             style={{width:width*0.4,marginLeft:20,borderRadius: 5,borderWidth: 0.5,borderColor: '#000' }}  
+                             style={{width:width*0.4,marginLeft:30,borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',paddingLeft:5 }}  
                              onChangeText={value => this.setState({session:value})}
                              keyboardType = 'numeric'
                              
                               />
 
-                        <Input
-                                 style={{marginLeft:10,width:width*0.4,borderRadius: 5,borderWidth: 0.5,borderColor: '#000'}}  
+                        <TextInput
+                                 style={{marginLeft:10,width:width*0.4,borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',paddingLeft:5}}  
                                   keyboardType = 'numeric'
                                  placeholder="Money paid"
                                  onChangeText={(money)=>this.setState({money})}
                                  value={this.state.money}
                                /> 
                                </View>
-                              <View style={{flexDirection:'column',marginLeft:10}}>
+                              <View style={{flexDirection:'column',marginLeft:40}}>
                               <View style={{flexDirection:'row' }}>
                               <CheckBox
                                        value={this.state.checkedTemporary}
@@ -771,15 +779,30 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                               </View>
                               </View>
                               
-                             
+                             <View style={{flexDirection:'row'}}>
+
+                                  <TextInput
+                                       style={{width:width*0.4,marginLeft:30,borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',paddingLeft:5 }}  
+                                       placeholder="medical examinations"
+                                       onChangeText={value => this.setState({medicalExaminationName:value})}
+                                       value={this.state.medicalExaminationName}
+                                    /> 
+
+                                   <TextInput
+                                       style={{width:width*0.4,marginLeft:15,borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',paddingLeft:5 }}  
+                                       placeholder="medicine name"
+                                       onChangeText={value => this.setState({medicine:value})}
+                                       value={this.state.medicine}
+                                    /> 
+                             </View>
                             
                              
                               {this.state.medicinesName.map((name,index)=>{
                       return(
-                          <View key={index} style={{marginLeft:50,width:width*0.5}}>
-                          <Input
+                          <View key={index} style={{marginLeft:70,width:width*0.5}}>
+                          <TextInput
                         
-                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000'}}
+                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
                         placeholder="medicine name"
                         onChangeText={(Mname)=>this.handleChange(Mname,index)}
                         value={name}
@@ -792,32 +815,66 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                       style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10, width: width * 0.5,borderRadius:10,marginLeft:50}}
                       onPress={this.addMedicineName}
                     >
-                     add medicine name
+                     other medicine 
+                    </Button>
+
+                    {this.state.medicalExaminations.map((name,index)=>{
+                      return(
+                          <View key={index} style={{marginLeft:70,width:width*0.5}}>
+                          <TextInput
+                        
+                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
+                        placeholder="medicine name"
+                        onChangeText={(Mname)=>this.handleMedicalExaminationsChange(Mname,index)}
+                        value={name}
+                      />
+                          </View>
+                      )
+                    })}
+
+                    <Button
+                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10, width: width * 0.5,borderRadius:10,marginLeft:50}}
+                      onPress={this.addMedicalExaminations}
+                    >
+                     other check up
                     </Button>
 
 
                    
                           <View style={{marginLeft:50,width:width*0.5}}>
-                          <Input
+                          <TextInput
                         
-                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000'}}
+                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
                         placeholder="medical examinations"
                         onChangeText={value => this.setState({medicalExaminationName:value})}
                         value={this.state.medicalExaminationName}
                         />
+                              </View>
+<View style={{marginTop:30}} >
+    <TextInput
+      style={styles.textArea}
+      underlineColorAndroid="transparent"
+      placeholder="Notes"
+      placeholderTextColor="grey"
+      numberOfLines={10}
+      multiline={true}
+      onChangeText={(text) => this.setState({notes:text})}
+                                value={this.state.notes}
+    />
+  </View>
+                             
+                                  
 
-                                  </View>
-
-                     <View style={{flexDirection:'row',marginLeft:5}}>
+                     <View style={{flexDirection:'row',marginLeft:50,marginTop:20}}>
                     <Button  
-                    style={{width:width*0.3,backgroundColor:'#333'}} 
+                    style={{width:width*0.3,backgroundColor:'#263238',color:'#fff'}} 
                     onPress={this.submit}>
                     <Text>add</Text>
                     
                     </Button>
 
                     <Button  
-                    style={{width:width*0.3,backgroundColor:"#333",marginLeft:15}} 
+                    style={{width:width*0.3,backgroundColor:"#263238",marginLeft:15,color:'#fff'}} 
                     onPress={()=>this.setState({nextSession:true})}
                     >
                     <Text>{this.state.sessionDate || "next session"}</Text>
@@ -875,7 +932,21 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 const styles = StyleSheet.create({
   
   
-
+  textAreaContainer: {
+    borderColor: "#fff",
+    borderWidth: 1,
+    padding: 5,
+    marginTop:20,
+    width:width*0.8,
+   marginLeft:30
+  },
+  textArea: {
+    height: 150,
+    //justifyContent: "flex-start",
+    width:width*0.8,
+    backgroundColor:"#fff",
+    marginLeft:50
+  },
   
   profile: {
     marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
