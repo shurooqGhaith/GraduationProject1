@@ -74,7 +74,7 @@ class PatientAfterSession extends React.Component {
     this.setState({
       username:datasnapshot.val()
     })
-    alert(datasnapshot.val())
+   // alert(datasnapshot.val())
  })
     
  fire.database().ref("users").child(idD).child("email").on('value',(datasnapshot)=>{
@@ -83,13 +83,25 @@ class PatientAfterSession extends React.Component {
     })
  })
 
+ var array=[];
  fire.database().ref("users").child(idD).child("appointment").on('value',(snapshot)=>{
      if(snapshot.val()){
     let data = Object.values(snapshot.val());
-    
+    array=data;
+    var result = array.reduce((unique, o) => {
+      if(!unique.some(obj => obj.idPatient === o.idPatient )) {
+        unique.push(o);
+      }
+      return unique;
+  },[]);
 
+  result.map((value)=>{
+    console.log(value.idPatient);
+    console.log(value.available);//false طبع اول عنصر بس لانه الباقي كلهم نفس الاي دي ف حزفهم
+    
+  })
     this.setState({
-        patientData:data,
+        patientData:result,
         nodata:false
     })
      }
@@ -190,7 +202,7 @@ viewInfo(id){
                   {!this.state.nodata && this.state.patientData.map((item,index)=>{
                       
                      
-                     if(item.available){
+                     //if(item.available){
                         var name;
                       fire.database().ref("users").child(item.idPatient).child("name").once('value',(snap)=>{
                         name=snap.val();
@@ -211,7 +223,7 @@ viewInfo(id){
                          
                       
                      
-                     }
+                     //}
                    })}
                     </View>
 
