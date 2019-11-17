@@ -183,6 +183,7 @@ class Info extends React.Component {
                               }
                              
                    })}
+                   {this.state.type=="doctor" && this.state.noInfo && <View style={{marginTop:100}}><Text bold >Not been made yet </Text></View>}
                     </View>
                   </Block>
 

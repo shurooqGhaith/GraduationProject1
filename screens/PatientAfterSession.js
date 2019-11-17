@@ -46,9 +46,9 @@ class PatientAfterSession extends React.Component {
       view:false,
       noInfo:false,
       process:[],
-      medicines:[]
+      medicines:[],
       
-      
+      noPatient:false
     }
   }
 
@@ -88,21 +88,38 @@ class PatientAfterSession extends React.Component {
      if(snapshot.val()){
     let data = Object.values(snapshot.val());
     array=data;
+  //  console.log(array.length);//12
+    data.map((value)=>{
+      if(!value.available){
+        array = array.filter(function( obj ) {
+          return obj.available !== false;
+      });
+      }
+    })
+
+    console.log(array.length);//3 يلي الافيلبل الهم تروو 
+    var len=array.length;
+  if(len == 0){
+    this.setState({noPatient:true});
+  }
     var result = array.reduce((unique, o) => {
-      if(!unique.some(obj => obj.idPatient === o.idPatient )) {
+      if(!unique.some(obj => obj.idPatient === o.idPatient  )) {
         unique.push(o);
       }
       return unique;
   },[]);
 
-  result.map((value)=>{
-    console.log(value.idPatient);
-    console.log(value.available);//false طبع اول عنصر بس لانه الباقي كلهم نفس الاي دي ف حزفهم
+  
+  
+  
+  // result.map((value)=>{
+  //   console.log(value.idPatient);
+  //   console.log(value.available);//false طبع اول عنصر بس لانه الباقي كلهم نفس الاي دي ف حزفهم
     
-  })
+  // })
     this.setState({
         patientData:result,
-        nodata:false
+         nodata:false
     })
      }
     
@@ -197,7 +214,8 @@ viewInfo(id){
                   
                   
                   <Block middle>
-                     
+                  {this.state.noPatient && <View style={{marginTop:300,marginLeft:50}}><Text bold size={20}>No patients yet </Text></View>}
+
                   <View style={{marginTop:200}}>
                   {!this.state.nodata && this.state.patientData.map((item,index)=>{
                       
@@ -212,7 +230,7 @@ viewInfo(id){
                           <View style={{flexDirection:'row'}}>
                           <Text>{name}</Text>
                           <Button small style={{backgroundColor:'#fff',marginLeft:30}}
-                          onPress={()=>this.props.navigation.navigate("Info",{id:item.idPatient,idDoctor:this.state.idDoctor,type:"doctor",date:'',time:'',clinic:'',available:false})}
+                          onPress={()=>this.props.navigation.navigate("Info",{id:item.idPatient,idDoctor:this.state.idDoctor,type:"doctor",date:'',time:'',clinic:'',available:item.available})}
                           ><Text style={{color:'#000'}}>details</Text></Button>
                           </View>
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
