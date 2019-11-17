@@ -492,47 +492,59 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
           if(!this.state.session ){alert("ensure you have entered the session number !  ");return;}
           else{
             var m="";
+            var m1="";
          // if(this.state.medicinesName){
-            var array=this.state.medicinesName;
-            if(this.state.medicine){array.push(this.state.medicine)}
-            array.forEach((value,index)=>{
-              if(value !== ""){
-                fire.database().ref("medicines").orderByChild("medicine").equalTo(value.toLowerCase()).on('value',(snap)=>{
-                  //alert("1");
-                  m+=value.trim()+"\n";
-                  if(!snap.val()){
-                    fire.database().ref("medicines").push().set({ 'medicine':value.toLowerCase().trim()})
-                  }
-                })
-              }
-            })
+            // var array=this.state.medicinesName;
+            // if(this.state.medicine){array.push(this.state.medicine)}
+            // array.forEach((value,index)=>{
+            //   if(value !== ""){
+            //     fire.database().ref("medicines").orderByChild("medicine").equalTo(value.toLowerCase()).on('value',(snap)=>{
+            //       //alert("1");
+            //       m+=value.trim()+"\n";
+            //       if(!snap.val()){
+            //         fire.database().ref("medicines").push().set({ 'medicine':value.toLowerCase().trim()})
+            //       }
+            //     })
+            //   }
+            // }) //array map
          // } // medicines if 
           if(!this.state.medicinesName){
             m+="no medicine";
           }
           //if(this.state.medicalExaminations){
-            var array=this.state.medicalExaminations;
-            if(this.state.medicalExaminationName){array.push(this.state.medicalExaminationName)}
-            array.forEach((value,index)=>{
-              if(value !== ""){
-                fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(value.toLowerCase()).on('value',(snap)=>{
-                  //alert("1");
-                  m+=value.trim()+"\n";
-                  if(!snap.val()){
-                    fire.database().ref("medicalExaminations").push().set({ 'exam':value.toLowerCase().trim()})
-                  }
-                })
+            // var array2=this.state.medicalExaminations;
+            // if(this.state.medicalExaminationName){array2.push(this.state.medicalExaminationName)}
+            // array2.forEach((value,index)=>{
+            //   if(value !== ""){
+            //     fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(value.toLowerCase()).on('value',(snap)=>{
+            //       //alert("1");
+            //       console.log(value+"\n");
+            //       m1+=value.trim()+"\n";
+            //       if(!snap.val()){
+            //         fire.database().ref("medicalExaminations").push().set({ 'exam':value.toLowerCase().trim()})
+            //       }
+            //     })
+            //   }
+            // })
+          //  console.log(m1);//empty
+        //  } //medical exam if
+          if(this.state.medicalExaminationName){
+           
+              fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(this.state.medicalExaminationName.trim().toLowerCase()).on('value',(snap)=>{
+                if(!snap.val()){
+                  fire.database().ref("medicalExaminations").push().set({ 'exam':this.state.medicalExaminationName.trim().toLowerCase()})
+                }
+              })
+          }
+
+          if(this.state.medicine){
+           
+            fire.database().ref("medicines").orderByChild("medicine").equalTo(this.state.medicine.trim().toLowerCase()).on('value',(snap)=>{
+              if(!snap.val()){
+                fire.database().ref("medicines").push().set({ 'medicine':this.state.medicine.trim().toLowerCase()})
               }
             })
-        //  } //medical exam if
-          // if(this.state.medicalExaminationName){
-           
-          //     fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(this.state.medicalExaminationName.trim()).on('value',(snap)=>{
-          //       if(!snap.val()){
-          //         fire.database().ref("medicalExaminations").push().set({ 'exam':this.state.medicalExaminationName.trim()})
-          //       }
-          //     })
-          // }
+        }
          
          
           
@@ -592,8 +604,8 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
             'sessionNumber':this.state.session,
             'process':pro,
             'money':this.state.money,
-            'medicine':m ,////////////
-            'medicalExaminations':this.state.medicalExaminationName ,
+            'medicine':this.state.medicine ,//////////// m
+            'medicalExaminations':this.state.medicalExaminationName ,//m1 بس بتضل فاضية
             'time':this.state.time,
             'date':this.state.date,
             'clinic':this.state.clinic,
@@ -607,8 +619,8 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
             'sessionNumber':this.state.session,
             'process':pro,
             'money':this.state.money,
-            'medicine':m ,////////////
-            'medicalExaminations':this.state.medicalExaminationName ,
+            'medicine':this.state.medicine ,////////////m
+            'medicalExaminations':this.state.medicalExaminationName ,//m1
             'time':this.state.time,
             'date':this.state.date,
             'clinic':this.state.clinic,
@@ -824,7 +836,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                           <TextInput
                         
                         style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
-                        placeholder="medicine name"
+                        placeholder="medical exam"
                         onChangeText={(Mname)=>this.handleMedicalExaminationsChange(Mname,index)}
                         value={name}
                       />
@@ -841,15 +853,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 
 
                    
-                          <View style={{marginLeft:50,width:width*0.5}}>
-                          <TextInput
-                        
-                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
-                        placeholder="medical examinations"
-                        onChangeText={value => this.setState({medicalExaminationName:value})}
-                        value={this.state.medicalExaminationName}
-                        />
-                              </View>
+                          
 <View style={{marginTop:30}} >
     <TextInput
       style={styles.textArea}
