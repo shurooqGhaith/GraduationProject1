@@ -297,7 +297,7 @@ class PatientProfile extends React.Component {
                     
                     <View style={{marginLeft:60}}>
                     <Button
-                     onPress={() => this.props.navigation.navigate("PatientAppointment",{idPatient:this.state.id})}
+                     onPress={() => this.props.navigation.navigate("MyPanel",{idPatient:this.state.id})}
                      color="transparent"
                         style={{width:width*0.5}}
                         textStyle={{

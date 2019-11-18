@@ -37,6 +37,7 @@
     "react-native-modal-datetime-picker": "^7.5.2",
     "react-native-modal-dropdown": "^0.6.2",
     "react-native-panel": "^1.0.4",
+    "react-native-paper": "^3.2.1",
     "react-native-popup-menu": "^0.15.6",
     "react-native-searchbar": "^1.16.0",
     "react-native-slot-creator": "^1.0.1",
