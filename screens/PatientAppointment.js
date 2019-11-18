@@ -7,7 +7,8 @@ import {
   Image,
   ImageBackground,
   Platform,
-  Picker
+  Picker,
+  ToastAndroid
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
@@ -20,7 +21,19 @@ import MapView,{Marker} from "react-native-maps";
 import { Divider } from 'react-native-elements';
 import { Table, TableWrapper, Row, Cell, Col,Rows } from 'react-native-table-component';
 const { width, height } = Dimensions.get("screen");
-
+const Toast = (props) => {
+  if (props.visible) {
+    ToastAndroid.showWithGravityAndOffset(
+      props.message,
+      ToastAndroid.LONG,
+      ToastAndroid.CENTER,
+      25,
+      50,
+    );
+    return null;
+  }
+  return null;
+};
 const thumbMeasure = (width - 48 - 32) / 3;
 
 class PatientAppointment extends React.Component {
@@ -127,7 +140,31 @@ class PatientAppointment extends React.Component {
        console.log(time);
        console.log(clinic);
        console.log(av);
+       if(!av){
+         this.setState({showToast:true});
+       setTimeout(function(){
+        this.setState({showToast:false});
+            }.bind(this),7000);
+  }
+  var flag=false;
+  if(av){
+  
+    this.state.session.map((session,index)=>{
+      if(date == session.date && time== session.time && clinic ==session.clinic && id==session.idDoctor){//الموعد صار و في اله جلسة
+        flag=true;
+      }
+    })
+  }
+if(flag){
+  this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:id,type:"patient",date:date,time:time,clinic:clinic,available:av})
+}
 
+if(!flag){ // الموعد ما صار تأجل او التغى
+  this.setState({showToast:true});
+  setTimeout(function(){
+   this.setState({showToast:false});
+       }.bind(this),7000);
+}
   }
   
   
@@ -145,6 +182,7 @@ class PatientAppointment extends React.Component {
                     
                   
                   {!this.state.nodata && <View style={styles.container}>
+                  <Toast visible={this.state.showToast} message="Does not been made yet "/>
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
           { this.state.appointment.map((data, index) => {

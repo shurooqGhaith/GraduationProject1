@@ -194,9 +194,9 @@ class Info extends React.Component {
                     <View style={styles.itemsList} >
                   
                     {this.state.available && !this.state.noSession && this.state.type=="patient" && this.state.session.map((session,ind)=>{
-                      var flag=false;
+                      var x=0;
           if(this.state.date == session.date && this.state.time== session.time && this.state.clinic ==session.clinic && this.state.idDoctor==session.idDoctor){
-           flag=true;
+          x=x+1;
             if(!session.money){money="no";}else{money=session.money}
             if(!session.medicine){medicine="no medicine";}else{medicine=session.medicine}
             if(!session.medicalExaminations){exam="no checkup needed";}else{exam=session.medicalExaminations}
