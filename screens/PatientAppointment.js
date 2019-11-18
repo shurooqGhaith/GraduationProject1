@@ -168,13 +168,14 @@ class PatientAppointment extends React.Component {
     })
   }
 if(flag){
-  this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:id,type:"patient",date:date,time:time,clinic:clinic,available:av})
+  //this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:id,type:"patient",date:date,time:time,clinic:clinic,available:av})
+  this.props.navigation.navigate("MyPanel");
 }
 
 if(!flag){ // الموعد ما صار تأجل او التغى
-  this.setState({showToast2:true});
+  this.setState({showToast:true});
   setTimeout(function(){
-   this.setState({showToast2:false});
+   this.setState({showToast:false});
        }.bind(this),7000);
 }
   }
@@ -228,7 +229,7 @@ if(!flag){ // الموعد ما صار تأجل او التغى
               style={{ width, marginTop: '25%' }}
             >
                   
-                  <View style={{flexDirection:'row',marginTop:50}}>
+                  <View style={{flexDirection:'row',marginTop:50,marginLeft:50}}>
                       <Button
                       small
                       onPress={this.filterResult}
@@ -259,8 +260,8 @@ if(!flag){ // الموعد ما صار تأجل او التغى
                       </View>
                   
                   {!this.state.nodata && <View style={styles.container}>
-                  <Toast visible={this.state.showToast} message="Does not been made yet "/>
-                  <Toast visible={this.state.showToast} message="Cancelled or delayed ! "/>
+                  <Toast visible={this.state.showToast} message="Cancelled or delayed or not made yet "/>
+                  <Toast visible={this.state.showToast2} message="Cancelled or delayed ! "/>
 
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>

@@ -13,7 +13,8 @@ import {
   ToastAndroid
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
-import { Icon,Divider } from 'react-native-elements';
+import { Divider } from 'react-native-elements';
+import Icon from "react-native-vector-icons/MaterialIcons";
 import firebase from 'firebase';
 import { Button as ComponentButton, Input } from "../components";
 import { Images, argonTheme } from "../constants";
@@ -268,8 +269,6 @@ class UpdateInfo extends React.Component {
                         //editable={this.state.nameEnable}
                        // underlineColorAndroid='transparent' 
                       />
-                      
-                          
                              <ComponentButton
                            small
                            style={{backgroundColor:'#333',marginLeft:50}}
@@ -281,8 +280,6 @@ class UpdateInfo extends React.Component {
                       </ComponentButton>  
                       {/* <Toast visible={this.state.isShow} message="Name is Updated successfully"/>       */}
                       </View>
-                      
-                     
                       }
                       </View>
                       
@@ -340,9 +337,10 @@ class UpdateInfo extends React.Component {
                     <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
 
                     <Block width={width * 0.8} style={{marginTop:30,marginBottom: 15}}>
-                    <TouchableOpacity onPress={()=>this.setState({passwordEnable:!this.state.passwordEnable})}>
-                    <Text style={{marginLeft:20}} size={15}> Change Password</Text>
-                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.row} onPress={()=>this.setState({passwordEnable:!this.state.passwordEnable})}>
+                <Text style={styles.title}>Change password</Text>
+                <Icon name={this.state.passwordEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+            </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
 
                        {this.state.passwordEnable && 
@@ -443,6 +441,20 @@ class UpdateInfo extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  row:{
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    height:56,
+    paddingLeft:25,
+    paddingRight:18,
+    alignItems:'center',
+    backgroundColor: "#eee",
+},
+title:{
+  fontSize: 14,
+  fontWeight:'bold',
+  color: "#333",
+},
     firstHeader: {
         marginHorizontal: 10,
         backgroundColor: 'gray',
