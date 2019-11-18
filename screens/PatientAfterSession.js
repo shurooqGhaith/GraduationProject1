@@ -230,7 +230,9 @@ viewInfo(id){
                           <View style={{flexDirection:'row'}}>
                           <Text>{name}</Text>
                           <Button small style={{backgroundColor:'#fff',marginLeft:30}}
-                          onPress={()=>this.props.navigation.navigate("Info",{id:item.idPatient,idDoctor:this.state.idDoctor,type:"doctor",date:'',time:'',clinic:'',available:item.available})}
+                          //onPress={()=>this.props.navigation.navigate("Info",{id:item.idPatient,idDoctor:this.state.idDoctor,type:"doctor",date:'',time:'',clinic:'',available:item.available})}
+                          onPress={()=>this.props.navigation.navigate("MyPanel",{id:item.idPatient,idDoctor:this.state.idDoctor,type:"doctor",date:'',time:'',clinic:'',available:item.available})}
+
                           ><Text style={{color:'#000'}}>details</Text></Button>
                           </View>
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>

@@ -246,18 +246,10 @@ class UpdateInfo extends React.Component {
                 <Divider style={{backgroundColor:'#444',width:width}}/>
 
                     <Block  width={width * 0.8} style={{ marginBottom: 15,marginTop:50}}>
-                    <TouchableOpacity 
-                    onPress={()=>this.setState({nameEnable:!this.state.nameEnable})}>
-                    <Text style={{marginLeft:20}} size={15}>Edit Name
-                    <Text style={{marginLeft:100,color:'#888'}} size={15}>
-                    {"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"
-                    +this.state.name}
-                    </Text>
-
-                    </Text>
-                    
-
-                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.row} onPress={()=>this.setState({nameEnable:!this.state.nameEnable})}>
+                <Text style={styles.title}>Change Name</Text>
+                <Icon name={this.state.nameEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+            </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
                       {this.state.nameEnable && 
                       <View>
@@ -286,14 +278,11 @@ class UpdateInfo extends React.Component {
                     </Block>
                     <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
                     <Block  width={width * 0.8} style={{ marginBottom: 15,marginTop:30}}>
-                    <TouchableOpacity 
-                    onPress={()=>this.setState({emailEnable:!this.state.emailEnable})}>
-                    <Text style={{marginLeft:20}} size={15}>Edit Email
-                    <Text style={{marginLeft:100,color:'#888'}} size={11}>
-                    {"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"+this.state.email}</Text>
-</Text>
-
-                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.row} onPress={()=>this.setState({emailEnable:!this.state.emailEnable})}>
+                <Text style={styles.title}>Change Email</Text>
+                <Icon name={this.state.emailEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+            </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
                       {this.state.emailEnable && 
                       <View>
@@ -385,13 +374,10 @@ class UpdateInfo extends React.Component {
 
                     {this.state.type=="doctor" &&
                     <Block width={width * 0.8} style={{marginTop:30,marginBottom: 15}}>
-                    <TouchableOpacity onPress={()=>this.setState({SpecializationEnable:!this.state.SpecializationEnable})}>
-                    <Text style={{marginLeft:20}} size={15}>Edit Specialization
-                    <Text style={{marginLeft:100,color:'#888'}} size={11}>
-                    {"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"+this.state.sp}
-                    </Text>
-                     </Text>                   
-                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.row} onPress={()=>this.setState({SpecializationEnable:!this.state.SpecializationEnable})}>
+                <Text style={styles.title}>Edit Specialization</Text>
+                <Icon name={this.state.SpecializationEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+            </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
 
                        {this.state.SpecializationEnable && 
@@ -406,7 +392,7 @@ class UpdateInfo extends React.Component {
                         style={styles.TextInputStyle}
                       />
                         
-                    
+                  
                      
                         <ComponentButton
                            small

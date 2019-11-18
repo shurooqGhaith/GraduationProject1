@@ -229,7 +229,7 @@ if(!flag){ // الموعد ما صار تأجل او التغى
               style={{ width, marginTop: '25%' }}
             >
                   
-                  <View style={{flexDirection:'row',marginTop:50,marginLeft:50}}>
+                  <View style={{flexDirection:'row',marginTop:50,marginLeft:70}}>
                       <Button
                       small
                       onPress={this.filterResult}

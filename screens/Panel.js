@@ -1,23 +1,75 @@
 import React, {Component} from 'react';
 import { View, TouchableOpacity, Text, FlatList, StyleSheet} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import fire from "../constants/firebaseConfigrations";
 
 export default class MyPanel extends Component{
 
     constructor(props) {
         super(props);
+        this.getData=this.getData.bind(this);
         this.state = { 
           data: props.data,
           expanded : false,
+          expanded2:false,
+          patientInfo:[],
+          noInfo:false,
+          date:'',
+          time:'',
+          clinic:'',
+          available:false,
+          idDoctor:"",
+          idPatient:'',
         }
     }
   
+    componentDidMount(){
+      this.getData();
+    }
+    getData(){
+
+      const { navigation } = this.props;  
+    var idP=navigation.getParam('id');
+    var idD=navigation.getParam('idDoctor');
+    var t=navigation.getParam('type');
+
+    var date=navigation.getParam('date');
+    var time=navigation.getParam('time');
+    var clinic=navigation.getParam('clinic');
+    var av=navigation.getParam('available');
+
+    this.setState({
+      idPatient:idP,
+      idDoctor:idD,
+      type:t,
+      date:date,
+      time:time,
+      clinic:clinic,
+      available:av
+    })
+      fire.database().ref("users").child(idD).child("patients").on('value',(snapshot)=>{
+        if(snapshot.val()){
+           let data = Object.values(snapshot.val());
+       this.setState({
+         patientInfo:data,
+         noInfo:false
+       })
+        }
+       
+        else{
+            this.setState({
+             noInfo:true
+            })
+        }
+   
+      })
+    }
   render() {
 
     return (
        <View>
             <TouchableOpacity style={styles.row} onPress={()=>this.toggleExpand()}>
-                <Text style={[styles.title]}>{this.props.title}</Text>
+                <Text style={[styles.title]}>press</Text>
                 <Icon name={this.state.expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
             </TouchableOpacity>
             <View style={styles.parentHr}/>
@@ -25,15 +77,23 @@ export default class MyPanel extends Component{
                 this.state.expanded &&
                 <View style={{}}>
                     <FlatList
-                    data={this.state.data}
+                    data={this.state.patientInfo}
                     numColumns={1}
                     scrollEnabled={false}
                     renderItem={({item, index}) => 
                         <View>
-                            <TouchableOpacity style={[styles.childRow, styles.button, item.value ? styles.btnInActive : styles.btnActive]} onPress={()=>this.onClick(index)}>
-                                <Text style={[styles.font, styles.itemInActive]} >{item.key}</Text>
+                            <TouchableOpacity style={[styles.childRow, styles.button, item.value ? styles.btnInActive : styles.btnActive]} 
+                            onPress={()=>this.setState({expanded2 : !this.state.expanded2})}
+                            >
+                                <Text style={[styles.font, styles.itemInActive]} >{item.sessionNumber}</Text>
                                 <Icon name={'check-circle'} size={24} color={ item.value ? "#eee" : "#388E3C"} />
                             </TouchableOpacity>
+                            {this.state.expanded2 && <View style={{flexDirection:'column'}}>
+                            <Text style={[styles.font, styles.itemInActive]} >{item.money}</Text>
+                            <Text style={[styles.font, styles.itemInActive]} >{item.medicine}</Text>
+                            <Text style={[styles.font, styles.itemInActive]} >{item.process}</Text>
+
+                            </View>}
                             <View style={styles.childHr}/>
                         </View>
                     }/>
@@ -45,9 +105,9 @@ export default class MyPanel extends Component{
   }
 
   onClick=(index)=>{
-    const temp = this.state.data.slice()
+    const temp = this.state.patientInfo.slice()
     temp[index].value = !temp[index].value
-    this.setState({data: temp})
+    this.setState({patientInfo: temp})
   }
 
   toggleExpand=()=>{
