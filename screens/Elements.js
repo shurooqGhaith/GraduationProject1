@@ -165,10 +165,12 @@ class Info extends React.Component {
                     <View style={styles.itemsList} >
                   {this.state.type=="doctor" && !this.state.noInfo && this.state.patientInfo.map((value,index)=>{
                       if(value.idPatient==this.state.idPatient){
-                        var money,medicine,exam;
+                        var money,medicine,exam,note;
                         if(!value.money){money="no";}else{money=value.money}
                         if(!value.medicine){medicine="no medicine";}else{medicine=value.medicine}
                         if(!value.medicalExaminations){exam="no checkup needed";}else{exam=value.medicalExaminations}
+                        if(!value.notes){note="no notes";}else{note=value.notes}
+
                                 return(
                                   
                              <Card title={"session number :"+value.sessionNumber}> 
@@ -177,6 +179,7 @@ class Info extends React.Component {
                              <Text>medicine:{medicine}</Text>
                              <Text>money:{money}</Text>
                              <Text>checkup : {exam}</Text>
+                             <Text>Notes : {note}</Text>
                              </View>
                              </Card> 
                                 )
@@ -197,6 +200,7 @@ class Info extends React.Component {
             if(!session.money){money="no";}else{money=session.money}
             if(!session.medicine){medicine="no medicine";}else{medicine=session.medicine}
             if(!session.medicalExaminations){exam="no checkup needed";}else{exam=session.medicalExaminations}
+            if(!session.notes){note="no notes";}else{note=session.notes}
 
            return(
              
@@ -204,10 +208,11 @@ class Info extends React.Component {
 <Card title={"session number :"+session.sessionNumber}> 
        <View style={{flexDirection:'column'}}>
        <Text>{"process:"+session.process}</Text>
-       <Text>medicine:{medicine}</Text>
-          <Text>money:{money}</Text>
+       <Text>Medicine:{medicine}</Text>
+          <Text>Money:{money}</Text>
           <Text>checkup : {exam}</Text>
-          
+          <Text>Notes : {note}</Text>
+
        </View>
        </Card>
            )
@@ -219,8 +224,10 @@ class Info extends React.Component {
       }
 
       {!this.state.available && this.state.type=="patient" && <View style={{marginTop:100}}><Text bold size={14}>Not been made yet</Text></View>}
-
-      <Button onPress={()=>{
+      <Button
+      small
+      style={{marginBottom:20,backgroundColor:"#333",color:'#fff',marginTop:height*0.4,marginLeft:width*0.1}}
+       onPress={()=>{
         if(this.state.type=="doctor"){
           this.props.navigation.navigate("PatientAfterSession",{id:this.state.idDoctor})
         }

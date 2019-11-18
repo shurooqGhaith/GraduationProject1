@@ -595,14 +595,11 @@ class AppointmentTable extends React.Component {
               style={{ width, marginTop: '25%' }}
             >
 {this.state.no1 && <View ><Text bold size={14}>{this.state.today1+":No appointment "}</Text></View>}
-
 {!this.state.no1 && <View style={styles.container}>
 <Text bold size={14}>{this.state.today1}</Text>
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
-          {
-             this.state.day1.map((data, index) => {
-                  //  return this.state.appointment.map((app,appIndex)=>{
+          { this.state.day1.map((data, index) => {
                         return(
               <TableWrapper key={index} style={styles.row}>
                     <Cell data={data.time} textStyle={styles.text}/>
@@ -616,13 +613,10 @@ class AppointmentTable extends React.Component {
                      onPress={()=>this.add(data.time,data.date,data.clinic,data.day)}
                      style={{backgroundColor:"#333"}} small>
                     <Text style={{color:"#fff"}}>add</Text></Button>} textStyle={styles.text}/>
-
              </TableWrapper>
                 )
-               
             })
           }
-
         </Table>
       </View> } 
 

@@ -18,7 +18,7 @@ import fire from "../constants/firebaseConfigrations";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import MapView,{Marker} from "react-native-maps";
 import { Divider } from 'react-native-elements';
-//import firebase from 'react-native-firebase';
+import { Table, TableWrapper, Row, Cell, Col,Rows } from 'react-native-table-component';
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -28,6 +28,7 @@ class PatientAppointment extends React.Component {
   constructor(props){
     super(props);
     this.authListener=this.authListener.bind(this);
+    this.show=this.show.bind(this);
     //this.setReminder=this.setReminder.bind(this);
         this.state={
       user:[],
@@ -44,7 +45,11 @@ class PatientAppointment extends React.Component {
       showSession:false,
       time:'',
       date:'',
-      enableNotification:true
+      enableNotification:true,
+
+      showToast:false,
+      head:["Date","Time","clinic",""],
+
     };
   }
 
@@ -116,64 +121,51 @@ class PatientAppointment extends React.Component {
   
   }
 
-  
+  show(id,date,time,clinic,av){
+       console.log(id);
+       console.log(date);
+       console.log(time);
+       console.log(clinic);
+       console.log(av);
+
+  }
   
   
   render() {
     return (
       <Block flex style={styles.profile}>
         <Block flex>
-         
+
+       
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
-              <Block flex style={styles.profileCard}>
-               
-               
-
-                <Block flex>
-                  <Block middle style={styles.nameInfo}>
-                    <Text bold size={28} color="#32325D" id="name">
-                      {this.state.username}
-                    </Text>
-                   
-                  </Block>
-                  <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
-                    <Block style={styles.divider} />
-                  </Block>
-                  <Block middle>
                   
                     
                   
-                    {!this.state.nodata && this.state.appointment.map((item,index)=>{
+                  {!this.state.nodata && <View style={styles.container}>
+        <Table borderStyle={{borderColor: 'transparent'}}>
+          <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
+          { this.state.appointment.map((data, index) => {
+                        return(
+              <TableWrapper key={index} style={styles.row}>
+                    <Cell data={data.dateSelected} textStyle={styles.text}/>
+                    <Cell data={data.timeSelected} textStyle={styles.text}/>
+                    <Cell data={data.clinicName} textStyle={styles.text}/>
+                    <Cell data={<Button 
+                    onPress={()=>this.show(data.idDoctor,data.dateSelected,data.timeSelected,data.clinicName,data.available)}
+                    style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>Info</Text></Button>
+                    } textStyle={styles.text}/>
+             </TableWrapper>
+                )
+            })
+          }
+        </Table>
+      </View> } 
 
-                              return(
-                                <View key={index} style={{flexDirection:'column'}}>
-                          
-                          <View style={{flexDirection:'row'}}>
-                          <Text style={{color:'#000'}}>{item.daySelected}</Text>
-                          <Text style={{color:'#000'}}>-{item.dateSelected}</Text>
-                          <Text style={{color:'#000'}}>-{item.timeSelected}</Text>
-                          </View>
-                          
-                          <Text style={{color:'#888'}}>{item.clinicName}</Text>
-                          <Button small 
-                          onPress={()=>this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:item.idDoctor,type:"patient",date:item.dateSelected,time:item.timeSelected,clinic:item.clinicName,available:item.available})}
-                          ><Text>Info</Text></Button>
-                          <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
-
-                         </View> 
-                              )
-                             
-
-                                       })
-                    }
-                  </Block>
-                </Block>
-              </Block>
-            </ScrollView>
-         
+      </ScrollView>
         </Block>
         
       </Block>
@@ -182,6 +174,10 @@ class PatientAppointment extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
+  head: { height: 40, backgroundColor: '#333' },
+  text: { margin: 6 },
+  row: { flexDirection: 'row', backgroundColor: '#eee' },
   profile: {
     marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
     // marginBottom: -HeaderHeight * 2,
