@@ -42,6 +42,9 @@ class PatientAppointment extends React.Component {
     super(props);
     this.authListener=this.authListener.bind(this);
     this.show=this.show.bind(this);
+    this.filterResult=this.filterResult.bind(this);
+    this.getAllAppointment=this.getAllAppointment.bind(this);  
+
     //this.setReminder=this.setReminder.bind(this);
         this.state={
       user:[],
@@ -61,13 +64,22 @@ class PatientAppointment extends React.Component {
       enableNotification:true,
 
       showToast:false,
+      showToast2:false,
       head:["Date","Time","clinic",""],
-
+      filterEnable:false,
+      todayDate:''
     };
   }
 
   componentDidMount(){
     this.authListener();
+    var today = new Date();
+    const day   = today.getDate();
+    const  month = today.getMonth()+1;
+    const  year  = today.getFullYear();
+    this.setState({
+      todayDate:day + '-' + month + '-' + year
+    })
     //this.setReminder();
   }
 
@@ -160,13 +172,50 @@ if(flag){
 }
 
 if(!flag){ // الموعد ما صار تأجل او التغى
-  this.setState({showToast:true});
+  this.setState({showToast2:true});
   setTimeout(function(){
-   this.setState({showToast:false});
+   this.setState({showToast2:false});
        }.bind(this),7000);
 }
   }
-  
+  filterResult(){
+    this.setState({
+      filterEnable:true
+    })
+    fire.database().ref("users").child(this.state.id).child("appointment").orderByChild("dateSelected").equalTo(this.state.todayDate).on('value',(snap)=>{
+      if(snap.val()){
+        let app=Object.values(snap.val());
+        this.setState({
+          appointment:app,
+            nodata:false
+        })
+      }
+      else{
+          this.setState({
+              nodata:true
+          })
+      }
+    })
+  }
+
+  getAllAppointment(){
+    this.setState({filterEnable:false})
+    fire.database().ref("users").child(this.state.id).child("appointment").on('value',(snap)=>{
+      if(snap.val()){
+        let app=Object.values(snap.val());
+        this.setState({
+          appointment:app,
+            nodata:false
+        })
+      }
+      else{
+          this.setState({
+              nodata:true
+          })
+      }
+    })
+
+  }
   
   render() {
     return (
@@ -179,14 +228,45 @@ if(!flag){ // الموعد ما صار تأجل او التغى
               style={{ width, marginTop: '25%' }}
             >
                   
-                    
+                  <View style={{flexDirection:'row',marginTop:50}}>
+                      <Button
+                      small
+                      onPress={this.filterResult}
+                      style={{backgroundColor:'#004D40',marginLeft:20}}
+                      
+                      textStyle={{
+                        color: "#fff",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }}
+                      >
+                              <Text>today</Text>
+                      </Button>
+
+                      <Button
+                      small
+                      onPress={this.getAllAppointment}
+                      style={{marginLeft:20,backgroundColor:'#3E2723'}}
+                      
+                      textStyle={{
+                        color: "#fff",
+                        fontWeight: "500",
+                        fontSize: 16
+                      }}
+                      >
+                              <Text>all</Text>
+                      </Button>
+                      </View>
                   
                   {!this.state.nodata && <View style={styles.container}>
                   <Toast visible={this.state.showToast} message="Does not been made yet "/>
+                  <Toast visible={this.state.showToast} message="Cancelled or delayed ! "/>
+
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
           { this.state.appointment.map((data, index) => {
-                        return(
+            if(this.state.filterEnable){
+              return(
               <TableWrapper key={index} style={styles.row}>
                     <Cell data={data.dateSelected} textStyle={styles.text}/>
                     <Cell data={data.timeSelected} textStyle={styles.text}/>
@@ -197,7 +277,24 @@ if(!flag){ // الموعد ما صار تأجل او التغى
                     <Text style={{color:"#fff"}}>Info</Text></Button>
                     } textStyle={styles.text}/>
              </TableWrapper>
-                )
+                ) 
+            }
+
+            if(!this.state.filterEnable){
+              return(
+              <TableWrapper key={index} style={styles.row}>
+                    <Cell data={data.dateSelected} textStyle={styles.text}/>
+                    <Cell data={data.timeSelected} textStyle={styles.text}/>
+                    <Cell data={data.clinicName} textStyle={styles.text}/>
+                    <Cell data={<Button 
+                    onPress={()=>this.show(data.idDoctor,data.dateSelected,data.timeSelected,data.clinicName,data.available)}
+                    style={{backgroundColor:"#333"}} small>
+                    <Text style={{color:"#fff"}}>Info</Text></Button>
+                    } textStyle={styles.text}/>
+             </TableWrapper>
+                ) 
+            }
+                      
             })
           }
         </Table>
