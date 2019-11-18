@@ -50,6 +50,7 @@ export default class MyPanel extends React.Component {
     })
   }
   render() {
+    //حطي كي لكل خليه
     return (
       <DataTable>
         <DataTable.Header>
