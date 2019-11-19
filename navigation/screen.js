@@ -26,8 +26,15 @@ import PatientAppointment from "../screens/PatientAppointment";
 import UpdateInfo from "../screens/UpdateInfo";
 import EmailVerify from "../screens/VerifyEmail";
 import MyPanel from "../screens/Panel";
+import DetailsAboutPatients from "../screens/DetailsAboutPatient";
 const AppNavigator = createStackNavigator(
     {
+
+      DetailsAboutPatients:{screen:DetailsAboutPatients,
+        navigationOptions: {
+          header: null,
+        }
+      },
 
       MyPanel:{screen:MyPanel,
         navigationOptions: {

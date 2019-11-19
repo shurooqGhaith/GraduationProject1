@@ -21,7 +21,7 @@ import fire from "../constants/firebaseConfigrations";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import MapView,{Marker} from "react-native-maps";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { Divider,Header } from 'react-native-elements';
+import { Divider,ListItem } from 'react-native-elements';
 import Autocomplete from 'react-native-autocomplete-input';
 const { width, height } = Dimensions.get("screen");
 
@@ -230,13 +230,10 @@ viewInfo(id){
                           <View style={{flexDirection:'row'}}>
                           <Text>{name}</Text>
                           <Button small style={{backgroundColor:'#fff',marginLeft:30}}
-                          //onPress={()=>this.props.navigation.navigate("Info",{id:item.idPatient,idDoctor:this.state.idDoctor,type:"doctor",date:'',time:'',clinic:'',available:item.available})}
-                          onPress={()=>this.props.navigation.navigate("MyPanel",{id:item.idPatient,idDoctor:this.state.idDoctor,type:"doctor",date:'',time:'',clinic:'',available:item.available})}
-
+                          onPress={()=>this.props.navigation.navigate("DetailsAboutPatients",{id:item.idPatient,idDoctor:this.state.idDoctor,type:"doctor",date:'',time:'',clinic:'',available:item.available})}
                           ><Text style={{color:'#000'}}>details</Text></Button>
                           </View>
                           <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
-
                          </View>
 
                          )
