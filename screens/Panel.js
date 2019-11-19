@@ -29,7 +29,9 @@ export default class MyPanel extends React.Component {
       id:'',
       appointment:[],
       noDate:false,
-      showToast:false
+      showToast:false,
+      session:[],
+      noSession:false
     }
   }
   componentDidMount(){
@@ -61,7 +63,23 @@ export default class MyPanel extends React.Component {
             noDate:true
           })
       }
+    });
+
+    fire.database().ref("users").child(id).child("session").on('value',(snapshot)=>{
+      if(snapshot.val()){
+        let app=Object.values(snapshot.val());
+        this.setState({
+            session:app,
+            noSession:false
+        })
+      }
+      else{
+          this.setState({
+            noSession:true
+          })
+      }
     })
+  
   }
 
   show(id,date,time,clinic,av){
@@ -86,8 +104,8 @@ if(av){
  })
 }
 if(flag){
-//this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:id,type:"patient",date:date,time:time,clinic:clinic,available:av})
-this.props.navigation.navigate("MyPanel");
+this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:id,type:"patient",date:date,time:time,clinic:clinic,available:av})
+
 }
 
 if(!flag){ // الموعد ما صار تأجل او التغى
@@ -116,9 +134,12 @@ this.setState({showToast:false});
         .slice(this.state.perPage * this.state.page, this.state.perPage * (this.state.page + 1))
         .map((item, i) => {
           return (
-            <DataTable.Row onPress={()=>this.show(item.idDoctor,item.dateSelected,item.timeSelected,item.clinicName,item.available)} >
+            <DataTable.Row key={i}
+             onPress={()=>
+             {console.log(i);this.show(item.idDoctor,item.dateSelected,item.timeSelected,item.clinicName,item.available);
+             } }>
               
-                  <DataTable.Cell >
+                  <DataTable.Cell  >
                     <Text>{item.dateSelected}</Text>
                   </DataTable.Cell>
 
