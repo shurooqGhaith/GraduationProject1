@@ -493,41 +493,62 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
           else{
             var m="";
             var m1="";
-         // if(this.state.medicinesName){
-            // var array=this.state.medicinesName;
-            // if(this.state.medicine){array.push(this.state.medicine)}
-            // array.forEach((value,index)=>{
-            //   if(value !== ""){
-            //     fire.database().ref("medicines").orderByChild("medicine").equalTo(value.toLowerCase()).on('value',(snap)=>{
-            //       //alert("1");
-            //       m+=value.trim()+"\n";
-            //       if(!snap.val()){
-            //         fire.database().ref("medicines").push().set({ 'medicine':value.toLowerCase().trim()})
-            //       }
-            //     })
-            //   }
-            // }) //array map
-         // } // medicines if 
+         if(this.state.medicinesName){
+            var array=this.state.medicinesName;
+            if(this.state.medicine){array.push(this.state.medicine)}
+            array.forEach((value,index)=>{
+              if(value !== ""){
+                fire.database().ref("users").child(this.state.idDoctor).child("medicines").push().set({
+                  idPatient:this.state.idPatient,
+                  sessionNumber:this.state.session,
+                  medicine:value
+                })
+                fire.database().ref("users").child(this.state.idPatient).child("medicines").push().set({
+                  idDoctor:this.state.idDoctor,
+                  sessionNumber:this.state.session,
+                  medicine:value
+                })
+
+                fire.database().ref("medicines").orderByChild("medicine").equalTo(value.toLowerCase()).on('value',(snap)=>{
+                  //alert("1");
+                  m+=value.trim()+"\n";
+                  if(!snap.val()){
+                    fire.database().ref("medicines").push().set({ 'medicine':value.toLowerCase().trim()})
+                  }
+                })
+              }
+            }) //array map
+         } // medicines if 
           if(!this.state.medicinesName){
             m+="no medicine";
           }
-          //if(this.state.medicalExaminations){
-            // var array2=this.state.medicalExaminations;
-            // if(this.state.medicalExaminationName){array2.push(this.state.medicalExaminationName)}
-            // array2.forEach((value,index)=>{
-            //   if(value !== ""){
-            //     fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(value.toLowerCase()).on('value',(snap)=>{
-            //       //alert("1");
-            //       console.log(value+"\n");
-            //       m1+=value.trim()+"\n";
-            //       if(!snap.val()){
-            //         fire.database().ref("medicalExaminations").push().set({ 'exam':value.toLowerCase().trim()})
-            //       }
-            //     })
-            //   }
-            // })
-          //  console.log(m1);//empty
-        //  } //medical exam if
+          if(this.state.medicalExaminations){
+            var array2=this.state.medicalExaminations;
+            if(this.state.medicalExaminationName){array2.push(this.state.medicalExaminationName)}
+            array2.forEach((value,index)=>{
+              if(value !== ""){
+                fire.database().ref("users").child(this.state.idDoctor).child("checkup").push().set({
+                  idPatient:this.state.idPatient,
+                  sessionNumber:this.state.session,
+                  exam:value
+                });
+                fire.database().ref("users").child(this.state.idPatient).child("checkup").push().set({
+                  idDoctor:this.state.idDoctor,
+                  sessionNumber:this.state.session,
+                  exam:value
+                });
+                fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(value.toLowerCase()).on('value',(snap)=>{
+                  //alert("1");
+                  console.log(value+"\n");
+                  m1+=value.trim()+"\n";
+                  if(!snap.val()){
+                    fire.database().ref("medicalExaminations").push().set({ 'exam':value.toLowerCase().trim()})
+                  }
+                })
+              }
+            })
+           console.log(m1);//empty
+         } //medical exam if
           if(this.state.medicalExaminationName){
            
               fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(this.state.medicalExaminationName.trim().toLowerCase()).on('value',(snap)=>{
@@ -596,6 +617,18 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                 pro+="nothing done yet !";
           }
 
+          process.forEach((value,index)=>{
+            fire.database().ref("users").child(this.state.idDoctor).child("processes").push().set({
+              idPatient:this.state.idPatient,
+              sessionNumber:this.state.session,
+              process:value
+            });
+            fire.database().ref("users").child(this.state.idPatient).child("processes").push().set({
+              idDoctor:this.state.idDoctor,
+              sessionNumber:this.state.session,
+              process:value
+            });
+          });
           if(!this.state.money){this.setState({money:0})}
         
           fire.database().ref("users").child(this.state.idDoctor).child("patients").push().set(
@@ -809,7 +842,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                              </View>
                             
                              
-                              {/* {this.state.medicinesName.map((name,index)=>{
+                              {this.state.medicinesName.map((name,index)=>{
                       return(
                           <View key={index} style={{marginLeft:70,width:width*0.5}}>
                           <TextInput
@@ -849,7 +882,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                       onPress={this.addMedicalExaminations}
                     >
                      other check up
-                    </Button> */}
+                    </Button>
 
 
                    

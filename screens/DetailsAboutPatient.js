@@ -132,7 +132,8 @@ class DetailsAboutPatients extends React.Component {
             >
                     <View >
                   { !this.state.noInfo && this.state.patientInfo.map((value,index)=>{
-                      if(value.idPatient==this.state.idPatient){
+                      if(value.idPatient==this.state.idPatient){//من هون بجيب ارقام الجلسات و بعرضهم بكبسات
+                      // و كل ما يكبس كبسة 
                         var money,medicine,exam,note;
                         if(!value.money){money="no";}else{money=value.money}
                         if(!value.medicine){medicine="no medicine";}else{medicine=value.medicine}
