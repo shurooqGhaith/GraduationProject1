@@ -28,7 +28,7 @@ class DetailsAboutPatients extends React.Component {
   constructor(props){
     super(props);
     this.authListener=this.authListener.bind(this);
-    
+    this.getData=this.getData.bind(this);
         this.state={
       username:"",
       email:'',
@@ -38,8 +38,6 @@ class DetailsAboutPatients extends React.Component {
       search:[],
       view:false,
       noInfo:false,
-      process:[],
-      medicines:[],
       type:'',
       session:[],
       appointment:[],
@@ -48,7 +46,16 @@ class DetailsAboutPatients extends React.Component {
       date:'',
       time:'',
       clinic:'',
-      available:false
+      available:false,
+
+      ///
+      money:'',
+      notes:'',
+      process:[],
+      medicines:[],
+      exams:[],
+      show:false
+
     }
   }
 
@@ -115,7 +122,64 @@ class DetailsAboutPatients extends React.Component {
 
   }
 
+ getData(id,num){
+   
+    this.setState({show:true});
+    this.state.patientInfo.map((value,index)=>{
+        if(value.idPatient==id && value.sessionNumber==num){
+            this.setState({
+                money:value.money,
+                notes:value.notes
+            })
+        }
+    })///map patientInfo
+
+    //get process
+    var array1=[];
+    fire.database().ref("users").child(this.state.idDoctor).child("processes").on('value',(pro)=>{
+        let res=Object.values(pro.val());
+        res.map((value)=>{
+            if(value.idPatient ==id && value.sessionNumber==num){
+                    array1.push({process:value.process});
+            }
+        })
+
+        this.setState({
+            process:array1
+        })
+    }) //pro fire
+
+    //get medicines
+    var array2=[];
+    fire.database().ref("users").child(this.state.idDoctor).child("medicines").on('value',(med)=>{
+        let res=Object.values(med.val());
+        res.map((value)=>{
+            if(value.idPatient ==id && value.sessionNumber==num){
+                    array2.push({medicine:value.medicine});
+            }
+        })
+
+        this.setState({
+            medicines:array2
+        })
+    }) //medicine fire
+
+     //get exams
+     var array3=[];
+     fire.database().ref("users").child(this.state.idDoctor).child("checkup").on('value',(ch)=>{
+         let res=Object.values(ch.val());
+         res.map((value)=>{
+             if(value.idPatient ==id && value.sessionNumber==num){
+                     array3.push({exam:value.exam});
+             }
+         })
  
+         this.setState({
+            exams:array3
+         })
+     }) //medicine fire
+    
+ }
 
 
 
@@ -130,38 +194,60 @@ class DetailsAboutPatients extends React.Component {
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
-                    <View >
+                    <View style={{flexDirection:'row'}} >
                   { !this.state.noInfo && this.state.patientInfo.map((value,index)=>{
                       if(value.idPatient==this.state.idPatient){//من هون بجيب ارقام الجلسات و بعرضهم بكبسات
                       // و كل ما يكبس كبسة 
-                        var money,medicine,exam,note;
-                        if(!value.money){money="no";}else{money=value.money}
-                        if(!value.medicine){medicine="no medicine";}else{medicine=value.medicine}
-                        if(!value.medicalExaminations){exam="no checkup needed";}else{exam=value.medicalExaminations}
-                        if(!value.notes){note="no notes";}else{note=value.notes}
-
                                 return(
-                                    <ListItem
-                                            key={index}
-                                            title={value.sessionNumber}
-                                           // leftIcon={{ name: item.icon }}
-                                            subtitle={
-                                            <View style={{flexDirection:'column'}}>
-                                              <Text>process : {value.process}</Text>
-                                              <Text>medicine:{medicine}</Text>
-                                              <Text>money:{money}</Text>
-                                              <Text>checkup : {exam}</Text>
-                                              <Text>Notes : {note}</Text>     
-                                            </View>
-                                            }
-                                             bottomDivider
-                                             chevron
-                                                  />
-                             
+                                    <View >
+                                        <Button small
+                                        onPress={()=>this.getData(value.idPatient,value.sessionNumber)}
+                                        >
+                                            <Text>{value.sessionNumber}</Text>
+                                        </Button>
+                                    </View>
                                 )
                               }
-                             
                    })}
+                    </View>
+
+                    <View style={{marginTop:30,flexDirection:'row'}}>
+                        {this.state.show && this.state.process.map((pro=>{
+                            return(
+                                <View style={{flexDirection:'row'}}>
+                                <Button small
+                                        >
+                                            <Text>{pro.process}</Text>
+                                        </Button>
+                                </View>
+                            )
+                        }))}
+                    </View>
+
+                    <View style={{marginTop:30,flexDirection:'row'}}>
+                        {this.state.show && this.state.medicines.map((med=>{
+                            return(
+                                <View style={{flexDirection:'row'}}>
+                                <Button small
+                                        >
+                                            <Text>{med.medicine}</Text>
+                                        </Button>
+                                </View>
+                            )
+                        }))}
+                    </View>
+
+                    <View style={{marginTop:30,flexDirection:'row'}}>
+                        {this.state.show && this.state.exams.map((ex=>{
+                            return(
+                                <View style={{flexDirection:'row'}}>
+                                <Button small
+                                        >
+                                            <Text>{ex.exam}</Text>
+                                        </Button>
+                                </View>
+                            )
+                        }))}
                     </View>
              
             </ScrollView>
