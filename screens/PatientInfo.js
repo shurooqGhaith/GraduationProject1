@@ -667,7 +667,8 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 
             }
             )
-            alert("added successfully!")
+            alert("added successfully!");
+            this.setState({showForm:false});
           }
         }
 //end submit
@@ -829,28 +830,23 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                                   </View>
                               </View>
                               </View>
-                              
-                             <View style={{flexDirection:'row'}}>
 
-                                  <TextInput
-                                       style={{width:width*0.4,marginLeft:30,borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',paddingLeft:5 }}  
-                                       placeholder="medical examinations"
-                                       onChangeText={value => this.setState({medicalExaminationName:value})}
-                                       value={this.state.medicalExaminationName}
-                                    /> 
-
-                                   <TextInput
-                                       style={{width:width*0.4,marginLeft:15,borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',paddingLeft:5 }}  
-                                       placeholder="medicine name"
-                                       onChangeText={value => this.setState({medicine:value})}
-                                       value={this.state.medicine}
-                                    /> 
-                             </View>
-                            
-                             
+                              {this.state.medicalExaminations.map((name,index)=>{
+                      return(
+                          <View key={index} style={{marginLeft:10,width:width*0.3}}>
+                          <TextInput
+                        
+                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
+                        placeholder="medical exam"
+                        onChangeText={(Mname)=>this.handleMedicalExaminationsChange(Mname,index)}
+                        value={name}
+                      />
+                          </View>
+                      )
+                    })}
                               {this.state.medicinesName.map((name,index)=>{
                       return(
-                          <View key={index} style={{marginLeft:70,width:width*0.5}}>
+                          <View key={index} style={{marginLeft:70,width:width*0.3}}>
                           <TextInput
                         
                         style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
@@ -862,33 +858,24 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                       )
                     })}
 
+                    <View style={{flexDirection:'row'}}>
                     <Button
-                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10, width: width * 0.5,borderRadius:10,marginLeft:50}}
+                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10, width: width * 0.4,borderRadius:10,marginLeft:10}}
                       onPress={this.addMedicineName}
                     >
                      other medicine 
                     </Button>
 
-                    {this.state.medicalExaminations.map((name,index)=>{
-                      return(
-                          <View key={index} style={{marginLeft:70,width:width*0.5}}>
-                          <TextInput
-                        
-                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
-                        placeholder="medical exam"
-                        onChangeText={(Mname)=>this.handleMedicalExaminationsChange(Mname,index)}
-                        value={name}
-                      />
-                          </View>
-                      )
-                    })}
-
                     <Button
-                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10, width: width * 0.5,borderRadius:10,marginLeft:50}}
+                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10, width: width * 0.4,borderRadius:10,marginLeft:10}}
                       onPress={this.addMedicalExaminations}
                     >
                      other check up
                     </Button>
+                    </View>
+                    
+
+                   
 
 
                    
