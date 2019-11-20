@@ -239,6 +239,7 @@ class DetailsAboutPatients extends React.Component {
                        </View>
                        <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
 
+{this.state.show &&  <View>
                        <View style={{marginTop:10,flexDirection:'column'}}>
                                 <View style={{flexDirection:'row',marginTop:10}}>
                                 <Text style={{marginLeft:10}}>{"session \xa0\xa0"+this.state.sessionSelected}</Text>
@@ -316,6 +317,9 @@ class DetailsAboutPatients extends React.Component {
                             <Text style={{color:'#333',marginLeft:10}} >{this.state.notes}</Text>
                          </View>
                          <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
+
+</View> 
+}
 
             </ScrollView>
           
