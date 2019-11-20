@@ -196,12 +196,12 @@ class DetailsAboutPatients extends React.Component {
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
-                    <View style={{flexDirection:'row'}} >
+                    <View style={{flexDirection:'row',flexWrap:'wrap'}} >
                   { !this.state.noInfo && this.state.patientInfo.map((value,index)=>{
                       if(value.idPatient==this.state.idPatient){//من هون بجيب ارقام الجلسات و بعرضهم بكبسات
                       // و كل ما يكبس كبسة 
                                 return(
-                                    <View >
+                                    <View style={{marginTop:5}}>
                                         <ComponentButton small
                                         style={{marginLeft:10,backgroundColor:"#333"}}
                                         onPress={()=>this.getData(value.idPatient,value.sessionNumber)}
