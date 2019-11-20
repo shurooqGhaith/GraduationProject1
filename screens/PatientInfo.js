@@ -60,6 +60,7 @@ class PatientInfo extends React.Component {
     this.changeTime=this.changeTime.bind(this);
     this.handleNextSession=this.handleNextSession.bind(this);
     this.makeNextSessionAppointment=this.makeNextSessionAppointment.bind(this);
+    this.showInfoForm=this.showInfoForm.bind(this);
         this.state={
       username:"",
       idDoctor:"",
@@ -577,11 +578,9 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
           
            
           fire.database().ref("users").child(this.state.idPatient).child("appointment").once('value',(result)=>{
-
             if(result.val()){
                 let appointment = Object.values(result.val());
                 this.setState({appointmentsPatient:appointment})
-
                 //map appointments state
                 this.state.appointmentsPatient.map((element,index)=>{
                     if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idDoctor==this.state.idDoctor  ){                         
@@ -595,20 +594,14 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                               this.state.appointments.map((value,ind)=>{
                                   if(value.timeSelected==this.state.time  && value.dateSelected==this.state.date && value.idPatient==this.state.idPatient  ){                         
                                     fire.database().ref("users").child(this.state.idDoctor).child("appointment").child(Object.keys(snap.val())[ind]).child("available").set(true);
-              
                                   }
-              
                               })
                           }
-                          
                       })
                       })
-
                     }
-
                 })
             }
-            
         });
                     
   
@@ -675,7 +668,28 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
         }
 //end submit
 
-        
+        showInfoForm(){
+          fire.database().ref("users").child(this.state.idPatient).child("appointment").once('value',(result)=>{
+            if(result.val()){
+                let appointment = Object.values(result.val());
+                this.setState({appointmentsPatient:appointment})
+                //map appointments state
+                this.state.appointmentsPatient.map((element,index)=>{
+                    if(element.timeSelected==this.state.time  && element.dateSelected==this.state.date && element.idDoctor==this.state.idDoctor  ){                         
+                      if(element.available){
+                        alert("You entered this info")
+                      }
+                      if(!element.available){
+                        this.setState({
+                          showForm:true
+                        })
+                      }
+                    }
+                })
+            }
+        });
+
+        }
 
 
   render() {
@@ -715,7 +729,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                       </Button>
 
                       <Button
-                      onPress={()=>this.setState({showForm:true})}
+                      onPress={this.showInfoForm}
                       style={{backgroundColor:'#37474F',marginLeft:20,marginTop:60,width:width*0.4}}
                       textStyle={{
                         color: "#fff",
