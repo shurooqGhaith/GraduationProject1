@@ -10,19 +10,16 @@ import {
   Picker,
   TextInput,
   CheckBox,
-  TouchableOpacity
+  TouchableOpacity,
+  Button
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
-import { Button,Icon,Input } from "../components";
+import { Button as ComponentButton,Icon,Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
 import fire from "../constants/firebaseConfigrations";
-import DateTimePicker from "react-native-modal-datetime-picker";
-import MapView,{Marker} from "react-native-maps";
-import { Col, Row, Grid } from "react-native-easy-grid";
-import { Divider,Header ,Card } from 'react-native-elements';
-import Autocomplete from 'react-native-autocomplete-input';
+import { Divider,Header ,Card ,ListItem} from 'react-native-elements';
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -32,7 +29,6 @@ class Info extends React.Component {
   constructor(props){
     super(props);
     this.authListener=this.authListener.bind(this);
-    
         this.state={
       username:"",
       email:'',
@@ -42,8 +38,6 @@ class Info extends React.Component {
       search:[],
       view:false,
       noInfo:false,
-      process:[],
-      medicines:[],
       type:'',
       session:[],
       appointment:[],
@@ -52,7 +46,18 @@ class Info extends React.Component {
       date:'',
       time:'',
       clinic:'',
-      available:false
+      available:false,
+
+      ///
+      money:'',
+      notes:'',
+      process:[],
+      medicines:[],
+      exams:[],
+      show:false,
+      sessionDate:'',
+      sessionSelected:''
+
     }
   }
 
@@ -75,8 +80,6 @@ class Info extends React.Component {
     var clinic=navigation.getParam('clinic');
     var av=navigation.getParam('available');
 
-    
-
      this.setState({
       idPatient:idP,
       idDoctor:idD,
@@ -87,24 +90,90 @@ class Info extends React.Component {
       available:av
      })
      
-   fire.database().ref("users").child(idP).child("name").on('value',(datasnapshot)=>{
+   fire.database().ref("users").child(idD).child("name").on('value',(datasnapshot)=>{
     this.setState({
       username:datasnapshot.val()
     })
  })
     
- fire.database().ref("users").child(idP).child("email").on('value',(datasnapshot)=>{
+ fire.database().ref("users").child(idD).child("email").on('value',(datasnapshot)=>{
     this.setState({
       email:datasnapshot.val()
     })
  })
- fire.database().ref("users").child(idD).child("patients").on('value',(snapshot)=>{
+ fire.database().ref("users").child(idP).child("session").on('value',(snapshot)=>{
      if(snapshot.val()){
         let data = Object.values(snapshot.val());
+        // console.log(date);
+        // console.log(time);
+        // console.log(clinic);
+        // console.log(idD);
+
+        data.map((value,index)=>{
+          if(value.idDoctor==idD && value.date==date && value.time==time && value.clinic==clinic ){
+              this.setState({
+                  money:value.money,
+                  notes:value.notes,
+                  sessionSelected:value.sessionNumber
+              })
+          }
+      })///map patientInfo
+  
+      //get process
+      var array1=[];
+      fire.database().ref("users").child(idP).child("processes").on('value',(pro)=>{
+          let res=Object.values(pro.val());
+          res.map((value)=>{
+              if(value.idDoctor==this.state.idDoctor && value.date==this.state.date && value.time==this.state.time){
+                      array1.push({process:value.process});
+              }
+          })
+          if(array1.length==0){array1.push({process:'Nothing done'})}
+  
+          this.setState({
+              process:array1
+          })
+      }) //pro fire
+  
+      //get medicines
+      var array2=[];
+      fire.database().ref("users").child(idP).child("medicines").on('value',(med)=>{
+          if(med.val()){
+          let res=Object.values(med.val());
+          var noMed='';
+          res.map((value)=>{
+            if(value.idDoctor==this.state.idDoctor && value.date==this.state.date && value.time==this.state.time){
+              array2.push({medicine:value.medicine});
+              }
+             
+          })
+            if(array2.length==0){array2.push({medicine:'No medicine Written'})}
+          this.setState({
+              medicines:array2
+          })
+      }
+      }) //medicine fire
+  
+       //get exams
+       var array3=[];
+       fire.database().ref("users").child(idP).child("checkup").on('value',(ch)=>{
+           let res=Object.values(ch.val());
+           res.map((value)=>{
+            if(value.idDoctor==this.state.idDoctor && value.date==this.state.date && value.time==this.state.time){
+              array3.push({exam:value.exam});
+               }
+           })
+           if(array3.length==0){array3.push({exam:'No medical checkup needed'})}
+  
+           this.setState({
+              exams:array3
+           })
+       }) //medicine fire
     this.setState({
       patientInfo:data,
       noInfo:false
     })
+    
      }
     
      else{
@@ -115,143 +184,127 @@ class Info extends React.Component {
 
    })
  
-
-   fire.database().ref("users").child(idP).child("session").on('value',(snapshot)=>{
-    if(snapshot.val()){
-      let app=Object.values(snapshot.val());
-      this.setState({
-          session:app,
-          noSession:false
-      })
-    }
-    else{
-        this.setState({
-          noSession:true
-        })
-    }
-  })
-
   }
 
- 
+
 
 
 
   render() {
 
     return(
-    <Block flex style={styles.profile}>
-        <Block flex>
+    
          
 
-       
+       <View>
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
-              <Block flex style={styles.profileCard}>
+            <View>
+            <Text bold size={20} style={{color:'#000'}}>Sessions Report</Text>
+            </View>
+                    
+                       
+                       <Divider style={{backgroundColor:'#000',marginTop:10,width:width*0.4}}/>
+
+                       <View style={{flexDirection:'row',marginTop:10}}>
+                          <View style={{flexDirection:'column',marginLeft:20}}>
+                              <Text bold size={14} style={{color:'#004D40'}}>Name</Text>
+                              <Text style={{color:'#aaa'}}>{this.state.username}</Text>
+                          </View>
+
+                          <View style={{flexDirection:'column',marginLeft:60}}>
+                              <Text bold size={14} style={{color:'#004D40'}}>Email</Text>
+                              <Text style={{color:'#aaa'}}>{this.state.email}</Text>
+                          </View>
+                       </View>
+                       <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
+
+  
+                       <View style={{marginTop:10,flexDirection:'column'}}>
+                                <View style={{flexDirection:'row',marginTop:10}}>
+                                <Text style={{marginLeft:10}}>{"session \xa0\xa0"+this.state.sessionSelected}</Text>
+                                <Text style={{marginLeft:60}}>{this.state.date}</Text>
+                                </View>
+                       </View>
+                    <View style={{marginTop:10,flexDirection:'column'}}>
+                    <Text bold size={16} style={{color:'#004D40'}}>Processes</Text>
+                    <View style={{flexDirection:'row',flexWrap:'wrap'}}>
+
+                        { this.state.process.map((pro=>{
+                            return(
+                                <View style={{marginLeft:10,marginTop:5
+                                //,flex: 1, justifyContent: 'center',alignItems: 'flex-start'
+                                }}>
+                                <Text
+                                   style={{borderRadius:4,backgroundColor:'#eee',padding:10}}
+                                        >
+                                        {pro.process}
+                                         </Text>   
+                                        
+                                </View>
+                            )
+                        }))}
+                    </View>
+                    </View>
+                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
+
+                    <View style={{marginTop:10,flexDirection:'column'}}>
+                    <Text bold size={16} style={{color:'#004D40'}}>Medicines :</Text>
+                           <View style={{flexDirection:'row',flexWrap:'wrap'}}>
+                        { this.state.medicines.map((med=>{
+                            return(
+                                <View style={{marginLeft:10,marginTop:5}}>
+                                <Text 
+                                   style={{borderRadius:4,backgroundColor:'#eee',padding:10}}
+                                        >
+                                            {med.medicine}
+                                        </Text>
+                                </View>
+                            )
+                        }))}
+                        </View>
+                    </View>
+                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
                 
-                <Block style={styles.info}>
-                  
-                <View style={{marginTop:20,backgroundColor:"#000",width:width,height:40,color:"#fff",flexDirection:'row',alignContent:'center'}}>
-                         <Text size={16} bold color="#fff" style={{marginLeft:5,padding:5}}>{this.state.username}</Text>
-                         <Text color="#fff" style={{marginLeft:80,padding:5}}>{this.state.email}</Text>   
-                </View>
+                   
+                    <View style={{marginTop:10,flexDirection:'column',flexWrap:'wrap'}}>
+                    <Text bold size={16} style={{color:'#004D40'}}>Medical checkup :</Text>
+                    <View style={{flexDirection:'row'}}>
 
-              
-                  
-                  
-                  <Block middle>
-                    <View style={styles.itemsList} >
-                  {this.state.type=="doctor" && !this.state.noInfo && this.state.patientInfo.map((value,index)=>{
-                      if(value.idPatient==this.state.idPatient){
-                        var money,medicine,exam,note;
-                        if(!value.money){money="no";}else{money=value.money}
-                        if(!value.medicine){medicine="no medicine";}else{medicine=value.medicine}
-                        if(!value.medicalExaminations){exam="no checkup needed";}else{exam=value.medicalExaminations}
-                        if(!value.notes){note="no notes";}else{note=value.notes}
-
-                                return(
-                                  
-                             <Card title={"session number :"+value.sessionNumber}> 
-                             <View style={{flexDirection:'column',marginTop:20}}>
-                             <Text>process : {value.process}</Text>
-                             <Text>medicine:{medicine}</Text>
-                             <Text>money:{money}</Text>
-                             <Text>checkup : {exam}</Text>
-                             <Text>Notes : {note}</Text>
-                             </View>
-                             </Card> 
-                                )
-                              }
-                             
-                   })}
-                   {this.state.type=="doctor" && this.state.noInfo && <View style={{marginTop:100}}><Text bold >Not been made yet </Text></View>}
+                        { this.state.exams.map((ex=>{
+                            return(
+                                <View style={{marginLeft:10,marginTop:5}}>
+                                <Text 
+                                   style={{borderRadius:4,backgroundColor:'#eee',padding:10}}
+                                        >
+                                            {ex.exam}
+                                        </Text>
+                                        
+                                </View>
+                            )
+                        }))}
+                        </View>
                     </View>
-                  </Block>
+                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
 
-                  <Block middle>
-                    <View style={styles.itemsList} >
-                  
-                    {this.state.available && !this.state.noSession && this.state.type=="patient" && this.state.session.map((session,ind)=>{
-                      var x=0;
-          if(this.state.date == session.date && this.state.time== session.time && this.state.clinic ==session.clinic && this.state.idDoctor==session.idDoctor){
-          x=x+1;
-            if(!session.money){money="no";}else{money=session.money}
-            if(!session.medicine){medicine="no medicine";}else{medicine=session.medicine}
-            if(!session.medicalExaminations){exam="no checkup needed";}else{exam=session.medicalExaminations}
-            if(!session.notes){note="no notes";}else{note=session.notes}
+                         <View style={{flexDirection:'column',marginTop:10}}>
+                             <Text bold size={16} style={{color:'#004D40'}}>Money paid :</Text>
+                            <Text style={{color:'#333',marginLeft:10}}>{this.state.money || "No money paid"}</Text>
+                         </View>
+                         <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,marginLeft:20}}/>
+                         <View style={{flexDirection:'column',marginTop:10}}>
+                             <Text bold size={16} style={{color:'#004D40'}}>Any Notes :</Text>
+                            <Text style={{color:'#333',marginLeft:10}} >{this.state.notes || "No notes2"}</Text>
+                         </View>
+                         <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
 
-           return(
-             
-      
-<Card title={"session number :"+session.sessionNumber}> 
-       <View style={{flexDirection:'column'}}>
-       <Text>{"process:"+session.process}</Text>
-       <Text>Medicine:{medicine}</Text>
-          <Text>Money:{money}</Text>
-          <Text>checkup : {exam}</Text>
-          <Text>Notes : {note}</Text>
 
-       </View>
-       </Card>
-           )
-          }//if 1
-          
-         
-        })//end session map
-        
-      }
-
-      {!this.state.available && this.state.type=="patient" && <View style={{marginTop:100}}><Text bold size={14}>Not been made yet</Text></View>}
-      <Button
-      small
-      style={{marginBottom:20,backgroundColor:"#333",color:'#fff',marginTop:height*0.4,marginLeft:width*0.1}}
-       onPress={()=>{
-        if(this.state.type=="doctor"){
-          this.props.navigation.navigate("PatientAfterSession",{id:this.state.idDoctor})
-        }
-
-        if(this.state.type=="patient"){
-          this.props.navigation.navigate("PatientAppointment",{idPatient:this.state.idPatient})
-        }
-
-      }}><Text>Back</Text></Button>
-                    </View>
-                  </Block>
-                                  
-                </Block>
-              </Block>
             </ScrollView>
           
-        </Block>
-        
-      </Block>
-
+            </View>
     
-    
-    
-
     )
     }
   
@@ -260,49 +313,9 @@ class Info extends React.Component {
 
 const styles = StyleSheet.create({
   
-  itemsList: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    marginTop:100
-},
-
   
-  profile: {
-    marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
-    // marginBottom: -HeaderHeight * 2,
-    flex: 1,
-    backgroundColor:'#eee'
-  },
-  profileContainer: {
-    width: width,
-    height: height,
-    padding: 0,
-    zIndex: 1
-  },
-  profileBackground: {
-    width: width,
-    height: height / 2
-  },
   
-  TextInputStyle: {  
-    textAlign: 'center',  
-    height: 40,  
-    borderRadius: 10,  
-    borderWidth: 2,  
-    borderColor: '#009688',  
-    marginBottom: 10  ,
-    width:width*0.5,
-    marginLeft:20
-} ,
-
-input: {
-  borderRadius: 4,
-  borderColor: argonTheme.COLORS.BORDER,
-  height: 44,
-  backgroundColor: '#FFFFFF',
-  marginTop:10
-},
+ 
   
 });
 

@@ -200,7 +200,7 @@ class DetailsAboutPatients extends React.Component {
 
        <View>
             <ScrollView
-              showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator={true}
               style={{ width, marginTop: '25%' }}
             >
             <View>
@@ -239,7 +239,7 @@ class DetailsAboutPatients extends React.Component {
                        </View>
                        <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
 
-{this.state.show &&  <View>
+{this.state.show &&  <View >
                        <View style={{marginTop:10,flexDirection:'column'}}>
                                 <View style={{flexDirection:'row',marginTop:10}}>
                                 <Text style={{marginLeft:10}}>{"session \xa0\xa0"+this.state.sessionSelected}</Text>
@@ -309,12 +309,12 @@ class DetailsAboutPatients extends React.Component {
 
                          <View style={{flexDirection:'column',marginTop:10}}>
                              <Text bold size={16} style={{color:'#004D40'}}>Money paid :</Text>
-                            <Text style={{color:'#333',marginLeft:10}}>{this.state.money}</Text>
+                            <Text style={{color:'#333',marginLeft:10}}>{this.state.money ||"No money paid"}</Text>
                          </View>
                          <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,marginLeft:20}}/>
                          <View style={{flexDirection:'column',marginTop:10}}>
                              <Text bold size={16} style={{color:'#004D40'}}>Any Notes :</Text>
-                            <Text style={{color:'#333',marginLeft:10}} >{this.state.notes}</Text>
+                            <Text style={{color:'#333',marginLeft:10}} >{this.state.notes || "No Notes"}</Text>
                          </View>
                          <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
 
@@ -325,9 +325,6 @@ class DetailsAboutPatients extends React.Component {
           
             </View>
     
-    
-    
-
     )
     }
   

@@ -51,7 +51,7 @@ export default class MyPanel extends React.Component {
         a=app;
         
         n=Math.ceil(a.length / 8)
-        console.log(a.length);
+       // console.log(a.length);
         this.setState({
           numberOfPages:n,
           appointment:app,
@@ -83,11 +83,11 @@ export default class MyPanel extends React.Component {
   }
 
   show(id,date,time,clinic,av){
-    console.log(id);
-    console.log(date);
-    console.log(time);
-    console.log(clinic);
-    console.log(av);
+    // console.log(id);
+    // console.log(date);
+    // console.log(time);
+    // console.log(clinic);
+    // console.log(av);
     if(!av){
       this.setState({showToast:true});
     setTimeout(function(){
@@ -105,7 +105,6 @@ if(av){
 }
 if(flag){
 this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:id,type:"patient",date:date,time:time,clinic:clinic,available:av})
-
 }
 
 if(!flag){ // الموعد ما صار تأجل او التغى
@@ -136,7 +135,7 @@ this.setState({showToast:false});
           return (
             <DataTable.Row key={i}
              onPress={()=>
-             {console.log(i);this.show(item.idDoctor,item.dateSelected,item.timeSelected,item.clinicName,item.available);
+             {this.show(item.idDoctor,item.dateSelected,item.timeSelected,item.clinicName,item.available);
              } }>
               
                   <DataTable.Cell  >

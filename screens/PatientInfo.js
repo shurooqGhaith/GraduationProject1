@@ -506,7 +506,9 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                 fire.database().ref("users").child(this.state.idPatient).child("medicines").push().set({
                   idDoctor:this.state.idDoctor,
                   sessionNumber:this.state.session,
-                  medicine:value
+                  medicine:value,
+                  'time':this.state.time,
+                  'date':this.state.date,
                 })
 
                 fire.database().ref("medicines").orderByChild("medicine").equalTo(value.toLowerCase()).on('value',(snap)=>{
@@ -535,7 +537,9 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                 fire.database().ref("users").child(this.state.idPatient).child("checkup").push().set({
                   idDoctor:this.state.idDoctor,
                   sessionNumber:this.state.session,
-                  exam:value
+                  exam:value,
+                  'time':this.state.time,
+                 'date':this.state.date
                 });
                 fire.database().ref("medicalExaminations").orderByChild("exam").equalTo(value.toLowerCase()).on('value',(snap)=>{
                   //alert("1");
@@ -626,7 +630,9 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
             fire.database().ref("users").child(this.state.idPatient).child("processes").push().set({
               idDoctor:this.state.idDoctor,
               sessionNumber:this.state.session,
-              process:value
+              process:value,
+              'time':this.state.time,
+              'date':this.state.date
             });
           });
           if(!this.state.money){this.setState({money:0})}
