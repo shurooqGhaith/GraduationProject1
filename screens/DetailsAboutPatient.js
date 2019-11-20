@@ -54,7 +54,9 @@ class DetailsAboutPatients extends React.Component {
       process:[],
       medicines:[],
       exams:[],
-      show:false
+      show:false,
+      sessionDate:'',
+      sessionSelected:''
 
     }
   }
@@ -118,18 +120,17 @@ class DetailsAboutPatients extends React.Component {
 
    })
  
-
-
   }
 
  getData(id,num){
    
-    this.setState({show:true});
+    this.setState({show:true,sessionSelected:num});
     this.state.patientInfo.map((value,index)=>{
         if(value.idPatient==id && value.sessionNumber==num){
             this.setState({
                 money:value.money,
-                notes:value.notes
+                notes:value.notes,
+                sessionDate:value.date
             })
         }
     })///map patientInfo
@@ -211,13 +212,10 @@ class DetailsAboutPatients extends React.Component {
                               }
                    })}
                     </View>
-                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
-                       <View style={{marginTop:10}}>
-                                <Text bold size={20}>Session Report</Text>
-                       </View>
+                       
                        <Divider style={{backgroundColor:'#000',marginTop:10,width:width*0.4}}/>
 
-                       <View style={{flexDirection:'row'}}>
+                       <View style={{flexDirection:'row',marginTop:10}}>
                           <View style={{flexDirection:'column',marginLeft:20}}>
                               <Text bold size={14}>Name</Text>
                               <Text style={{color:'#aaa'}}>{this.state.username}</Text>
@@ -229,14 +227,21 @@ class DetailsAboutPatients extends React.Component {
                           </View>
                        </View>
                        <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
-
+                       
+                       <View style={{marginTop:10,flexDirection:'column'}}>
+                                <Text bold size={20}>Session Report</Text>
+                                <View style={{flexDirection:'row',marginTop:10}}>
+                                <Text style={{marginLeft:10}}>{"session \xa0\xa0"+this.state.sessionSelected}</Text>
+                                <Text style={{marginLeft:60}}>{this.state.sessionDate}</Text>
+                                </View>
+                       </View>
                     <View style={{marginTop:10,flexDirection:'column'}}>
                     <Text bold size={16}>Processes</Text>
                     <View style={{flexDirection:'row'}}>
 
-                        {this.state.show && this.state.process.map((pro=>{
+                        { this.state.process.map((pro=>{
                             return(
-                                <View style={{flexDirection:'row',marginLeft:10}}>
+                                <View style={{marginLeft:10,marginTop:5}}>
                                 <Button small
                                    style={{backgroundColor:"#eee"}}
                                         >
@@ -252,9 +257,9 @@ class DetailsAboutPatients extends React.Component {
                     <View style={{marginTop:10,flexDirection:'column'}}>
                     <Text bold size={16}>Medicines :</Text>
                            <View style={{flexDirection:'row'}}>
-                        {this.state.show && this.state.medicines.map((med=>{
+                        { this.state.medicines.map((med=>{
                             return(
-                                <View style={{marginLeft:10}}>
+                                <View style={{marginLeft:10,marginTop:5}}>
                                 <Button small
                                     style={{backgroundColor:"#eee"}}
                                         >
@@ -272,9 +277,9 @@ class DetailsAboutPatients extends React.Component {
                     <Text bold size={16}>Medical checkup :</Text>
                     <View style={{flexDirection:'row'}}>
 
-                        {this.state.show && this.state.exams.map((ex=>{
+                        { this.state.exams.map((ex=>{
                             return(
-                                <View style={{flexDirection:'row',marginLeft:10}}>
+                                <View style={{marginLeft:10,marginTop:5}}>
                                 <Button small
                                 style={{backgroundColor:"#eee"}}
                                         >
