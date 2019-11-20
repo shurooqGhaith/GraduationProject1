@@ -219,7 +219,8 @@ this.setState({
 
      this.setState({
       sessionAvailable:ar,
-      showModal2:true
+      showModal2:true,
+      showForm:false
     })
 
 
@@ -390,8 +391,9 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
     })//app doctor map
    
   })//app doctor
+  this.props.navigation.navigate("DoctorAppointment",{id:this.state.idDoctor});
 
-})
+})//then end
 
 }
 })//map app p
@@ -754,25 +756,27 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 
                   </View>
 
-                  <View style={{marginTop:100,flexDirection:'column',alignItems:'center'}}>
+                  <View style={{marginTop:100,flexDirection:'row',alignItems:'center'}}>
                   <Toast visible={this.state.flag} message={this.state.msg}/> 
                   <Modal transparent={true} visible={this.state.showModal}>
-                  <View style={{backgroundColor:'#ffffff80',flexDirection:'column',marginTop:200,alignItems:'center',justifyContent:'center',height:height*0.3}}>
-                  <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 20,width:width*0.6,height:height*0.3}}>
+                  <View style={{backgroundColor:'#ffffff80',flexDirection:'row',marginTop:200,alignItems:'center',justifyContent:'center',height:height*0.3}}>
+                  <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 20,width:width*0.8,height:height*0.3}}>
                   <Text>Available times </Text>
                   <ScrollView showsVerticalScrollIndicator={true}>
-                      
+                  <View style={{flexDirection:'row',flexWrap:'wrap'}}>
+
                   {this.state.change && this.state.availableSlots.map((slot,index)=>{
                       if(slot.time){
                            return(
-                                   <View>
-                                     <Button style={{backgroundColor:'#eee',marginTop:5}} small onPress={()=>this.changeTime(slot.time)}>
+                                   <View style={{marginTop:5}} >
+                                     <Button style={{backgroundColor:'#eee',marginLeft:10}} small onPress={()=>this.changeTime(slot.time)}>
                                      <Text style={{color:'#00897b'}}>{slot.time}</Text>
                                       </Button>
                                       </View>
                               )
                             }
                 })}
+                </View>
                 <Button small style={{marginTop:5}} onPress={()=>this.setState({showModal:false})}><Text>cancel</Text></Button>
                   </ScrollView>
                       </View>
@@ -950,19 +954,20 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                        datePickerModeAndroid={'spinner'}
                              />
 
-<View style={{marginTop:100,flexDirection:'column',alignItems:'center'}}>
+<View style={{marginTop:100,flexDirection:'row',alignItems:'center'}}>
 <Toast visible={this.state.isShow} message={this.state.msg}/> 
                   <Modal transparent={true} visible={this.state.showModal2}>
-                  <View style={{backgroundColor:'#ffffff80',flexDirection:'column',marginTop:200,alignItems:'center',justifyContent:'center',height:height*0.3}}>
-                  <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 20,width:width*0.6,height:height*0.3}}>
+                  <View style={{backgroundColor:'#ffffff80',flexDirection:'row',marginTop:200,alignItems:'center',justifyContent:'center',height:height*0.3}}>
+                  <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 20,width:width*0.8,height:height*0.3}}>
                   <Text>Available times </Text>
                   <ScrollView showsVerticalScrollIndicator={true}>
-                      
+                  <View style={{flexDirection:'row',flexWrap:'wrap'}}>
+
                   {this.state.nextEnable && this.state.sessionAvailable.map((slot,index)=>{
                        if(slot.time){
                                return(
-                                   <View>
-                             <Button style={{backgroundColor:'#eee',marginTop:5}} small onPress={()=>this.makeNextSessionAppointment(slot.time)}>
+                                   <View style={{marginTop:5}}>
+                             <Button style={{backgroundColor:'#eee',marginLeft:10}} small onPress={()=>this.makeNextSessionAppointment(slot.time)}>
                                   <Text style={{color:'#00897b'}}>{slot.time}</Text>
                                  </Button>
                                             </View>
@@ -971,7 +976,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
    
           
                 })}
-
+                     </View>
                 <Button small style={{marginTop:5}} onPress={()=>this.setState({showModal2:false})}><Text>cancel</Text></Button>
                   </ScrollView>
                       </View>

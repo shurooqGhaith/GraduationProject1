@@ -108,13 +108,26 @@ class DoctorAppointment extends React.Component {
     this.setState({
       filterEnable:true
     })
+    var flag=false;
     fire.database().ref("users").child(this.state.id).child("appointment").orderByChild("dateSelected").equalTo(this.state.todayDate).on('value',(snap)=>{
       if(snap.val()){
         let app=Object.values(snap.val());
-        this.setState({
+        app.map(value=>{
+          if(!value.available){
+             flag=true;
+          }
+        })
+        if(flag){
+          this.setState({
             patientInfo:app,
             nodata:false
         })
+        }
+        if(!flag){
+          this.setState({
+              nodata:true
+          })
+      }
       }
       else{
           this.setState({
