@@ -145,6 +145,7 @@ class DetailsAboutPatients extends React.Component {
                     array1.push({process:value.process});
             }
         })
+        if(array1.length==0){array1.push({process:'Nothing done'})}
 
         this.setState({
             process:array1
@@ -154,16 +155,20 @@ class DetailsAboutPatients extends React.Component {
     //get medicines
     var array2=[];
     fire.database().ref("users").child(this.state.idDoctor).child("medicines").on('value',(med)=>{
+        if(med.val()){
         let res=Object.values(med.val());
+        var noMed='';
         res.map((value)=>{
             if(value.idPatient ==id && value.sessionNumber==num){
                     array2.push({medicine:value.medicine});
             }
+           
         })
-
+          if(array2.length==0){array2.push({medicine:'No medicine Written'})}
         this.setState({
             medicines:array2
         })
+    }
     }) //medicine fire
 
      //get exams
@@ -175,7 +180,8 @@ class DetailsAboutPatients extends React.Component {
                      array3.push({exam:value.exam});
              }
          })
- 
+         if(array3.length==0){array3.push({exam:'No medical checkup needed'})}
+
          this.setState({
             exams:array3
          })
