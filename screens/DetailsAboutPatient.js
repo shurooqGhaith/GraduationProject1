@@ -111,6 +111,7 @@ class DetailsAboutPatients extends React.Component {
       patientInfo:data,
       noInfo:false
     })
+    
      }
     
      else{
@@ -202,6 +203,9 @@ class DetailsAboutPatients extends React.Component {
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
+            <View>
+            <Text bold size={20} style={{color:'#000'}}>Sessions Report</Text>
+            </View>
                     <View style={{flexDirection:'row',flexWrap:'wrap'}} >
                   { !this.state.noInfo && this.state.patientInfo.map((value,index)=>{
                       if(value.idPatient==this.state.idPatient){//من هون بجيب ارقام الجلسات و بعرضهم بكبسات
@@ -236,7 +240,6 @@ class DetailsAboutPatients extends React.Component {
                        <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
 
                        <View style={{marginTop:10,flexDirection:'column'}}>
-                                <Text bold size={20} style={{color:'#004D40'}}>Session Report</Text>
                                 <View style={{flexDirection:'row',marginTop:10}}>
                                 <Text style={{marginLeft:10}}>{"session \xa0\xa0"+this.state.sessionSelected}</Text>
                                 <Text style={{marginLeft:60}}>{this.state.sessionDate}</Text>
@@ -244,7 +247,7 @@ class DetailsAboutPatients extends React.Component {
                        </View>
                     <View style={{marginTop:10,flexDirection:'column'}}>
                     <Text bold size={16} style={{color:'#004D40'}}>Processes</Text>
-                    <View style={{flexDirection:'row'}}>
+                    <View style={{flexDirection:'row',flexWrap:'wrap'}}>
 
                         { this.state.process.map((pro=>{
                             return(
@@ -266,7 +269,7 @@ class DetailsAboutPatients extends React.Component {
 
                     <View style={{marginTop:10,flexDirection:'column'}}>
                     <Text bold size={16} style={{color:'#004D40'}}>Medicines :</Text>
-                           <View style={{flexDirection:'row'}}>
+                           <View style={{flexDirection:'row',flexWrap:'wrap'}}>
                         { this.state.medicines.map((med=>{
                             return(
                                 <View style={{marginLeft:10,marginTop:5}}>
@@ -283,7 +286,7 @@ class DetailsAboutPatients extends React.Component {
                     <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
                 
                    
-                    <View style={{marginTop:10,flexDirection:'column'}}>
+                    <View style={{marginTop:10,flexDirection:'column',flexWrap:'wrap'}}>
                     <Text bold size={16} style={{color:'#004D40'}}>Medical checkup :</Text>
                     <View style={{flexDirection:'row'}}>
 
