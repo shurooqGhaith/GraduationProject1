@@ -16,8 +16,8 @@ import {
   Modal
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
-
-import { Button,Icon,Input } from "../components";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { Button,Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
 import fire from "../constants/firebaseConfigrations";
@@ -115,7 +115,9 @@ class PatientInfo extends React.Component {
       showModal:false,
       showModal2:false,
       showForm:false,
-      notes:''
+      notes:'',
+      showMedicine:false,
+      showExam:false
 
     }
   }
@@ -831,20 +833,21 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                               </View>
                               </View>
 
-                              {this.state.medicalExaminations.map((name,index)=>{
-                      return(
-                          <View key={index} style={{marginLeft:10,width:width*0.3}}>
-                          <TextInput
-                        
-                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
-                        placeholder="medical exam"
-                        onChangeText={(Mname)=>this.handleMedicalExaminationsChange(Mname,index)}
-                        value={name}
-                      />
-                          </View>
-                      )
-                    })}
-                              {this.state.medicinesName.map((name,index)=>{
+                              
+                   <View style={{width:width*0.9}}>
+                   <TouchableOpacity style={styles.row} onPress={()=>this.setState({showMedicine:!this.state.showMedicine})}>
+                <Text style={styles.title}>Medicine</Text>
+                <Icon name={this.state.showMedicine ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+            </TouchableOpacity>
+            <View>
+              {this.state.showMedicine && <View>
+                <Button
+                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10, width: width * 0.4,borderRadius:10,marginLeft:10}}
+                      onPress={this.addMedicineName}
+                    >
+                     other medicine 
+                    </Button>
+                    {this.state.medicinesName.map((name,index)=>{
                       return(
                           <View key={index} style={{marginLeft:70,width:width*0.3}}>
                           <TextInput
@@ -857,27 +860,41 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                           </View>
                       )
                     })}
+              </View>}
+            </View>
+                   </View>
 
-                    <View style={{flexDirection:'row'}}>
-                    <Button
-                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10, width: width * 0.4,borderRadius:10,marginLeft:10}}
-                      onPress={this.addMedicineName}
-                    >
-                     other medicine 
-                    </Button>
+                    <View style={{width:width*0.9}} >
+                    <TouchableOpacity style={styles.row} onPress={()=>this.setState({showExam:!this.state.showExam})}>
+                <Text style={styles.title}>Exam</Text>
+                <Icon name={this.state.showExam ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+            </TouchableOpacity>
 
-                    <Button
+             <View>
+               {this.state.showExam && <View>
+                <Button
                       style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10, width: width * 0.4,borderRadius:10,marginLeft:10}}
                       onPress={this.addMedicalExaminations}
                     >
                      other check up
                     </Button>
-                    </View>
+
+                    {this.state.medicalExaminations.map((name,index)=>{
+                      return(
+                          <View key={index} style={{marginLeft:10,width:width*0.3}}>
+                          <TextInput
+                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
+                        placeholder="medical exam"
+                        onChangeText={(Mname)=>this.handleMedicalExaminationsChange(Mname,index)}
+                        value={name}
+                      />
+                          </View>
+                      )
+                    })}
+               </View>}
+             </View>
+            </View>
                     
-
-                   
-
-
                    
                           
 <View style={{marginTop:30}} >
@@ -961,7 +978,15 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 
 const styles = StyleSheet.create({
   
-  
+  row:{
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    height:56,
+    paddingLeft:25,
+    paddingRight:18,
+    alignItems:'center',
+    backgroundColor: "#eee",
+},
   textAreaContainer: {
     borderColor: "#fff",
     borderWidth: 1,
