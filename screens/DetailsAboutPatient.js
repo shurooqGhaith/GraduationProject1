@@ -201,21 +201,44 @@ class DetailsAboutPatients extends React.Component {
                                 return(
                                     <View >
                                         <Button small
+                                        style={{marginLeft:10,backgroundColor:"#333"}}
                                         onPress={()=>this.getData(value.idPatient,value.sessionNumber)}
                                         >
-                                            <Text>{value.sessionNumber}</Text>
+                                            <Text style={{color:'#fff'}}>{value.sessionNumber}</Text>
                                         </Button>
                                     </View>
                                 )
                               }
                    })}
                     </View>
+                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
+                       <View style={{marginTop:10}}>
+                                <Text bold size={20}>Session Report</Text>
+                       </View>
+                       <Divider style={{backgroundColor:'#000',marginTop:10,width:width*0.4}}/>
 
-                    <View style={{marginTop:30,flexDirection:'row'}}>
+                       <View style={{flexDirection:'row'}}>
+                          <View style={{flexDirection:'column',marginLeft:20}}>
+                              <Text bold size={14}>Name</Text>
+                              <Text style={{color:'#aaa'}}>{this.state.username}</Text>
+                          </View>
+
+                          <View style={{flexDirection:'column',marginLeft:60}}>
+                              <Text bold size={14}>Email</Text>
+                              <Text style={{color:'#aaa'}}>{this.state.email}</Text>
+                          </View>
+                       </View>
+                       <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
+
+                    <View style={{marginTop:10,flexDirection:'column'}}>
+                    <Text bold size={16}>Processes</Text>
+                    <View style={{flexDirection:'row'}}>
+
                         {this.state.show && this.state.process.map((pro=>{
                             return(
-                                <View style={{flexDirection:'row'}}>
+                                <View style={{flexDirection:'row',marginLeft:10}}>
                                 <Button small
+                                   style={{backgroundColor:"#eee"}}
                                         >
                                             <Text>{pro.process}</Text>
                                         </Button>
@@ -223,33 +246,59 @@ class DetailsAboutPatients extends React.Component {
                             )
                         }))}
                     </View>
+                    </View>
+                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
 
-                    <View style={{marginTop:30,flexDirection:'row'}}>
+                    <View style={{marginTop:10,flexDirection:'column'}}>
+                    <Text bold size={16}>Medicines :</Text>
+                           <View style={{flexDirection:'row'}}>
                         {this.state.show && this.state.medicines.map((med=>{
                             return(
-                                <View style={{flexDirection:'row'}}>
+                                <View style={{marginLeft:10}}>
                                 <Button small
+                                    style={{backgroundColor:"#eee"}}
                                         >
                                             <Text>{med.medicine}</Text>
                                         </Button>
                                 </View>
                             )
                         }))}
+                        </View>
                     </View>
+                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
+                
+                   
+                    <View style={{marginTop:10,flexDirection:'column'}}>
+                    <Text bold size={16}>Medical checkup :</Text>
+                    <View style={{flexDirection:'row'}}>
 
-                    <View style={{marginTop:30,flexDirection:'row'}}>
                         {this.state.show && this.state.exams.map((ex=>{
                             return(
-                                <View style={{flexDirection:'row'}}>
+                                <View style={{flexDirection:'row',marginLeft:10}}>
                                 <Button small
+                                style={{backgroundColor:"#eee"}}
                                         >
                                             <Text>{ex.exam}</Text>
                                         </Button>
+                                        
                                 </View>
                             )
                         }))}
+                        </View>
                     </View>
-             
+                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
+
+                         <View style={{flexDirection:'column',marginTop:10}}>
+                             <Text bold size={16}>Money paid :</Text>
+                            <Text style={{color:'#333',marginLeft:10}}>{this.state.money}</Text>
+                         </View>
+                         <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,marginLeft:20}}/>
+                         <View style={{flexDirection:'column',marginTop:10}}>
+                             <Text bold size={16}>Any Notes :</Text>
+                            <Text style={{color:'#333',marginLeft:10}} >{this.state.notes}</Text>
+                         </View>
+                         <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
+
             </ScrollView>
           
             </View>
