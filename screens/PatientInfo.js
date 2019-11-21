@@ -81,6 +81,9 @@ class PatientInfo extends React.Component {
       checkedNerve:false,
       checkedProsthodontics:false,
       checkedGumSurgery:false,
+      checkedDentalSize:false,
+      checkedTeethWhitening:false,
+      checkedOrthodonticsInstallation:false,
 
       medicinesName:[],
       medicine:'',
@@ -631,6 +634,9 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
           if(this.state.checkedNerve){process.push("Remove the Nerve");pro+="Remove the Nerve\n"}
           if(this.state.checkedProsthodontics){process.push("Prosthodontics");pro+="Prosthodontics\n"}
           if(this.state.checkedGumSurgery){process.push("Gum Surgery");pro+="Gum Surgery\n"}
+          if(this.state.checkedDentalSize){process.push("Take dental sizes");pro+="Take dental sizes\n"}
+          if(this.state.checkedTeethWhitening){process.push("Teeth whitening");pro+="Teeth whitening\n"}
+          if(this.state.checkedOrthodonticsInstallation){process.push("Orthodontics installation");pro+="Orthodontics installation\n"}
 
           if(!this.state.checkedPermanent && !this.state.checkedTemporary && !this.state.checkedRepairing && !this.state.checkedWindmillDressing){
                 process.push("nothing done");
@@ -919,6 +925,27 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                                  />
                                   <Text style={{marginTop: 5}}>Gum surgery</Text>
                                   </View>
+                                  </View>
+                                  <View style={{flexDirection:'row'}} >
+                                  <CheckBox
+                                       value={this.state.checkedDentalSize}
+                                       onValueChange={() => this.setState({ checkedDentalSize: !this.state.checkedDentalSize })}
+                                 />
+                                  <Text style={{marginTop: 5}}>Take dental sizes</Text>
+                                  </View>
+                                  <View style={{flexDirection:'row'}} >
+                                  <CheckBox
+                                       value={this.state.checkedTeethWhitening}
+                                       onValueChange={() => this.setState({ checkedTeethWhitening: !this.state.checkedTeethWhitening })}
+                                 />
+                                  <Text style={{marginTop: 5}}>Teeth whitening</Text>
+                                  </View>
+                                  <View style={{flexDirection:'row'}} >
+                                  <CheckBox
+                                       value={this.state.checkedOrthodonticsInstallation}
+                                       onValueChange={() => this.setState({ checkedOrthodonticsInstallation: !this.state.checkedOrthodonticsInstallation })}
+                                 />
+                                  <Text style={{marginTop: 5}}>Orthodontics installation</Text>
                                   </View>
                               </View>
 
