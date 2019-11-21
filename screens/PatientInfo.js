@@ -764,8 +764,8 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                   <Toast visible={this.state.flag} message={this.state.msg}/> 
                   <Modal transparent={true} visible={this.state.showModal}>
                   <View style={{backgroundColor:'#ffffff80',flexDirection:'row',marginTop:250,alignItems:'center',justifyContent:'center',height:height*0.3}}>
-                  <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 20,width:width*0.8,height:height*0.3}}>
-                  <Text>Available times </Text>
+                  <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 50,width:width*0.8,height:height*0.3}}>
+                  <Text style={{color:'#3E2723'}}>Available times </Text>
                   <ScrollView showsVerticalScrollIndicator={true}>
                   <View style={{flexDirection:'row',flexWrap:'wrap'}}>
 
@@ -858,23 +858,25 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                               
                    <View style={{width:width*0.9}}>
                    <TouchableOpacity style={styles.row} onPress={()=>this.setState({showMedicine:!this.state.showMedicine})}>
-                <Text style={styles.title}>Medicine</Text>
+                <Text style={styles.title}>Add Medicine</Text>
                 <Icon name={this.state.showMedicine ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
             </TouchableOpacity>
+
             <View>
               {this.state.showMedicine && <View>
                 <Button
-                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10, width: width * 0.4,borderRadius:10,marginLeft:10}}
+                      small
+                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10,borderRadius:5,marginLeft:10}}
                       onPress={this.addMedicineName}
                     >
-                     other medicine 
+                     Add  
                     </Button>
                     {this.state.medicinesName.map((name,index)=>{
                       return(
-                          <View key={index} style={{marginLeft:70,width:width*0.3}}>
+                          <View key={index} style={{marginLeft:10,width:width*0.3}}>
                           <TextInput
                         
-                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
+                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,marginTop:10}}
                         placeholder="medicine name"
                         onChangeText={(Mname)=>this.handleChange(Mname,index)}
                         value={name}
@@ -885,20 +887,22 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
               </View>}
             </View>
                    </View>
+                   <Divider style={{backgroundColor:'#000000',marginTop:10,width:width*0.9}}/>
 
                     <View style={{width:width*0.9}} >
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({showExam:!this.state.showExam})}>
-                <Text style={styles.title}>Exam</Text>
+                <Text style={styles.title}>Add Medical checkup</Text>
                 <Icon name={this.state.showExam ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
             </TouchableOpacity>
 
              <View>
                {this.state.showExam && <View>
                 <Button
-                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10, width: width * 0.4,borderRadius:10,marginLeft:10}}
+                      small
+                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10,borderRadius:5,marginLeft:10}}
                       onPress={this.addMedicalExaminations}
                     >
-                     other check up
+                     Add
                     </Button>
 
                     {this.state.medicalExaminations.map((name,index)=>{
@@ -917,7 +921,8 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
              </View>
             </View>
                     
-                   
+            <Divider style={{backgroundColor:'#000000',marginTop:10,width:width*0.9}}/>
+   
                           
 <View style={{marginTop:30}} >
     <TextInput
@@ -961,12 +966,12 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 
                     </View>
                  }
-                 <View style={{marginTop:170,flexDirection:'row',alignItems:'center'}}>
+                 <View style={{marginTop:200,flexDirection:'row',alignItems:'center'}}>
 <Toast visible={this.state.isShow} message={this.state.msg}/> 
                   <Modal transparent={true} visible={this.state.showModal2}>
-                  <View style={{backgroundColor:'#ffffff80',flexDirection:'row',marginTop:200,alignItems:'center',justifyContent:'center',height:height*0.3}}>
-                  <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 20,width:width*0.8,height:height*0.3}}>
-                  <Text>Available times </Text>
+                  <View style={{backgroundColor:'#ffffff80',flexDirection:'row',marginTop:250,alignItems:'center',justifyContent:'center',height:height*0.3}}>
+                  <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 50,width:width*0.8,height:height*0.3}}>
+                  <Text style={{color:'#3E2723'}}>Available times </Text>
                   <ScrollView showsVerticalScrollIndicator={true}>
                   <View style={{flexDirection:'row',flexWrap:'wrap'}}>
 
@@ -981,7 +986,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                                                        ) }
                 })}
                      </View>
-                <Button small style={{marginTop:5,marginLeft:30,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal2:false})}><Text>cancel</Text></Button>
+                <Button small style={{marginTop:5,marginLeft:50,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal2:false})}><Text>cancel</Text></Button>
                   </ScrollView>
                       </View>
                  </View>
