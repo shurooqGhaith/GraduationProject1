@@ -70,10 +70,18 @@ class PatientInfo extends React.Component {
       info:[],
       email:'',
       session:'',
+
       checkedTemporary:false,
       checkedPermanent:false,
       checkedRepairing:false,
       checkedWindmillDressing:false,
+      checkedBridgeInstallation:false,
+      checkedImplant:false,
+      checkedExtraction:false,
+      checkedNerve:false,
+      checkedProsthodontics:false,
+      checkedGumSurgery:false,
+
       medicinesName:[],
       medicine:'',
       medicineNameFromPicker:'',
@@ -617,6 +625,13 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
           if(this.state.checkedTemporary){process.push("temporary dental filling");pro+="temporary dental filling\n"}
           if(this.state.checkedRepairing){process.push("repairing");pro+="repairing\n"}
           if(this.state.checkedWindmillDressing){process.push("windmill dressing");pro+="windmill dressing\n"}
+          if(this.state.checkedBridgeInstallation){process.push("Bridge installation");pro+="Bridge installation\n"}
+          if(this.state.checkedImplant){process.push("Implant");pro+="Implant\n"}
+          if(this.state.checkedExtraction){process.push("Extraction");pro+="Extraction\n"}
+          if(this.state.checkedNerve){process.push("Remove the Nerve");pro+="Remove the Nerve\n"}
+          if(this.state.checkedProsthodontics){process.push("Prosthodontics");pro+="Prosthodontics\n"}
+          if(this.state.checkedGumSurgery){process.push("Gum Surgery");pro+="Gum Surgery\n"}
+
           if(!this.state.checkedPermanent && !this.state.checkedTemporary && !this.state.checkedRepairing && !this.state.checkedWindmillDressing){
                 process.push("nothing done");
                 pro+="nothing done yet !";
@@ -832,30 +847,79 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                                  />
                                   <Text style={{marginTop: 5}}> Temporary dental filling</Text>
                                   </View>
-                                  <View style={{flexDirection:'row'}}>
+                                  <View style={{flexDirection:'row'}} >
                                   <CheckBox
                                        value={this.state.checkedPermanent}
                                        onValueChange={() => this.setState({ checkedPermanent: !this.state.checkedPermanent })}
                                  />
                                   <Text style={{marginTop: 5}}> Permanent dental filling</Text>
                                   </View>
-                              
                               <View style={{flexDirection:'row'}}>
-                              <View style={{flexDirection:'row'}}>
+                              <View style={{flexDirection:'row'}} >
                               <CheckBox
                                        value={this.state.checkedRepairing}
                                        onValueChange={() => this.setState({ checkedRepairing: !this.state.checkedRepairing })}
                                  />
                                   <Text style={{marginTop: 5}}> Repairing</Text>
                                   </View>
-                                  <View style={{flexDirection:'row'}}>
+                                  <View style={{flexDirection:'row'}} >
                                   <CheckBox
                                        value={this.state.checkedWindmillDressing}
                                        onValueChange={() => this.setState({ checkedWindmillDressing: !this.state.checkedWindmillDressing })}
                                  />
                                   <Text style={{marginTop: 5}}> Windmill Dressing</Text>
                                   </View>
-                              </View>
+                                  </View>
+                                 <View style={{flexDirection:'row'}}>
+                                  <View style={{flexDirection:'row'}}>
+                                  <CheckBox
+                                       value={this.state.checkedBridgeInstallation}
+                                       onValueChange={() => this.setState({ checkedBridgeInstallation: !this.state.checkedBridgeInstallation })}
+                                 />
+                                  <Text style={{marginTop: 5}}> Bridge installation</Text>
+                                  </View>
+
+                                  <View style={{flexDirection:'row'}} >
+                                  <CheckBox
+                                       value={this.state.checkedImplant}
+                                       onValueChange={() => this.setState({ checkedImplant: !this.state.checkedImplant })}
+                                 />
+                                  <Text style={{marginTop: 5}}> Implant</Text>
+                                  </View>
+                                    </View>
+                                    <View style={{flexDirection:'row'}}>
+                                  <View style={{flexDirection:'row'}} >
+                                  <CheckBox
+                                       value={this.state.checkedExtraction}
+                                       onValueChange={() => this.setState({ checkedExtraction: !this.state.checkedExtraction })}
+                                 />
+                                  <Text style={{marginTop: 5}}> Extraction</Text>
+                                  </View>
+                                  <View style={{flexDirection:'row'}}>
+                                  <CheckBox
+                                       value={this.state.checkedNerve}
+                                       onValueChange={() => this.setState({ checkedNerve: !this.state.checkedNerve })}
+                                 />
+                                  <Text style={{marginTop: 5}}> Remove the nerve</Text>
+                                  </View>
+                                    </View>
+                                    <View style={{flexDirection:'row'}}>
+                                  <View style={{flexDirection:'row'}} >
+                                  <CheckBox
+                                       value={this.state.checkedProsthodontics}
+                                       onValueChange={() => this.setState({ checkedProsthodontics: !this.state.checkedProsthodontics })}
+                                 />
+                                  <Text style={{marginTop: 5}}>Prosthodontics</Text>
+                                  </View>
+
+                                  <View style={{flexDirection:'row'}} >
+                                  <CheckBox
+                                       value={this.state.checkedGumSurgery}
+                                       onValueChange={() => this.setState({ checkedGumSurgery: !this.state.checkedGumSurgery })}
+                                 />
+                                  <Text style={{marginTop: 5}}>Gum surgery</Text>
+                                  </View>
+                                  </View>
                               </View>
 
                               
