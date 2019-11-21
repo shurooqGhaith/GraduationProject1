@@ -129,7 +129,8 @@ class PatientInfo extends React.Component {
       showForm:false,
       notes:'',
       showMedicine:false,
-      showExam:false
+      showExam:false,
+      showProcess:false
 
     }
   }
@@ -845,6 +846,12 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                                  value={this.state.money}
                                /> 
                                </View>
+                               <View style={{width:width*0.9}}>
+                               <TouchableOpacity style={styles.row} onPress={()=>this.setState({showProcess:!this.state.showProcess})}>
+                <Text style={styles.title}>Add process</Text>
+                <Icon name={this.state.showProcess ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+            </TouchableOpacity>
+                   {this.state.showProcess && 
                               <View style={{flexDirection:'column',marginLeft:40}}>
                               <View style={{flexDirection:'row' }}>
                               <CheckBox
@@ -948,8 +955,10 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                                   <Text style={{marginTop: 5}}>Orthodontics installation</Text>
                                   </View>
                               </View>
+                                }
+                                </View>
+                                <Divider style={{backgroundColor:'#000000',marginTop:10,width:width*0.9}}/>
 
-                              
                    <View style={{width:width*0.9}}>
                    <TouchableOpacity style={styles.row} onPress={()=>this.setState({showMedicine:!this.state.showMedicine})}>
                 <Text style={styles.title}>Add Medicine</Text>
