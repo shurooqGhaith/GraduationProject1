@@ -780,6 +780,9 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                               )
                             }
                 })}
+                {!this.state.change && <View style={{marginTop:5}} >
+                                     <Text style={{color:'#00897b'}}>Doctor is busy at this day</Text>
+                                      </View> }
                 </View>
                 <Button small style={{marginTop:5,marginLeft:50,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal:false})}><Text>cancel</Text></Button>
                   </ScrollView>
@@ -873,7 +876,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                     </Button>
                     {this.state.medicinesName.map((name,index)=>{
                       return(
-                          <View key={index} style={{marginLeft:10,width:width*0.3}}>
+                          <View key={index} style={{marginLeft:10,width:width*0.5}}>
                           <TextInput
                         
                         style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,marginTop:10}}
@@ -907,7 +910,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 
                     {this.state.medicalExaminations.map((name,index)=>{
                       return(
-                          <View key={index} style={{marginLeft:10,width:width*0.3}}>
+                          <View key={index} style={{marginLeft:10,width:width*0.5}}>
                           <TextInput
                         style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
                         placeholder="medical exam"
