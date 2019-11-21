@@ -221,6 +221,7 @@ this.setState({
       sessionAvailable:ar,
       showModal2:true,
       showForm:false
+      
     })
 
 
@@ -243,11 +244,14 @@ this.setState({
       'clinicName':this.state.clinic,
       'available':false
   });
-  
+  /////////
+
   this.setState({isShow:true,msg:'Added successfully !'});
   setTimeout(function(){
    this.setState({isShow:false});
   }.bind(this),5000);
+
+  this.props.navigation.navigate("DoctorAppointment",{id:this.state.idDoctor});
 
   }).catch((error)=>{
     this.setState({isShow:true,msg:error.message});
@@ -756,10 +760,10 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 
                   </View>
 
-                  <View style={{marginTop:100,flexDirection:'row',alignItems:'center'}}>
+                  <View style={{marginTop:200,flexDirection:'row',alignItems:'center'}}>
                   <Toast visible={this.state.flag} message={this.state.msg}/> 
                   <Modal transparent={true} visible={this.state.showModal}>
-                  <View style={{backgroundColor:'#ffffff80',flexDirection:'row',marginTop:200,alignItems:'center',justifyContent:'center',height:height*0.3}}>
+                  <View style={{backgroundColor:'#ffffff80',flexDirection:'row',marginTop:250,alignItems:'center',justifyContent:'center',height:height*0.3}}>
                   <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 20,width:width*0.8,height:height*0.3}}>
                   <Text>Available times </Text>
                   <ScrollView showsVerticalScrollIndicator={true}>
@@ -777,7 +781,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                             }
                 })}
                 </View>
-                <Button small style={{marginTop:5}} onPress={()=>this.setState({showModal:false})}><Text>cancel</Text></Button>
+                <Button small style={{marginTop:5,marginLeft:50,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal:false})}><Text>cancel</Text></Button>
                   </ScrollView>
                       </View>
                  </View>
@@ -954,7 +958,10 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                        datePickerModeAndroid={'spinner'}
                              />
 
-<View style={{marginTop:100,flexDirection:'row',alignItems:'center'}}>
+
+                    </View>
+                 }
+                 <View style={{marginTop:170,flexDirection:'row',alignItems:'center'}}>
 <Toast visible={this.state.isShow} message={this.state.msg}/> 
                   <Modal transparent={true} visible={this.state.showModal2}>
                   <View style={{backgroundColor:'#ffffff80',flexDirection:'row',marginTop:200,alignItems:'center',justifyContent:'center',height:height*0.3}}>
@@ -971,22 +978,16 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                                   <Text style={{color:'#00897b'}}>{slot.time}</Text>
                                  </Button>
                                             </View>
-                                                       )
-                                            }
-   
-          
+                                                       ) }
                 })}
                      </View>
-                <Button small style={{marginTop:5}} onPress={()=>this.setState({showModal2:false})}><Text>cancel</Text></Button>
+                <Button small style={{marginTop:5,marginLeft:30,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal2:false})}><Text>cancel</Text></Button>
                   </ScrollView>
                       </View>
                  </View>
                   </Modal>
 </View>
 
-                    </View>
-                 }
-               
             </ScrollView>
           
         </Block>

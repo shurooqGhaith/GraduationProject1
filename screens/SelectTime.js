@@ -335,12 +335,12 @@ export default class SelectTime extends React.Component {
                  
                 
                     <Divider style={{backgroundColor:'#000000'}}/>
-                    <View style={{marginTop:100,flexDirection:'column',alignItems:'center'}}>
+                    <View style={{marginTop:100,flexDirection:'row',flexWrap:'wrap'}}>
                     { this.state.availableSlots.map((slot,index)=>{
    if(slot.time){
     return(
-     <View>
-      <Button style={{backgroundColor:'#eee',marginTop:10}} small onPress={()=>this.makeAppointment(slot.time)}>
+     <View style={{marginTop:5}}>
+      <Button style={{backgroundColor:'#eee',marginLeft:10}} small onPress={()=>this.makeAppointment(slot.time)}>
       <Text style={{color:'#00897b'}}>{slot.time}</Text>
       </Button>
          </View>
