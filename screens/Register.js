@@ -84,7 +84,8 @@ class Register extends React.Component {
    .catch(function(error) {alert(error.message)});
 
   }
-  
+
+
  async handleLoginWithFacebook(){
    
   const { type, token } = await Facebook.logInWithReadPermissionsAsync('951872101816416', { permissions: ['public_profile'] })
@@ -114,44 +115,12 @@ class Register extends React.Component {
             <Block style={styles.registerContainer}>
               <Block flex={0.25} middle style={styles.socialConnect}>
                 <Text color="#8898AA" size={12}>
-                  Sign up with
+                  Sign up 
                 </Text>
-                <Block row style={{ marginTop: theme.SIZES.BASE }}>
-                  <Button 
-                  onPress={this.handleLoginWithFacebook}
-                  style={{ ...styles.socialButtons, marginRight: 30 }}>
-                    <Block row>
-                      <Icon
-                        name="logo-facebook"
-                        family="Ionicon"
-                        size={14}
-                        color={"black"}
-                        style={{ marginTop: 2, marginRight: 5 }}
-                      />
-                      <Text style={styles.socialTextButtons}>Facebook</Text>
-                    </Block>
-                  </Button>
-                  <Button style={styles.socialButtons}>
-                    <Block row>
-                      <Icon
-                        name="logo-google"
-                        family="Ionicon"
-                        size={14}
-                        color={"black"}
-                        style={{ marginTop: 2, marginRight: 5 }}
-                      />
-                      <Text style={styles.socialTextButtons}>GOOGLE</Text>
-                    </Block>
-                  </Button>
-                </Block>
+                
               </Block>
               <Block flex>
-                <Block flex={0.17} middle>
-                  <Text style={{marginTop:20}} color="#8898AA" size={12}>
-                    Or sign up the classic way
-                    
-                  </Text>
-                </Block>
+                
                 <ScrollView 
                 showsVerticalScrollIndicator={false}
                 style={{ width:width*0.9, marginTop: '25%' }}

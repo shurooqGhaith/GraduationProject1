@@ -363,7 +363,7 @@ class DoctorInfo extends React.Component {
                   <Block middle>
                 <View style={{flexDirection:'column'}}>
                 <Picker 
-                    style={{height: 60, width: width*0.5}} 
+                    style={{height: 60, width: width*0.8}} 
                     selectedValue = {this.state.clinicName} 
                     onValueChange = {(value) => {this.setState({clinicName: value});
                     }}>

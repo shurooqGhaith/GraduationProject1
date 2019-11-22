@@ -835,7 +835,6 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                              style={{width:width*0.4,marginLeft:30,borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',paddingLeft:5 }}  
                              onChangeText={value => this.setState({session:value})}
                              keyboardType = 'numeric'
-                             
                               />
 
                         <TextInput

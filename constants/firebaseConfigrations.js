@@ -5,7 +5,7 @@ var firebaseConfig = {
     authDomain: "my-graduation-project-d734c.firebaseapp.com",
     databaseURL: "https://my-graduation-project-d734c.firebaseio.com",
     projectId: "my-graduation-project-d734c",
-    storageBucket: "",
+    storageBucket: "my-graduation-project-d734c..appspot.com",
     messagingSenderId: "1032550654166",
     appId: "1:1032550654166:web:3a9bd348805e962cf7e977"
   };

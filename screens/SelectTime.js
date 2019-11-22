@@ -325,16 +325,16 @@ export default class SelectTime extends React.Component {
                     style={{ marginTop: 20, paddingBottom: 24 }}
                   >
                   <View  style={{ marginTop: 10,flexDirection:'column' }}>
-                  <Text bold size={14} >Doctor name : {this.state.username}</Text>
-                  <Text>The appointment will be on : {this.state.dateSelected+"\n"}{this.state.daySelected}</Text>
-                  <Text bold size={14} color="#000000">The appointment is at :{this.state.clinicSelected}</Text>
+                  <Text size={14} >Doctor name : {this.state.username}</Text>
+                  <Text>The appointment will be on : {this.state.dateSelected}</Text>
+                  <Text  size={14} color="#000000">At :{this.state.clinicSelected}</Text>
                     </View>
                   </Block>
                   </Block>
                   <Block middle>
                  
                 
-                    <Divider style={{backgroundColor:'#000000'}}/>
+                    <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
                     <View style={{marginTop:100,flexDirection:'row',flexWrap:'wrap'}}>
                     { this.state.availableSlots.map((slot,index)=>{
    if(slot.time){

@@ -20,7 +20,6 @@ import { Button as ComponentButton, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 import Panel from 'react-native-panel';
- 
 const { width, height } = Dimensions.get("screen");
 const Toast = (props) => {
     if (props.visible) {
@@ -61,6 +60,7 @@ class UpdateInfo extends React.Component {
       nameEnable:false,
       emailEnable:false,
       passwordEnable:false,
+      UploadEnable:false,
       currentPassword:'',
       newPassword:'',
       Specialization:'',
@@ -70,7 +70,7 @@ class UpdateInfo extends React.Component {
       isShowEmail:false,
       isShowPass:false,
       isShowSpecialization:false,
-
+      
       message:''
     }
   }
@@ -217,6 +217,8 @@ class UpdateInfo extends React.Component {
            )
     
     }
+
+   
 
   render() {
     return (
@@ -382,18 +384,13 @@ class UpdateInfo extends React.Component {
 
                        {this.state.SpecializationEnable && 
                         <View >
-
                         <TextInput
-                        
                         autoCapitalize="none"
                         placeholder="new Specialization"
                         value={this.state.Specialization}
                         onChangeText={Specialization => this.setState({Specialization: Specialization })}
                         style={styles.TextInputStyle}
                       />
-                        
-                  
-                     
                         <ComponentButton
                            small
                            style={{backgroundColor:'#333',marginLeft:50}}
@@ -414,6 +411,7 @@ class UpdateInfo extends React.Component {
                     }
                     <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
    
+
                     <Toast visible={this.state.isShow} message={this.state.message}/> 
                   </KeyboardAvoidingView>
                 </Block>
