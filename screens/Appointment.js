@@ -116,6 +116,10 @@ export default class Appointment extends React.Component {
   }
 
   continue(){
+    console.log(this.state.dateSelected);
+    if(this.state.dateSelected==''){
+      alert("Enter a date !");
+    }
     if(this.state.available){
        this.props.navigation.navigate("SelectTime",{idDoctor:this.state.idDoctor,idPatient:this.state.idPatient,selectedDay:this.state.daySelected,selectedDate:this.state.dateSelected,clinic:this.state.clinic});
 

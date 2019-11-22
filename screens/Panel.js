@@ -132,6 +132,7 @@ this.setState({showToast:false});
         {this.state.appointment
         .slice(this.state.perPage * this.state.page, this.state.perPage * (this.state.page + 1))
         .map((item, i) => {
+          if(item.available){
           return (
             <DataTable.Row key={i}
              onPress={()=>
@@ -153,6 +154,7 @@ this.setState({showToast:false});
               
             </DataTable.Row>
           );
+          }
         })}
         
         <DataTable.Pagination

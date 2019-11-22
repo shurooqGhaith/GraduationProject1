@@ -228,7 +228,7 @@ this.setState({
        
       
      })//working hour database
-
+    if(ar.length==0){this.setState({nextEnable:false})}
      this.setState({
       sessionAvailable:ar,
       showModal2:true,
@@ -372,10 +372,12 @@ this.setState({
       }
       return unique;
   },[]);
+  console.log(ar.length);
+  if(ar.length==0){this.setState({change:false})}
+  console.log(this.state.change);
      this.setState({
       availableSlots:ar,
       showModal:true
-
     })
     
   }
@@ -729,17 +731,17 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
               style={{ width, marginTop: '25%' }}
             >
                   <Block style={{marginLeft:5}}>
-                  <View style={{flexDirection:'column',marginTop:40}}>
-                  <View style={{flexDirection:'row'}}>
-                  <Text style={{color:"#263238"}}>name:</Text>
-                  <Text style={{color:"#263238"}}>{this.state.username}</Text>
-                  
-                  </View>
-                  <View style={{flexDirection:'row'}}>
-                    <Text style={{color:"#263238"}}>email:</Text>
-                    <Text style={{color:"#263238"}}>{this.state.email}</Text>
-                  </View>
-                  </View>
+                  <View style={{flexDirection:'row',marginTop:10}}>
+                          <View style={{flexDirection:'column',marginLeft:20}}>
+                              <Text bold size={14} style={{color:'#004D40'}}>Name</Text>
+                              <Text style={{color:'#aaa'}}>{this.state.username}</Text>
+                          </View>
+
+                          <View style={{flexDirection:'column',marginLeft:60}}>
+                              <Text bold size={14} style={{color:'#004D40'}}>Email</Text>
+                              <Text style={{color:'#aaa'}}>{this.state.email}</Text>
+                          </View>
+                       </View>
                   </Block>
                   <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
 
@@ -779,7 +781,6 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                        datePickerModeAndroid={'spinner'}
                              />
 
-
                   </View>
 
                   <View style={{marginTop:200,flexDirection:'row',alignItems:'center'}}>
@@ -790,7 +791,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                   <Text style={{color:'#3E2723'}}>Available times </Text>
                   <ScrollView showsVerticalScrollIndicator={true}>
                   <View style={{flexDirection:'row',flexWrap:'wrap'}}>
-
+                      
                   {this.state.change && this.state.availableSlots.map((slot,index)=>{
                       if(slot.time){
                            return(
@@ -804,9 +805,14 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                 })}
                 {!this.state.change && <View style={{marginTop:5}} >
                                      <Text style={{color:'#00897b'}}>Doctor is busy at this day</Text>
+                                     <Button small style={{marginTop:5,marginLeft:35,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal:false})}><Text>cancel</Text></Button>
+
                                       </View> }
                 </View>
-                <Button small style={{marginTop:5,marginLeft:50,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal:false})}><Text>cancel</Text></Button>
+                {this.state.change && <View>
+                  <Button small style={{marginTop:5,marginLeft:50,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal:false})}><Text>cancel</Text></Button>
+
+                </View>}
                   </ScrollView>
                       </View>
                  </View>
@@ -1087,8 +1093,18 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                                             </View>
                                                        ) }
                 })}
+
+                {!this.state.nextEnable && <View style={{marginTop:5}} >
+                                     <Text style={{color:'#00897b'}}>Doctor is busy at this day</Text>
+                                     <Button small style={{marginTop:5,marginLeft:35,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal2:false})}><Text>cancel</Text></Button>
+
+                                      </View> }
+
                      </View>
-                <Button small style={{marginTop:5,marginLeft:50,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal2:false})}><Text>cancel</Text></Button>
+                     {this.state.nextEnable &&
+                      <Button small style={{marginTop:5,marginLeft:50,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal2:false})}><Text>cancel</Text></Button>
+
+                     }
                   </ScrollView>
                       </View>
                  </View>

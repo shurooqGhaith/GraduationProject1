@@ -324,18 +324,36 @@ export default class SelectTime extends React.Component {
                     space="evenly"
                     style={{ marginTop: 20, paddingBottom: 24 }}
                   >
-                  <View  style={{ marginTop: 10,flexDirection:'column' }}>
+                  {/* <View  style={{ marginTop: 10,flexDirection:'column' }}>
                   <Text size={14} >Doctor name : {this.state.username}</Text>
                   <Text>The appointment will be on : {this.state.dateSelected}</Text>
                   <Text  size={14} color="#000000">At :{this.state.clinicSelected}</Text>
-                    </View>
+                    </View> */}
+
+                    <View style={{flexDirection:'column',marginTop:10,marginLeft:20}}>
+                          <View style={{flexDirection:'row'}}>
+                              <Text bold size={14} style={{color:'#004D40'}}>Name:</Text>
+                              <Text style={{color:'#aaa'}}>{this.state.username}</Text>
+                          </View>
+
+                          <View style={{flexDirection:'row',marginTop:10}}>
+                              <Text bold size={14} style={{color:'#004D40'}}>Date:</Text>
+                              <Text style={{color:'#aaa'}}>{this.state.dateSelected}</Text>
+                          </View>
+                          <View style={{flexDirection:'row',marginTop:10}}>
+                              <Text bold size={14} style={{color:'#004D40'}}>Clinic name:</Text>
+                              <Text style={{color:'#aaa'}}>{this.state.clinicSelected}</Text>
+                          </View>
+                       </View>
+
+                       
                   </Block>
                   </Block>
                   <Block middle>
                  
                 
                     <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
-                    <View style={{marginTop:100,flexDirection:'row',flexWrap:'wrap'}}>
+                    <View style={{marginTop:100,flexDirection:'row',flexWrap:'wrap',marginLeft:30}}>
                     { this.state.availableSlots.map((slot,index)=>{
    if(slot.time){
     return(
