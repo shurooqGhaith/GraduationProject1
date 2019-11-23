@@ -21,14 +21,26 @@ class Onboarding extends React.Component {
   }
   
   componentDidMount(){
-    // fire.auth().onAuthStateChanged((user) => {
-    //   if (user) {
-    //     this.setState({  authenticated: true });
-    //     console.log(user);
-    //   } else {
-    //     this.setState({ authenticated: false });
-    //   }
-    // });
+    var id;
+    fire.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({  authenticated: true });
+         id=user.uid;
+       //console.log(id);
+        fire.database().ref("users").child(id).child("type").on('value',(snap)=>{
+          if(snap.val()=="patient"){
+            this.props.navigation.navigate('PatientProfile');
+          }
+          if(snap.val()=="doctor"){
+            this.props.navigation.navigate("Profile");
+          }
+        })
+      //  console.log(user);
+        
+      } else {
+        this.setState({ authenticated: false });
+      }
+    });
   }
 
   render() {

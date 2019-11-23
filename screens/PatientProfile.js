@@ -86,84 +86,92 @@ class PatientProfile extends React.Component {
   authListener(){
   
    var name,start,end,close;
-   var user =fire.auth().currentUser;
-   if(user != null){
-     if(user.emailVerified){
-        this.setState({isVerified:true});
-     }
-     else{
-      this.setState({isVerified:false});
-       user.sendEmailVerification().then(()=>{
-         console.log("sent");
+  //  var user =fire.auth().currentUser;
+   fire.auth().onAuthStateChanged((user)=>{
+      if(user){
         if(user.emailVerified){
-        this.setState({isVerified:true});
-     }
-     
-       }).catch(()=>console.log("error"))
-     }
-     var id=user.uid;
+          this.setState({isVerified:true});
+       }
+       else{
+        this.setState({isVerified:false});
+         user.sendEmailVerification().then(()=>{
+           console.log("sent");
+          if(user.emailVerified){
+          this.setState({isVerified:true});
+       }
+       
+         }).catch(()=>console.log("error"))
+       }
+       var id=user.uid;
+       this.setState({
+         id:id
+       })
+       fire.database().ref("users").child(id).child("name").on('value',datasnapshot =>{
+       name=datasnapshot.val();//
+      this.setState({
+          username:datasnapshot.val()
+      })
+    })
+  
+    fire.database().ref("users").child(id).child("email").on('value',datasnapshot =>{
+      e=datasnapshot.val();//
      this.setState({
-       id:id
+         email:datasnapshot.val()
      })
-     fire.database().ref("users").child(id).child("name").on('value',datasnapshot =>{
-     name=datasnapshot.val();//
-    this.setState({
-        username:datasnapshot.val()
-    })
-  })
-
-  fire.database().ref("users").child(id).child("email").on('value',datasnapshot =>{
-    e=datasnapshot.val();//
-   this.setState({
-       email:datasnapshot.val()
    })
- })
-
- var today=new Date();
- const day   = today.getDate();
- const dayName=today.getDay();
- const  month = today.getMonth()+1;
- const  year  = today.getFullYear();
-
-    this.setState({
-        date:day+'-'+month+'-'+year
+  
+   var today=new Date();
+   const day   = today.getDate();
+   const dayName=today.getDay();
+   const  month = today.getMonth()+1;
+   const  year  = today.getFullYear();
+  
+      this.setState({
+          date:day+'-'+month+'-'+year
+      })
+  
+    fire.database().ref("users").child(id).child("appointment").on('value',(snapshot)=>{
+      if(snapshot.val()){
+        let app=Object.values(snapshot.val());
+        // app.map((value,index)=>{
+        //   if(value.dateSelected == this.state.date){
+        //       this.setState({time:value.timeSelected})
+        //   }
+        // })
+        this.setState({
+            appointment:app,
+            nodata:false
+        })
+      }
+      else{
+          this.setState({
+              nodata:true
+          })
+      }
     })
-
-  fire.database().ref("users").child(id).child("appointment").on('value',(snapshot)=>{
-    if(snapshot.val()){
-      let app=Object.values(snapshot.val());
-      // app.map((value,index)=>{
-      //   if(value.dateSelected == this.state.date){
-      //       this.setState({time:value.timeSelected})
-      //   }
-      // })
-      this.setState({
-          appointment:app,
-          nodata:false
-      })
-    }
-    else{
+  
+    fire.database().ref("users").child(id).child("session").on('value',(snapshot)=>{
+      if(snapshot.val()){
+        let app=Object.values(snapshot.val());
         this.setState({
-            nodata:true
+            session:app,
+            noSession:false
         })
-    }
-  })
+      }
+      else{
+          this.setState({
+            noSession:true
+          })
+      }
+    })
+  
+      }//if user
 
-  fire.database().ref("users").child(id).child("session").on('value',(snapshot)=>{
-    if(snapshot.val()){
-      let app=Object.values(snapshot.val());
-      this.setState({
-          session:app,
-          noSession:false
-      })
-    }
-    else{
-        this.setState({
-          noSession:true
-        })
-    }
-  })
-   }
+      else{
+        this.props.navigation.navigate("Login");
+      }
+   })
+  
    
   
   }

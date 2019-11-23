@@ -150,7 +150,7 @@ this.setState({clinicNames:this.state.clinicNames})
             })
             
             alert("added successfully!");
-            this.props.navigation.navigate("Profile",{id:this.state.id});
+            this.props.navigation.navigate("Profile");
             //this.props.navigation.navigate("Pro",{id:this.state.id})
           })
             .catch((error)=>alert("error!"))
