@@ -68,73 +68,78 @@ class Profile extends React.Component {
     var name,start,end,close;
   
     
-     var user =fire.auth().currentUser;
-
-     if(user != null){
-      if(user.emailVerified){
-        this.setState({isVerified:true});
-        console.log("verified");
-     }
-     else{
-      this.setState({isVerified:false});
-       user.sendEmailVerification().then(()=>{
-         console.log("sent");
+    //  var user =fire.auth().currentUser;
+     fire.auth().onAuthStateChanged((user)=>{
+      if(user){
         if(user.emailVerified){
-        this.setState({isVerified:true});
-        console.log("verified");
-
-     }
-     
-       }).catch(()=>console.log("error"))
-     }
-      var id=user.uid;
+          this.setState({isVerified:true});
+          console.log("verified");
+       }
+       else{
+        this.setState({isVerified:false});
+         user.sendEmailVerification().then(()=>{
+           console.log("sent");
+          if(user.emailVerified){
+          this.setState({isVerified:true});
+          console.log("verified");
+  
+       }
+       
+         }).catch(()=>console.log("error"))
+       }
+        var id=user.uid;
+        this.setState({
+          id:id
+      })
+      
+      fire.database().ref("users").child(id).child("Specialization").on('value',(datasnapshot)=>{
+        this.setState({
+          Specialization:datasnapshot.val()
+        })
+     })
+  
+     fire.database().ref("users").child(id).child("name").on('value',(datasnapshot)=>{
       this.setState({
-        id:id
-    })
-    
-    fire.database().ref("users").child(id).child("Specialization").on('value',(datasnapshot)=>{
-      this.setState({
-        Specialization:datasnapshot.val()
+        username:datasnapshot.val()
       })
    })
-
-   fire.database().ref("users").child(id).child("name").on('value',(datasnapshot)=>{
+  
+   fire.database().ref("users").child(id).child("email").on('value',(datasnapshot)=>{
     this.setState({
-      username:datasnapshot.val()
+      email:datasnapshot.val()
     })
- })
-
- fire.database().ref("users").child(id).child("email").on('value',(datasnapshot)=>{
-  this.setState({
-    email:datasnapshot.val()
   })
-})
-    
-
-  fire.database().ref("users").child(id).child("clinicName").on('value',(datasnapshot) =>{
-    let nameClinic = Object.values(datasnapshot.val());
-    this.setState({clinicName:nameClinic})
- })
-
- fire.database().ref("users").child(id).child("workingHours").on('value',(datasnapshot) =>{
-  if(datasnapshot.val()){
-   let items = Object.values(datasnapshot.val());
-
-   this.setState({
-     workingHours:items,
-     nodata:false
-       })
-
-  }
- else{
-   this.setState({
-     nodata:true
+      
+  
+    fire.database().ref("users").child(id).child("clinicName").on('value',(datasnapshot) =>{
+      let nameClinic = Object.values(datasnapshot.val());
+      this.setState({clinicName:nameClinic})
    })
- }
- 
-})
-
-     }
+  
+   fire.database().ref("users").child(id).child("workingHours").on('value',(datasnapshot) =>{
+    if(datasnapshot.val()){
+     let items = Object.values(datasnapshot.val());
+  
+     this.setState({
+       workingHours:items,
+       nodata:false
+         })
+  
+    }
+   else{
+     this.setState({
+       nodata:true
+     })
+   }
+   
+  })
+  
+              
+              }//if user
+              else{
+                this.props.navigation.navigate("Login");
+              }
+     })
     
 
  
@@ -164,7 +169,7 @@ class Profile extends React.Component {
 backgroundColor='#fff'
   leftComponent={{ icon: 'home', color: '#000' }}
   centerComponent={<Text style={{color:'#000'}}>{this.state.username}</Text>}
-  rightComponent={<TouchableOpacity style={{backgroundColor:'#fff'}} small onPress={()=>this.props.navigation.navigate("Login")}><Text style={{color:'#000'}}>Logout</Text></TouchableOpacity>}
+  rightComponent={<TouchableOpacity style={{backgroundColor:'#fff'}} small onPress={()=>fire.auth().signOut()}><Text style={{color:'#000'}}>Logout</Text></TouchableOpacity>}
 />
           </Block>
        
