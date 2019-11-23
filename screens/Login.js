@@ -4,7 +4,8 @@ import {
   ImageBackground,
   Dimensions,
   StatusBar,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  ToastAndroid
 } from "react-native";
 import { Button,Block, Checkbox, Text, theme } from "galio-framework";
 
@@ -12,6 +13,19 @@ import {  Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 const { width, height } = Dimensions.get("screen");
+const Toast = (props) => {
+  if (props.visible) {
+    ToastAndroid.showWithGravityAndOffset(
+      props.message,
+      ToastAndroid.LONG,
+      ToastAndroid.TOP,
+      25,
+      50,
+    );
+    return null;
+  }
+  return null;
+};
 
 class Login extends React.Component {
 
@@ -22,7 +36,8 @@ class Login extends React.Component {
         this.state={
             email:'',
             password:'',
-            errorMessage:null
+            errorMessage:null,
+            isShow:false
         }
     }
     
@@ -43,7 +58,13 @@ class Login extends React.Component {
       if(name ==="doctor"){this.props.navigation.navigate('Profile',{id:id})}
       if(name =="patient"){this.props.navigation.navigate('PatientProfile')}
     })
-    .catch((error)=> { this.setState({errorMessage:error.message})})
+    .catch((error)=> { 
+      this.setState({errorMessage:error.message,isShow:true});
+      setTimeout(function(){
+        this.setState({isShow:false});
+   }.bind(this),5000);
+      
+    })
     }
 
   render() {
@@ -127,7 +148,7 @@ class Login extends React.Component {
                       </Button>
                     </Block>
                     
-                    <Text style={{marginTop:10}} bold size={10} color="#D50000">{this.state.errorMessage}</Text>
+                    <Toast visible={this.state.isShow} message={this.state.errorMessage}/>
                   </KeyboardAvoidingView>
                 </Block>
               </Block>

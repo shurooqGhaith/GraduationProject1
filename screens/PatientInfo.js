@@ -833,18 +833,18 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                                             )}
                                                     />
                              </View> */}
-                 {this.state.showForm && <View style={{flexDirection:'column',marginTop:20}}>
+                 {this.state.showForm && <View style={{flexDirection:'column'}}>
                    <View style={{flexDirection:'row'}}>
                        <TextInput  
                              value={this.state.session}
                              placeholder="session Number"   
-                             style={{width:width*0.4,marginLeft:30,borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',paddingLeft:5 }}  
+                             style={{width:width*0.4,marginLeft:30,borderRadius: 5,borderWidth: 0.5,borderColor: '#fff',backgroundColor:'#fff',paddingLeft:5 }}  
                              onChangeText={value => this.setState({session:value})}
                              keyboardType = 'numeric'
                               />
 
                         <TextInput
-                                 style={{marginLeft:10,width:width*0.4,borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',paddingLeft:5}}  
+                                 style={{marginLeft:10,width:width*0.4,borderRadius: 5,borderWidth: 1,borderColor: '#fff',backgroundColor:'#fff',paddingLeft:5}}  
                                   keyboardType = 'numeric'
                                  placeholder="Money paid"
                                  onChangeText={(money)=>this.setState({money})}
@@ -984,7 +984,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                           <View key={index} style={{marginLeft:10,width:width*0.5}}>
                           <TextInput
                         
-                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,marginTop:10}}
+                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#fff',backgroundColor:'#fff',marginTop:10,marginTop:10,paddingLeft:5}}
                         placeholder="medicine name"
                         onChangeText={(Mname)=>this.handleChange(Mname,index)}
                         value={name}
@@ -1017,7 +1017,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                       return(
                           <View key={index} style={{marginLeft:10,width:width*0.5}}>
                           <TextInput
-                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#000',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
+                        style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#fff',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
                         placeholder="medical exam"
                         onChangeText={(Mname)=>this.handleMedicalExaminationsChange(Mname,index)}
                         value={name}
@@ -1034,14 +1034,14 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                           
 <View style={{marginTop:30}} >
     <TextInput
-      style={styles.textArea}
+      style={{width:width*0.8,backgroundColor:"#fff",marginLeft:40}}
       underlineColorAndroid="transparent"
       placeholder="Notes"
       placeholderTextColor="grey"
-      numberOfLines={10}
+      numberOfLines={4}
       multiline={true}
       onChangeText={(text) => this.setState({notes:text})}
-                                value={this.state.notes}
+       value={this.state.notes}
     />
   </View>
                              
@@ -1136,11 +1136,11 @@ const styles = StyleSheet.create({
     padding: 5,
     marginTop:20,
     width:width*0.8,
-   marginLeft:30
+    marginLeft:30
   },
   textArea: {
     height: 150,
-    //justifyContent: "flex-start",
+    justifyContent: "flex-start",
     width:width*0.8,
     backgroundColor:"#fff",
     marginLeft:50

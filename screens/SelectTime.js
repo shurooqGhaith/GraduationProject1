@@ -78,7 +78,8 @@ export default class SelectTime extends React.Component {
       buttonColor:'#4527A0',
       availableSlots:[],
       isShow:false,
-      message:''
+      message:'',
+      noAvailable:false
 
     }
   }
@@ -290,6 +291,8 @@ export default class SelectTime extends React.Component {
         
       })//work map
    // alert("1");
+   console.log(ar.length);
+   if(ar.length==0){this.setState({noAvailable:true})}
       this.setState({
         availableSlots:ar
       })
@@ -335,15 +338,11 @@ export default class SelectTime extends React.Component {
                               <Text bold size={14} style={{color:'#004D40'}}>Name:</Text>
                               <Text style={{color:'#aaa'}}>{this.state.username}</Text>
                           </View>
-
-                          <View style={{flexDirection:'row',marginTop:10}}>
-                              <Text bold size={14} style={{color:'#004D40'}}>Date:</Text>
-                              <Text style={{color:'#aaa'}}>{this.state.dateSelected}</Text>
-                          </View>
                           <View style={{flexDirection:'row',marginTop:10}}>
                               <Text bold size={14} style={{color:'#004D40'}}>Clinic name:</Text>
                               <Text style={{color:'#aaa'}}>{this.state.clinicSelected}</Text>
                           </View>
+
                        </View>
 
                        
@@ -353,7 +352,11 @@ export default class SelectTime extends React.Component {
                  
                 
                     <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
-                    <View style={{marginTop:100,flexDirection:'row',flexWrap:'wrap',marginLeft:30}}>
+                    <Text bold style={{color:'#004D40',marginLeft:140,marginTop:15}}>{this.state.dateSelected}</Text>
+                    <Text bold style={{color:'#004D40',marginLeft:20,marginTop:15}}>Available times</Text>
+
+                    <View style={{marginTop:60,flexDirection:'row',flexWrap:'wrap',marginLeft:15}}>
+
                     { this.state.availableSlots.map((slot,index)=>{
    if(slot.time){
     return(
@@ -367,6 +370,8 @@ export default class SelectTime extends React.Component {
    
           
                 })}
+
+                {this.state.noAvailable && <View style={{marginTop:150}}><Text bold size={20}>Doctor is busy this day</Text></View>}
                 </View>
 
 

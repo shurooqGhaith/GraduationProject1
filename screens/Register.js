@@ -8,7 +8,8 @@ import {
   View,
   CheckBox,
   ScrollView,
-  TouchableOpacity 
+  TouchableOpacity ,
+  ToastAndroid
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
 
@@ -16,7 +17,19 @@ import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 import * as Facebook from 'expo-facebook';
-
+const Toast = (props) => {
+  if (props.visible) {
+    ToastAndroid.showWithGravityAndOffset(
+      props.message,
+      ToastAndroid.LONG,
+      ToastAndroid.TOP,
+      25,
+      50,
+    );
+    return null;
+  }
+  return null;
+};
 const { width, height } = Dimensions.get("screen");
 
 
@@ -35,7 +48,7 @@ class Register extends React.Component {
       password:'',
       errorMessage:null,
       checked:false,
-      
+      isShow:false
     }
   }
   
@@ -81,7 +94,12 @@ class Register extends React.Component {
    }
    )
    
-   .catch(function(error) {alert(error.message)});
+   .catch(function(error) {
+    this.setState({errorMessage:error.message,isShow:true});
+    setTimeout(function(){
+      this.setState({isShow:false});
+ }.bind(this),8000);
+   });
 
   }
 
@@ -193,7 +211,8 @@ class Register extends React.Component {
                             />
                      <Text style={{marginTop: 5}}> Doctor</Text>
 
-                     
+                     <Toast visible={this.state.isShow} message={this.state.errorMessage}/>
+
 
                        </View>
                     </Block>
