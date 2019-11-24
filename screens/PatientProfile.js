@@ -20,7 +20,8 @@ import fire from "../constants/firebaseConfigrations";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import MapView,{Marker} from "react-native-maps";
 import { Divider,Header } from 'react-native-elements';
-//import firebase from 'react-native-firebase';
+import { Appbar } from 'react-native-paper';
+
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -30,7 +31,6 @@ class PatientProfile extends React.Component {
   constructor(props){
     super(props);
     this.authListener=this.authListener.bind(this);
-    //this.setReminder=this.setReminder.bind(this);
         this.state={
       user:[],
       username:"",
@@ -52,36 +52,10 @@ class PatientProfile extends React.Component {
 
   componentDidMount(){
     this.authListener();
-    //this.setReminder();
   }
 
 
-  // setReminder = async () => {
-  //   const  notificationTime = this.state.time;
-    
-  //   if (this.state.enableNotification) {
-  //     // schedule notification       
-  //     firebase.notifications().scheduleNotification(this.buildNotification(), {
-  //       fireDate: notificationTime,
-  //       repeatInterval: 'day',
-  //       exact: true,
-  //     });
-  //   } else {
-  //     return false;
-  //   }
-  // };
 
-  // buildNotification = () => {
-  //   const title = Platform.OS === "android" ? "Daily Reminder" : "";
-  //   const notification = new firebase.notifications.Notification()
-  //     .setNotificationId("1") // Any random ID
-  //     .setTitle(title) // Title of the notification
-  //     .setBody("This is a notification") // body of notification
-  //     .android.setPriority(firebase.notifications.Android.Priority.High) // set priority in Android
-  //     .android.setChannelId("reminder") // should be the same when creating channel for Android
-  //     .android.setAutoCancel(true); // To remove notification when tapped on it
-  //     return notification;
-  // };
 
   authListener(){
   
@@ -302,6 +276,7 @@ class PatientProfile extends React.Component {
   
                     </Block>
                     <Block style={{ paddingBottom: -HeaderHeight * 2 }}>
+                   
                     
                     <View style={{marginLeft:60}}>
                     <Button
@@ -369,6 +344,15 @@ class PatientProfile extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  bottom: {
+    position: 'absolute',
+    backgroundColor:'#333',
+    width:width,
+    height:30,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
   profile: {
     marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
     // marginBottom: -HeaderHeight * 2,

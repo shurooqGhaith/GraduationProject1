@@ -16,7 +16,7 @@ import {  Input,Button as ComponentButton } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 import {Card,Icon,Header,Divider,Button } from 'react-native-elements'; 
-
+import { List } from 'react-native-paper';
 const { width, height } = Dimensions.get("screen");
 
 class Search extends React.Component {
@@ -25,6 +25,7 @@ class Search extends React.Component {
     constructor(props){
         super(props);
         this.SearchFilterFunction=this.SearchFilterFunction.bind(this);
+        this._handlePress=this._handlePress.bind(this);
         this.state={
             data:[],
             DrInfo:[],
@@ -36,7 +37,9 @@ class Search extends React.Component {
             nodata:false,
             dateTimeVisible:false,
             timeToSearch:'',
-            appointments:[]
+            appointments:[],
+
+            show:[]
         }
     }
     componentDidMount(){
@@ -56,7 +59,14 @@ class Search extends React.Component {
                     let data = snapshot.val();
                     var id=snapshot.key;//id = users
                     let items = Object.values(data);
-                    this.setState({data:items,nodata:false});
+                    console.log(items.length);
+                    var ar=[];
+                    for(var i=0;i<items.length;i++){
+                               ar.push(false);
+                    }
+                    console.log(ar.length);
+
+                    this.setState({data:items,nodata:false,show:ar});
                  }
             )
     }
@@ -117,8 +127,11 @@ class Search extends React.Component {
     }
 
    
-    
-    
+    _handlePress(index) {
+    this.setState({
+      show: !this.state.show[index]
+    })
+}
     render(){
         
         return(
@@ -162,7 +175,26 @@ class Search extends React.Component {
             if(item.type=="doctor"){
                 return(
                     <View key={index} style={{marginTop:20}}>
-                    <Card
+                    <List.Accordion
+                       title={item.name}
+                       left={props => <List.Icon {...props} icon="doctor" />}
+                       expanded={this.state.show[index]}
+                       onPress={()=>this._handlePress(index)}
+                           >
+                            <List.Item titleStyle={{color:'#263238'}} title="Email"
+                               description={item.email}
+                                onPress={()=>alert("first item")} />
+                             <List.Item title="Specialization" titleStyle={{color:'#263238'}}
+                             description={item.Specialization}  />
+                             <List.Item
+                             title="Book Now"
+                              onPress={()=>this.props.navigation.navigate("Appointment",{id:item.id,idPatient:this.state.idP})}
+                             />
+                    </List.Accordion>
+                    <Divider style={{backgroundColor:'#000000',width:width*0.7,marginLeft:50}}/>
+
+
+                    {/* <Card
                   title={item.name}
                   //image={require('../images/pic2.jpg')}
                   >
@@ -178,7 +210,7 @@ class Search extends React.Component {
                            icon={<Icon name='code' color='#ffffff' />}
                            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor:"#444"}}
                            title='VIEW NOW' />
-                        </Card>
+                        </Card> */}
                     </View>
                 )
             }

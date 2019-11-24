@@ -24,6 +24,8 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import MapView,{Marker} from "react-native-maps";
 import { Divider,Icon ,Header} from 'react-native-elements';
 import { Table, TableWrapper, Row, Cell, Col } from 'react-native-table-component';
+import { Appbar } from 'react-native-paper';
+
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -320,8 +322,12 @@ backgroundColor='#fff'
                   >
                     
                   </Block>
-                  <Block style={{ paddingBottom: -HeaderHeight * 2  }}>
-                  
+                  <Block >
+                  {/* <Appbar style={styles.bottom}>
+                          <Appbar.Content title="Appointment"  onPress={() =>this.props.navigation.navigate("DoctorAppointment",{id:this.state.id})} />
+                         <Appbar.Content title="Patients" onPress={() =>this.props.navigation.navigate("PatientAfterSession",{id:this.state.id})} />
+                         </Appbar> */}
+
                   <View style={{marginLeft:60,marginTop:10}}>
                   <Button
                       onPress={()=>this.props.navigation.navigate("Pro",{id:this.state.id})}
@@ -395,6 +401,15 @@ backgroundColor='#fff'
 }
 
 const styles = StyleSheet.create({
+  bottom: {
+    position: 'absolute',
+    backgroundColor:'#333',
+    width:width,
+    height:30,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
   container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
   head: { height: 40, backgroundColor: '#808B97' },
   text: { margin: 6 },
