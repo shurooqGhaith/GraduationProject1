@@ -14,9 +14,10 @@ import { Block, Checkbox, Text, theme } from "galio-framework";
 import {  Button as ComponentButton } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
-import {Card,Button,Icon,Header } from 'react-native-elements'; 
+import {Divider } from 'react-native-elements'; 
 import SearchBar from 'react-native-searchbar';
 import DateTimePicker from "react-native-modal-datetime-picker";
+import { List } from 'react-native-paper';
 
 const { width, height } = Dimensions.get("screen");
 
@@ -29,6 +30,8 @@ class Book extends React.Component {
         this.SearchFilterFunction=this.SearchFilterFunction.bind(this);
         this.handle=this.handle.bind(this);
         this.sortData=this.sortData.bind(this);
+        this._handlePress=this._handlePress.bind(this);
+
         this.state={
             data:[],
             DrInfo:[],
@@ -48,7 +51,8 @@ class Book extends React.Component {
             sort1:false,
             latitude:'',
             longitude:'',
-            nearest:false
+            nearest:false,
+            show:[]
 
         }
     }
@@ -81,7 +85,11 @@ class Book extends React.Component {
                     let data = snapshot.val();
                     var id=snapshot.key;//id = users
                     let items = Object.values(data);
-                    this.setState({data:items,nodata:false});
+                    var ar=[];
+                    for(var i=0;i<items.length;i++){
+                               ar.push(false);
+                    }
+                    this.setState({data:items,nodata:false,show:ar});
                  }
             )
     }
@@ -160,10 +168,14 @@ class Book extends React.Component {
               })
 
             //  alert(array2.length);//1
-
+                     var ar1=[];
+            for(var i=0;i<array2.length;i++){
+                ar1.push(false);
+     }
               this.setState({
                   data:array2,
-                  nodata:false
+                  nodata:false,
+                  show:ar1
               })
 
 
@@ -181,11 +193,15 @@ class Book extends React.Component {
                     
                     if(snapshot.val()){
                         let items = Object.values(snapshot.val());
-                        
+                        var ar3=[];
+                        for(var i=0;i<items.length;i++){
+                            ar3.push(false);
+                                }
                         this.setState({
                             data:items,
                             nodata:false,
-                            nearest:true
+                            nearest:true,
+                            show:ar33
                         })
                     }
                     else{
@@ -203,9 +219,14 @@ class Book extends React.Component {
                 fire.database().ref("users").orderByChild('name').equalTo(this.state.search.toLowerCase()).on('value',(snapshot)=>{
                     if(snapshot.val()){
                         let items = Object.values(snapshot.val());
+                        var ar4=[];
+                        for(var i=0;i<items.length;i++){
+                            ar4.push(false);
+                                }
                         this.setState({
                             data:items,
-                            nodata:false
+                            nodata:false,
+                            show:ar4
                         })
                     }
                     else{
@@ -227,24 +248,39 @@ class Book extends React.Component {
             fire.database().ref("users").orderByChild("name").startAt(this.state.search.toLowerCase()).endAt(this.state.search.toLowerCase()+"\uf8ff").on('value',(snap)=>{
                 
                 let items = Object.values(snap.val());
+                var ar5=[];
+                        for(var i=0;i<items.length;i++){
+                            ar5.push(false);
+                                }
                 this.setState({
                     data:items,
-                    nodata:false
+                    nodata:false,
+                    show:ar5
                 })
             })
         }
         if(this.state.searchParameter=="specialization"){
             fire.database().ref("users").orderByChild("Specialization").startAt(this.state.search.toLowerCase()).endAt(this.state.search.toLowerCase()+"\uf8ff").on('value',(snap)=>{
                 let items = Object.values(snap.val());
+                var ar6=[];
+                        for(var i=0;i<items.length;i++){
+                            ar6.push(false);
+                                }
                 this.setState({
                     data:items,
-                    nodata:false
+                    nodata:false,
+                    show:ar6
                 })
             })
         }
        
     }
     
+    _handlePress(index) {
+        this.setState({
+          show: !this.state.show[index]
+        })
+    }
     
     render(){
         
@@ -283,25 +319,26 @@ class Book extends React.Component {
             if(item.type=="doctor"){
                 return(
                     <View key={index} style={{marginTop:20}}>
-                    <Card
-                  title={item.name}
-                  //image={require('../images/pic2.jpg')}
-                  >
-               <Text style={{marginBottom: 10}}>
-                       email:{item.email}
-                 </Text>
-                 
-                 <Text style={{marginBottom: 10}}>
-                 Specialization:{item.Specialization}
-                 </Text>
-                  
-                  
-                     <Button
-                          onPress={()=>this.props.navigation.navigate("Appointment",{id:item.id,idPatient:this.state.idP})}
-                           icon={<Icon name='code' color='#ffffff' />}
-                           buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor:"#444"}}
-                           title='VIEW NOW' />
-                        </Card>
+                    <List.Accordion
+                       title={item.name}
+                       left={props => <List.Icon {...props} icon="doctor" />}
+                       expanded={this.state.show[index]}
+                       onPress={()=>this._handlePress(index)}
+                           >
+                            <List.Item titleStyle={{color:'#263238'}} title="Email"
+                               description={item.email}
+                                onPress={()=>alert("first item")} />
+                             <List.Item title="Specialization" titleStyle={{color:'#263238'}}
+                             description={item.Specialization}  />
+                             <List.Item
+                             titleStyle={{color:'#1B5E20'}}
+                             title="Book Now"
+                              onPress={()=>this.props.navigation.navigate("Appointment",{id:item.id,idPatient:this.state.idP})}
+                             />
+                    </List.Accordion>
+                    <Divider style={{backgroundColor:'#000000',width:width*0.7,marginLeft:50}}/>
+
+
                     </View>
                 )
             }
