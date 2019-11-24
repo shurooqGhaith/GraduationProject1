@@ -187,6 +187,7 @@ class Search extends React.Component {
                              <List.Item title="Specialization" titleStyle={{color:'#263238'}}
                              description={item.Specialization}  />
                              <List.Item
+                             titleStyle={{color:'#1B5E20'}}
                              title="Book Now"
                               onPress={()=>this.props.navigation.navigate("Appointment",{id:item.id,idPatient:this.state.idP})}
                              />
