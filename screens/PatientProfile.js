@@ -245,9 +245,14 @@ class PatientProfile extends React.Component {
   
                   <Block flex>
                     <Block middle style={styles.nameInfo}>
-                      <Text bold size={28} color="#32325D" id="name">
-                        {this.state.username}
-                      </Text>
+                    <View  style={{flexDirection:'column'}}>
+                    <Text bold style={{color:'#aaa'}}>Name:</Text>
+                    <Text bold size={15} color="#32325D" > {this.state.username}</Text>
+                    <Text bold style={{color:'#aaa'}} >Email:</Text>
+                    <Text bold size={15} color="#32325D" > {this.state.email}</Text>
+
+                    </View>
+                      
                      
                     </Block>
                     <Block middle style={{marginTop: 30}}>

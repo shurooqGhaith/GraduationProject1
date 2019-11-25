@@ -246,23 +246,24 @@ backgroundColor='#fff'
 
                 <Block flex>
                   <Block middle style={styles.nameInfo}>
-                  <View style={{flexDirection:'column'}}>
-                    <Text bold size={16} color="#000000" id="name">
-                      {this.state.username}
-                    </Text>
-
-                    <Text bold size={16} color="#000000" id="Specialization">
-                      {this.state.Specialization}
-                    </Text>
-
-                    </View>
-                    <View  style={{ marginTop: 10,flexDirection:'column' }}>
+                  <Text bold size={20} color="#32325D" id="name">
+                        {this.state.username}
+                      </Text>
+                  <View  style={{flexDirection:'column',marginTop:5}}>
+                    <Text  style={{color:'#aaa'}} >Email:</Text>
+                    <Text  size={15} color="#32325D" > {this.state.email}</Text>
+                    <Text  style={{color:'#aaa'}} >Specialization:</Text>
+                    <Text  size={15} color="#32325D" > {this.state.Specialization}</Text>
+                    <Text  style={{color:'#aaa'}} >clinic Name:</Text>
+                    <View  style={{flexDirection:'row' }}>
                      {this.state.clinicName.map((value,ind)=>{
                        return(
-                         <Text>{value.clinic}</Text>
+                         <Text style={{marginLeft:2}} color="#32325D">{value.clinic}</Text>
                        )
                      })}
                     </View>
+                    </View>
+
 
 
                   </Block>
