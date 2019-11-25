@@ -20,6 +20,8 @@ import { Button as ComponentButton, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 import Panel from 'react-native-panel';
+import { List } from 'react-native-paper';
+
 const { width, height } = Dimensions.get("screen");
 const Toast = (props) => {
     if (props.visible) {
@@ -54,6 +56,7 @@ class UpdateInfo extends React.Component {
       username:'',
       name:'',
       email:'',
+      em:'',
       password:'',
       errorMessage:null,
       checked:false,
@@ -92,7 +95,7 @@ class UpdateInfo extends React.Component {
             this.setState({username:name.val(),name:name.val()})
         })
         fire.database().ref("users").child(id).child("email").on('value',(email)=>{
-            this.setState({email:email.val()})
+            this.setState({email:email.val(),em:email.val()})
         })
         if(type=='doctor'){
             fire.database().ref("users").child(id).child("Specialization").on('value',(sp)=>{
@@ -154,7 +157,7 @@ class UpdateInfo extends React.Component {
           user.updateEmail(this.state.email).then(() => {
             fire.database().ref("users").child(this.state.id).child("email").set(this.state.email);
             //alert("Email updated!");
-            this.setState({isShow:true,name:this.state.username,message:'Email updated!'});
+            this.setState({isShow:true,em:this.state.email,message:'Email updated!'});
         setTimeout(function(){
             this.setState({isShow:false});
        }.bind(this),5000);
@@ -222,7 +225,7 @@ class UpdateInfo extends React.Component {
 
   render() {
     return (
-      <Block style={{backgroundColor:'#eee'}} flex middle>
+      <Block style={{backgroundColor:'#eee',flex:1}} flex middle>
         <StatusBar hidden />
         
          
@@ -247,10 +250,14 @@ class UpdateInfo extends React.Component {
                 </Text>
                 <Divider style={{backgroundColor:'#444',width:width}}/>
 
-                    <Block  width={width * 0.8} style={{ marginBottom: 15,marginTop:50}}>
+                    <Block  width={width } style={{ marginBottom: 15,marginTop:50}}>
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({nameEnable:!this.state.nameEnable})}>
-                <Text style={styles.title}>Change Name</Text>
-                <Icon name={this.state.nameEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+                <Text color={this.state.nameEnable ? '#4A148C' : '#333'} size={14}>{"Change Name\n"}
+                <Text style={{color:'#aaa'}} size={10}>{this.state.name}</Text>
+                </Text>
+
+                <Icon name={this.state.nameEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
+                color={this.state.nameEnable ? '#4A148C' : '#333'} />
             </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
                       {this.state.nameEnable && 
@@ -282,8 +289,11 @@ class UpdateInfo extends React.Component {
                     <Block  width={width * 0.8} style={{ marginBottom: 15,marginTop:30}}>
                     
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({emailEnable:!this.state.emailEnable})}>
-                <Text style={styles.title}>Change Email</Text>
-                <Icon name={this.state.emailEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+                <Text color={this.state.emailEnable ? '#4A148C' : '#333'} size={14}>{"Change Email\n"}
+                <Text style={{color:'#aaa'}} size={10}>{this.state.em}</Text>
+                </Text>
+                <Icon name={this.state.emailEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
+                color={this.state.emailEnable ? '#4A148C' : '#333'}  />
             </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
                       {this.state.emailEnable && 
@@ -329,8 +339,9 @@ class UpdateInfo extends React.Component {
 
                     <Block width={width * 0.8} style={{marginTop:30,marginBottom: 15}}>
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({passwordEnable:!this.state.passwordEnable})}>
-                <Text style={styles.title}>Change password</Text>
-                <Icon name={this.state.passwordEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+                <Text color={this.state.passwordEnable ? '#4A148C' : '#333'} size={14}>Change password</Text>
+                <Icon name={this.state.passwordEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
+                color={this.state.passwordEnable ? '#4A148C' : '#333'}  />
             </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
 
@@ -377,8 +388,11 @@ class UpdateInfo extends React.Component {
                     {this.state.type=="doctor" &&
                     <Block width={width * 0.8} style={{marginTop:30,marginBottom: 15}}>
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({SpecializationEnable:!this.state.SpecializationEnable})}>
-                <Text style={styles.title}>Edit Specialization</Text>
-                <Icon name={this.state.SpecializationEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+                <Text color={this.state.SpecializationEnable ? '#4A148C' : '#333'} size={14}>{"Edit Specialization\n"}
+                <Text style={{color:'#aaa'}} size={10}>{this.state.sp} </Text>
+                    </Text>
+                <Icon name={this.state.SpecializationEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
+                color={this.state.SpecializationEnable ? '#4A148C' : '#333'}  />
             </TouchableOpacity>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
 

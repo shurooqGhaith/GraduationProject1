@@ -114,8 +114,10 @@ class Profile extends React.Component {
       
   
     fire.database().ref("users").child(id).child("clinicName").on('value',(datasnapshot) =>{
+      if(datasnapshot.val()){
       let nameClinic = Object.values(datasnapshot.val());
       this.setState({clinicName:nameClinic})
+      }
    })
   
    fire.database().ref("users").child(id).child("workingHours").on('value',(datasnapshot) =>{
