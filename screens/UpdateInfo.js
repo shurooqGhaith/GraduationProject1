@@ -272,7 +272,7 @@ class UpdateInfo extends React.Component {
                       />
                              <ComponentButton
                            small
-                           style={{backgroundColor:'#333',marginLeft:50}}
+                           style={{backgroundColor:'#333',marginLeft:10}}
                            onPress={this.update}
                       >
                       <Text bold size={14} color={argonTheme.COLORS.WHITE}>
@@ -286,7 +286,7 @@ class UpdateInfo extends React.Component {
                       
                     </Block>
                     <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
-                    <Block  width={width * 0.8} style={{ marginBottom: 15,marginTop:30}}>
+                    <Block  width={width } style={{ marginBottom: 15,marginTop:30}}>
                     
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({emailEnable:!this.state.emailEnable})}>
                 <Text color={this.state.emailEnable ? '#4A148C' : '#333'} size={14}>{"Change Email\n"}
@@ -318,7 +318,7 @@ class UpdateInfo extends React.Component {
                       />     
                              <ComponentButton
                            small
-                           style={{backgroundColor:'#333',marginLeft:50}}
+                           style={{backgroundColor:'#333',marginLeft:10}}
                            onPress={this.changeEmail}
                       >
                       <Text bold size={14} color={argonTheme.COLORS.WHITE}>
@@ -337,7 +337,7 @@ class UpdateInfo extends React.Component {
                     
                     <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
 
-                    <Block width={width * 0.8} style={{marginTop:30,marginBottom: 15}}>
+                    <Block width={width } style={{marginTop:30,marginBottom: 15}}>
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({passwordEnable:!this.state.passwordEnable})}>
                 <Text color={this.state.passwordEnable ? '#4A148C' : '#333'} size={14}>Change password</Text>
                 <Icon name={this.state.passwordEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
@@ -368,7 +368,7 @@ class UpdateInfo extends React.Component {
                       />
                         <ComponentButton
                            small
-                           style={{backgroundColor:'#333',marginLeft:50}}
+                           style={{backgroundColor:'#333',marginLeft:10}}
                            onPress={this.changePassword}
                       >
                       <Text bold size={14} color={argonTheme.COLORS.WHITE}>
@@ -386,7 +386,7 @@ class UpdateInfo extends React.Component {
                     <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
 
                     {this.state.type=="doctor" &&
-                    <Block width={width * 0.8} style={{marginTop:30,marginBottom: 15}}>
+                    <Block width={width } style={{marginTop:30,marginBottom: 15}}>
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({SpecializationEnable:!this.state.SpecializationEnable})}>
                 <Text color={this.state.SpecializationEnable ? '#4A148C' : '#333'} size={14}>{"Edit Specialization\n"}
                 <Text style={{color:'#aaa'}} size={10}>{this.state.sp} </Text>
@@ -407,7 +407,7 @@ class UpdateInfo extends React.Component {
                       />
                         <ComponentButton
                            small
-                           style={{backgroundColor:'#333',marginLeft:50}}
+                           style={{backgroundColor:'#333',marginLeft:10}}
                            onPress={this.updateSpecialization}
                       >
                       <Text bold size={14} color={argonTheme.COLORS.WHITE}>
@@ -491,7 +491,7 @@ title:{
     alignContent:'center',
     paddingLeft:20,
     width:width*.8,
-    marginLeft:50
+    marginLeft:10
 }  ,
   socialConnect: {
     backgroundColor: argonTheme.COLORS.WHITE,
