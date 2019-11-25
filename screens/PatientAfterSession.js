@@ -99,6 +99,7 @@ class PatientAfterSession extends React.Component {
 
     //console.log(array.length);//3 يلي الافيلبل الهم تروو 
     var len=array.length;
+    console.log(len);
   if(len == 0){
     this.setState({noPatient:true});
   }
@@ -214,7 +215,7 @@ viewInfo(id){
                   
                   
                   <Block middle>
-                  {this.state.noPatient && <View style={{marginTop:300,marginLeft:50}}><Text bold size={20}>No patients yet </Text></View>}
+                  {/* {this.state.noPatient && <View style={{marginTop:300,marginLeft:50}}><Text bold size={20}>No patients yet </Text></View>} */}
 
                   <View style={{marginTop:200}}>
                   {!this.state.nodata && this.state.patientData.map((item,index)=>{

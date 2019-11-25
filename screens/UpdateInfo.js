@@ -483,15 +483,18 @@ title:{
   },
   TextInputStyle: {  
     height: 40,  
-     borderRadius: 5,  
-     borderWidth: 0.5,  
-     borderColor: '#000',  
+    //  borderRadius: 5,  
+    //  borderWidth: 0.5,  
+    //  borderColor: '#fff',  
     marginBottom: 10 ,
     marginTop:10 ,
     alignContent:'center',
     paddingLeft:20,
     width:width*.8,
-    marginLeft:10
+    marginLeft:10,
+   // backgroundColor:'#fff',
+    borderBottomWidth:2,
+    borderBottomColor:'#000'
 }  ,
   socialConnect: {
     backgroundColor: argonTheme.COLORS.WHITE,
