@@ -25,7 +25,7 @@ export default class MyPanel extends React.Component {
     this.state={
       page:0,
       numberOfPages:'',
-      perPage:8,
+      perPage:4,
       id:'',
       appointment:[],
       noDate:false,

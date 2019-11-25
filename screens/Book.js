@@ -201,7 +201,7 @@ class Book extends React.Component {
                             data:items,
                             nodata:false,
                             nearest:true,
-                            show:ar33
+                            show:ar3
                         })
                     }
                     else{
@@ -345,7 +345,10 @@ class Book extends React.Component {
             
         })}
 
-        {this.state.nearest && <ComponentButton style={{width:width*0.5,marginTop:10,marginLeft:70}}  onPress={this.sortData}><Text>Nearest clinic</Text></ComponentButton>     
+        {this.state.nearest && <ComponentButton
+        small
+        style={{marginBottom:20,backgroundColor:"#333",color:'#fff',marginTop:height*0.4,marginLeft:width*0.1}}
+         onPress={this.sortData}><Text>Nearest clinic</Text></ComponentButton>     
 }
 
       </View>

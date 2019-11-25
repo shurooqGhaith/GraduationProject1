@@ -339,7 +339,7 @@ backgroundColor='#fff'
                         fontSize: 16
                       }}
                     >
-                       set your location
+                       Location
                     </Button>
                     </View>
                   <View style={{marginLeft:60,marginTop:10}}>
@@ -371,22 +371,7 @@ backgroundColor='#fff'
                        Patients
                     </Button>
                     </View>
-                    <View style={{marginLeft:60,marginTop:10}}>
-                  <Button
-                      
-                      
-                      // create an Article
-                      color="transparent"
-                      style={{width:width*0.5}}
-                      textStyle={{
-                        color: "#233DD2",
-                        fontWeight: "500",
-                        fontSize: 16
-                      }}
-                    >
-                       create an Article
-                    </Button>
-                    </View>
+                    
                     
                   </Block>
                 </Block>
