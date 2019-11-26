@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
-import { Button,Icon,Input } from "../components";
+import { Button,Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
 import fire from "../constants/firebaseConfigrations";
@@ -23,6 +23,8 @@ import MapView,{Marker} from "react-native-maps";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { Divider,ListItem } from 'react-native-elements';
 import Autocomplete from 'react-native-autocomplete-input';
+import Icon from "react-native-vector-icons/MaterialIcons";
+
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -92,23 +94,36 @@ class PatientAfterSession extends React.Component {
     data.map((value)=>{
       if(!value.available){
         array = array.filter(function( obj ) {
-          return obj.available !== false;
+          return obj.available !== false;//شلت يلي الفيلببل الهم فولس
       });
       }
     })
-
+    
     //console.log(array.length);//3 يلي الافيلبل الهم تروو 
     var len=array.length;
-    console.log(len);
+    // console.log(len);
   if(len == 0){
     this.setState({noPatient:true});
   }
+  // var array2=[];
+  // array.map(value=>{
+  //   fire.database().ref("users").child(value.idPatient).child("name").on('value',(snap)=>{
+  //     //console.log(snap.val());
+  //     array2.push({name:snap.val(),idPatient:value.idPatient,available:value.available})
+  //   })
+  // })
+  // console.log(array2.length);
+// ما كان راضي يتعرف ع الاسم لاني بضيف عنصر جديد بصير عندي عنصرين واحد باسم و واحد ما اله اسم و لما يجي يحزف 
+// بلاقي التاني الاي دي اله نفس الاول ف بخلي الاول و بحزف التاني يلي معه الاسم 
+// مشان هيك عملت بوش ع اريه فاضية و بحزف المتكرر منها 
+// ما زبطت اول مرة بدخل ع الصفحة ما بعرض شي بكون اللينجث يساوي زيرو
     var result = array.reduce((unique, o) => {
       if(!unique.some(obj => obj.idPatient === o.idPatient  )) {
         unique.push(o);
       }
       return unique;
   },[]);
+  // console.log(result.length);
 
   
   
@@ -116,7 +131,8 @@ class PatientAfterSession extends React.Component {
   // result.map((value)=>{
   //   console.log(value.idPatient);
   //   console.log(value.available);//false طبع اول عنصر بس لانه الباقي كلهم نفس الاي دي ف حزفهم
-    
+  //   console.log(value.name);
+
   // })
     this.setState({
         patientData:result,
@@ -209,15 +225,11 @@ viewInfo(id){
                 
                 <Block style={styles.info}>
                   
-                
-
-              
-                  
                   
                   <Block middle>
-                  {/* {this.state.noPatient && <View style={{marginTop:300,marginLeft:50}}><Text bold size={20}>No patients yet </Text></View>} */}
+                  {this.state.noPatient && <View style={{marginTop:100,marginLeft:50}}><Text bold size={20}>No patients yet </Text></View>}
 
-                  <View style={{marginTop:200}}>
+                  <View style={{marginTop:100}}>
                   {!this.state.nodata && this.state.patientData.map((item,index)=>{
                       
                      
@@ -227,14 +239,24 @@ viewInfo(id){
                         name=snap.val();
                       })
                          return(
-                          <View key={index} style={{flexDirection:'column'}}>
-                          <View style={{flexDirection:'row'}}>
+
+                          <View key={index} style={{flexDirection:'column',width:width}}>
+                          <TouchableOpacity style={styles.row} 
+                           onPress={()=>this.props.navigation.navigate("DetailsAboutPatients",{id:item.idPatient,idDoctor:this.state.idDoctor,type:"doctor",date:'',time:'',clinic:'',available:item.available})}
+                          >
+                         <Text color='#333' size={14}>{name+"\n"}
+                            <Text style={{color:'#aaa'}} size={10}>press for Info</Text>
+                                </Text>
+                         <Icon name={'keyboard-arrow-right'} size={30} 
+                                  />
+                               </TouchableOpacity>
+                          {/* <View style={{flexDirection:'row'}}>
                           <Text>{name}</Text>
                           <Button small style={{backgroundColor:'#fff',marginLeft:30}}
                           onPress={()=>this.props.navigation.navigate("DetailsAboutPatients",{id:item.idPatient,idDoctor:this.state.idDoctor,type:"doctor",date:'',time:'',clinic:'',available:item.available})}
                           ><Text style={{color:'#000'}}>details</Text></Button>
-                          </View>
-                          <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
+                          </View> */}
+                          <Divider style={{backgroundColor:'#000000',marginTop:10,width:width}}/>
                          </View>
 
                          )
@@ -271,7 +293,15 @@ viewInfo(id){
 const styles = StyleSheet.create({
   
   
-
+  row:{
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    height:56,
+    paddingLeft:25,
+    paddingRight:18,
+    alignItems:'center',
+    backgroundColor: "#eee",
+},
   
   profile: {
     marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
