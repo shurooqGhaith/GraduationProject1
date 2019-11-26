@@ -246,7 +246,7 @@ class Book extends React.Component {
     handle=input=>{
         if(this.state.searchParameter=="name"){
             fire.database().ref("users").orderByChild("name").startAt(this.state.search.toLowerCase()).endAt(this.state.search.toLowerCase()+"\uf8ff").on('value',(snap)=>{
-                
+                if(snap.val()){
                 let items = Object.values(snap.val());
                 var ar5=[];
                         for(var i=0;i<items.length;i++){
@@ -257,10 +257,19 @@ class Book extends React.Component {
                     nodata:false,
                     show:ar5
                 })
+            }
+            else{
+                this.setState({
+                    nodata:true
+                })
+                // alert("no data available");
+                // this.retrieveData();
+            }
             })
         }
         if(this.state.searchParameter=="specialization"){
             fire.database().ref("users").orderByChild("Specialization").startAt(this.state.search.toLowerCase()).endAt(this.state.search.toLowerCase()+"\uf8ff").on('value',(snap)=>{
+               if(snap.val()){
                 let items = Object.values(snap.val());
                 var ar6=[];
                         for(var i=0;i<items.length;i++){
@@ -271,6 +280,14 @@ class Book extends React.Component {
                     nodata:false,
                     show:ar6
                 })
+            }
+            else{
+                this.setState({
+                    nodata:true
+                })
+              //  alert("no data available");
+               // this.retrieveData();
+            }
             })
         }
        
@@ -314,7 +331,6 @@ class Book extends React.Component {
                            
                                
             <View style={styles.itemsList}>
-            
         {!this.state.nodata && this.state.data.map((item, index) => {
             if(item.type=="doctor"){
                 return(
@@ -337,18 +353,15 @@ class Book extends React.Component {
                              />
                     </List.Accordion>
                     <Divider style={{backgroundColor:'#000000',width:width*0.7,marginLeft:50}}/>
-
-
                     </View>
                 )
             }
-            
         })}
 
         {this.state.nearest && <ComponentButton
-        small
-        style={{marginBottom:20,backgroundColor:"#333",color:'#fff',marginTop:height*0.4,marginLeft:width*0.1}}
-         onPress={this.sortData}><Text>Nearest clinic</Text></ComponentButton>     
+        
+        style={{marginBottom:20,backgroundColor:"#333",marginLeft:width*0.3,width:width*0.5,marginTop:10}}
+         onPress={this.sortData}><Text style={{color:'#fff'}}>Nearest clinic</Text></ComponentButton>     
 }
 
       </View>
@@ -378,7 +391,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'space-around',
-        marginTop:25
+        marginTop:50
     },
     itemtext: {
         fontSize: 24,

@@ -224,15 +224,11 @@ viewInfo(id){
               <Block flex style={styles.profileCard}>
                 
                 <Block style={styles.info}>
-                  
-                  
                   <Block middle>
                   {this.state.noPatient && <View style={{marginTop:100,marginLeft:50}}><Text bold size={20}>No patients yet </Text></View>}
 
                   <View style={{marginTop:100}}>
                   {!this.state.nodata && this.state.patientData.map((item,index)=>{
-                      
-                     
                      //if(item.available){
                         var name;
                       fire.database().ref("users").child(item.idPatient).child("name").once('value',(snap)=>{

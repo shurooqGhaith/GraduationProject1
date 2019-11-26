@@ -14,6 +14,7 @@ import { Divider } from 'react-native-elements';
 import fire from "../constants/firebaseConfigrations";
 import argonTheme from "../constants/Theme";
 import Images from "../constants/Images";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 const { height, width } = Dimensions.get("screen");
 
@@ -146,9 +147,9 @@ export default class Main extends React.Component{
                 {!this.state.nodata && this.state.type=="doctor" && this.state.users.map((item,index)=>{
                   var name;
                   return(
-                    <View style={{marginTop:20}}>
+                    <View key={index} style={{marginTop:20}}>
                     <TouchableOpacity
-                         style={styles.button}
+                         style={styles.row}
                          onPress={()=>
                          { //fire.database().ref("users").child(item.idPatient).child("name").once('value',(snap)=>{
                           //name=snap.val();
@@ -159,6 +160,7 @@ export default class Main extends React.Component{
                           
                          }>
                         <Text bold size={16}> {item.name} </Text>
+                        <Icon name={'keyboard-arrow-right'} size={30}  />
                       </TouchableOpacity>
                       <Divider style={{backgroundColor:'#000000',width:width}}/>
                       </View>
@@ -170,10 +172,12 @@ export default class Main extends React.Component{
                   return(
                     <View style={{marginTop:20}}>
                     <TouchableOpacity
-                         style={styles.button}
+                         style={styles.row}
                          onPress={()=>this.props.navigation.navigate("Chat",{sender:this.state.senderID,name:this.state.name,email:this.state.email,receiver:item.id,nameR:item.name})
                     }>
                         <Text  bold size={16}>{item.name}</Text>
+                        <Icon name={'keyboard-arrow-right'} size={30}  />
+
                       </TouchableOpacity>
                       <Divider style={{backgroundColor:'#000000',width:width}}/>
                       </View>
@@ -190,7 +194,16 @@ export default class Main extends React.Component{
 }
 
 const styles =StyleSheet.create({
-   
+  row:{
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    height:56,
+    paddingLeft:25,
+    paddingRight:18,
+    alignItems:'center',
+    backgroundColor: "#eee",
+},
+
       button: {
        // alignItems: 'center',
         backgroundColor: '#fff',
