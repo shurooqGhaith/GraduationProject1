@@ -12,6 +12,7 @@ class Location extends Component {
     super(props);
     this.callGps=this.callGps.bind(this);
     this.onRegionChange=this.onRegionChange.bind(this);
+    this.authListener=this.authListener.bind(this);
     this.state = {
         id:'',
         clinicNames:[],
@@ -22,9 +23,22 @@ class Location extends Component {
        region: {
          latitude: 32.22111,
          longitude: 35.25444,
-		 latitudeDelta: 0.0922,
+		     latitudeDelta: 0.0922,
          longitudeDelta: 0.0421
        },
+       region1: {
+        latitude: 32.22111,
+        longitude: 35.25444,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      },
+
+       initialRegion: {
+        latitude: 32.22111,
+        longitude: 35.25444,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA
+      },
        to:{
          latitude: 32.2276745735839,
          longitude: 35.215799398720264
@@ -42,7 +56,11 @@ class Location extends Component {
 };
 
    }	
-	componentDidMount() {
+   componentDidMount(){
+     this.authListener();
+   }
+
+	authListener() {
 
      const { navigation } = this.props;  
     var id=navigation.getParam('id');
@@ -60,71 +78,32 @@ class Location extends Component {
             
          });
 
-         var array=[];
-        //  fire.database().ref("users").on('value',(snap)=>{
-        //     var data=snap.val();
-        //     var keys=Object.keys(data);
-        //     for(var i=0 ; i<keys.length;i++){
-        //         fire.database().ref("users").child(keys[i]).child("type").on('value',(snapshot)=>{
-        //             var app=snapshot.val();//type of user
-        //             if(app=="doctor"){
-        //                 fire.database().ref("users").child(keys[i]).child("clinicName").on('value',(result)=>{
-        //                     if(result.val()){
-        //                         let names = Object.values(result.val());
-        //                         this.setState({clinicNames:names})
-
-        //                         this.state.clinicNames.map((value,index)=>{
-        //                           array.push({clinicName:value.clinic,latitude:value.latitude,longitude:value.longitude});
-        //                         })
-        //                     }
-        //                 })
-        //             }
-        //         })
-
-        //     }
-        //  })
-
-         if(array.length>0){
-            var result = array.reduce((unique, o) => {
-                if(!unique.some(obj => obj.clinicName === o.clinicName )) {
-                  unique.push(o);
-                }
-                return unique;
-            },[]);
-        
-            this.setState({
-                clinics:result,
-                nodata:false
-            })
-        }
-    navigator.geolocation.getCurrentPosition(
-      position => {
-
-
-        this.setState({
-          region: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            latitudeDelta: 0.10922,
-            longitudeDelta: 0.100421
-          }
-        });
-      },
-    (error) => console.log(error.message),
-    { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-    );
-    this.watchID = navigator.geolocation.watchPosition(
-      position => {
-        this.setState({
-          region: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            latitudeDelta: 0.100922,
-            longitudeDelta: 0.100421
-          }
-        });
-      }
-    );
+    // navigator.geolocation.getCurrentPosition(
+    //   position => {
+    //     this.setState({
+    //       region: {
+    //         latitude: position.coords.latitude,
+    //         longitude: position.coords.longitude,
+    //         latitudeDelta: 0.10922,
+    //         longitudeDelta: 0.100421
+    //       }
+    //     });
+    //   },
+    // (error) => console.log(error.message),
+    // { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+    // );
+    // this.watchID = navigator.geolocation.watchPosition(
+    //   position => {
+    //     this.setState({
+    //       region: {
+    //         latitude: position.coords.latitude,
+    //         longitude: position.coords.longitude,
+    //         latitudeDelta: 0.100922,
+    //         longitudeDelta: 0.100421
+    //       }
+    //     });
+    //   }
+    // );
 	
 	
   }
@@ -134,11 +113,11 @@ callGps(){
 
         //Alert.alert('Simple Button pressed')
         
-        fire.database().ref("users").child(this.state.id).child("latitud").set(this.state.region.latitude);
-        fire.database().ref("users").child(this.state.id).child("longitude").set(this.state.region.longitude);
-
-
+        // fire.database().ref("users").child(this.state.id).child("latitud").set(this.state.region.latitude);
+        // fire.database().ref("users").child(this.state.id).child("longitude").set(this.state.region.longitude);
+        console.log("callGPS");
         this.state.clinicNames.map((value,index)=>{
+          console.log(value.clinic);
             if(value.clinic == this.state.clinicName){
                 fire.database().ref("users").child(this.state.id).child("clinicName").orderByChild("clinic").equalTo(this.state.clinicName).on('value',(snap)=>{
                     if(snap.val()){
@@ -157,48 +136,51 @@ callGps(){
 
 }
 onRegionChange(region) {
+  console.log(region);
   this.setState({
-      region:region
+      region
   })
+
 }	
 
 render () {
 	return (
 		  <View style={styles.container}>
-
-
-
 			<MapView
-			region={this.state.region}
+      provider="google"
+      mapType='hybrid'
+      showsBuildings={true}
+      initialRegion={this.state.initialRegion}
 			style={styles.mapStyle}
             showsUserLocation
-           // onRegionChange={()=>this.callGps}
+            onRegionChangeComplete={this.onRegionChange}
+            onMarkerDragEnd={this.callGps}
             >
 				
             
 				
 			  <MapView.Marker
 				title={this.state.clinicName}
-			    draggable = {true}
-				coordinate={this.state.region}
+			  draggable = {true}
+				coordinate={this.state.x}
 				onDragEnd={(e) => {
-          this.setState({ region: e.nativeEvent.coordinate });
-          this.state.clinicNames.map((value,index)=>{
-            if(value.clinic == this.state.clinicName){
-                fire.database().ref("users").child(this.state.id).child("clinicName").orderByChild("clinic").equalTo(this.state.clinicName).on('value',(snap)=>{
-                    if(snap.val()){
-                       fire.database().ref("users").child(this.state.id).child("clinicName").child(Object.keys(snap.val())[index]).child("latitude").set(this.state.region.latitude);
-                       fire.database().ref("users").child(this.state.id).child("clinicName").child(Object.keys(snap.val())[index]).child("longitude").set(this.state.region.longitude);
-                    }
-              })
-            }
-        })
+          this.setState({ region1: e.nativeEvent.coordinate });
+        //   this.state.clinicNames.map((value,index)=>{
+        //     if(value.clinic == this.state.clinicName){
+        //         fire.database().ref("users").child(this.state.id).child("clinicName").orderByChild("clinic").equalTo(this.state.clinicName).on('value',(snap)=>{
+        //             if(snap.val()){
+        //                fire.database().ref("users").child(this.state.id).child("clinicName").child(Object.keys(snap.val())[index]).child("latitude").set(this.state.region.latitude);
+        //                fire.database().ref("users").child(this.state.id).child("clinicName").child(Object.keys(snap.val())[index]).child("longitude").set(this.state.region.longitude);
+        //             }
+        //       })
+        //     }
+        // })
          
         }}
 			  />
 				<MapView.Circle
 
-				 center={this.state.region}
+				 center={this.state.x}
 				 radius={200}
 				 fillColor='rgba(255, 0, 0, 0.2)'
 				 strokeColor='rgba(0, 0, 0, 0.2)'

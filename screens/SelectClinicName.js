@@ -61,6 +61,7 @@ export default class Pro extends React.Component {
                       
                    
                       <Button small onPress={()=>{
+                        console.log(this.state.clinicName+"select");
                         if(this.state.clinicName){
                           navigation.navigate('Location',{clinic:this.state.clinicName,id:this.state.id})
                         }
