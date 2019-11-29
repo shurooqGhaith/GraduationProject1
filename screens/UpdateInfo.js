@@ -311,7 +311,8 @@ class UpdateInfo extends React.Component {
                     <Block  width={width } style={{ marginBottom: 15,marginTop:50}}>
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({phoneEnable:!this.state.phoneEnable})}>
                 <Text color={this.state.phoneEnable ? '#4A148C' : '#333'} size={14}>{"Change PhoneNumber\n"}
-                <Text style={{color:'#aaa'}} size={10}>{"Current:"+this.state.phoneNum?this.state.phoneNum:'Not determined yet'}</Text>
+                <Text style={{color:'#aaa'}} size={10}>{"Current:"}
+                <Text style={{color:'#aaa'}} size={10}>{this.state.phoneNum?this.state.phoneNum:'Not determined yet'}</Text></Text>
                 </Text>
 
                 <Icon name={this.state.phoneEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 

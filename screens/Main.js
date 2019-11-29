@@ -7,7 +7,8 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
-  View
+  View,
+  TextInput
 } from "react-native";
 import { Block, Button, Text, theme } from "galio-framework";
 import { Divider } from 'react-native-elements';
@@ -23,6 +24,7 @@ export default class Main extends React.Component{
     constructor(props){
         super(props);
         this.authListener=this.authListener.bind(this);
+        this.search=this.search.bind(this);
         this.state={
             senderID:'',
             name:'',
@@ -95,9 +97,6 @@ export default class Main extends React.Component{
             }
           })//*** *
             
-
-      
-
       
       }
       var array2=[];
@@ -137,13 +136,51 @@ export default class Main extends React.Component{
       }
 
     }
-  
+  search(text){
+    fire.database().ref("users").orderByChild('name').startAt(text.toLowerCase()).endAt(text.toLowerCase()+"\uf8ff").on('value',(snapshot)=>{
+      if(snapshot.val()){
+          let items = Object.values(snapshot.val());
+         if(this.state.type=="doctor"){
+          this.setState({
+            users:items,
+            nodata:false,
+        })
+         }
+         
+         if(this.state.type=="patient"){
+          this.setState({
+            doctors:items,
+           
+        })
+         }
+
+          
+      }
+      else{
+          this.setState({
+              nodata:true
+          })
+         // alert("no data available");
+          // this.retrieveData();
+      }
+   })
+
+  }
     render(){
         return(
             <Block flex >
             
             <View style={{marginTop:20,marginLeft:5,backgroundColor:'#eee',width:width}}><Text bold size={16}>Users Lists</Text></View>
             <Block>
+            <View style={styles.row}>
+            <TextInput
+               inlineImageLeft='search_icon'
+               placeholder="search"
+               onChangeText={text=>this.search(text)}
+                 />
+                <Icon name={ 'search'} size={30} />
+
+                 </View>
                 {!this.state.nodata && this.state.type=="doctor" && this.state.users.map((item,index)=>{
                   var name;
                   return(
@@ -201,7 +238,7 @@ const styles =StyleSheet.create({
     paddingLeft:25,
     paddingRight:18,
     alignItems:'center',
-    backgroundColor: "#eee",
+    backgroundColor: "#fff",
 },
 
       button: {

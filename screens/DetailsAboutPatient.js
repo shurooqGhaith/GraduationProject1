@@ -247,7 +247,7 @@ class DetailsAboutPatients extends React.Component {
                                 </View>
                        </View>
                     <View style={{marginTop:10,flexDirection:'column'}}>
-                    <Text bold size={16} style={{color:'#004D40'}}>Processes</Text>
+                    <Text bold size={16} style={{color:'#004D40',marginLeft:10}}>Processes</Text>
                     <View style={{flexDirection:'row',flexWrap:'wrap'}}>
 
                         { this.state.process.map((pro=>{
@@ -269,7 +269,7 @@ class DetailsAboutPatients extends React.Component {
                     <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
 
                     <View style={{marginTop:10,flexDirection:'column'}}>
-                    <Text bold size={16} style={{color:'#004D40'}}>Medicines :</Text>
+                    <Text bold size={16} style={{color:'#004D40',marginLeft:10}}>Medicines :</Text>
                            <View style={{flexDirection:'row',flexWrap:'wrap'}}>
                         { this.state.medicines.map((med=>{
                             return(
@@ -288,7 +288,7 @@ class DetailsAboutPatients extends React.Component {
                 
                    
                     <View style={{marginTop:10,flexDirection:'column',flexWrap:'wrap'}}>
-                    <Text bold size={16} style={{color:'#004D40'}}>Medical checkup :</Text>
+                    <Text bold size={16} style={{color:'#004D40',marginLeft:10}}>Medical checkup :</Text>
                     <View style={{flexDirection:'row'}}>
 
                         { this.state.exams.map((ex=>{
@@ -308,12 +308,12 @@ class DetailsAboutPatients extends React.Component {
                     <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
 
                          <View style={{flexDirection:'column',marginTop:10}}>
-                             <Text bold size={16} style={{color:'#004D40'}}>Money paid :</Text>
+                             <Text bold size={16} style={{color:'#004D40',marginLeft:10}}>Money paid :</Text>
                             <Text style={{color:'#333',marginLeft:10}}>{this.state.money ||"No money paid"}</Text>
                          </View>
                          <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,marginLeft:20}}/>
                          <View style={{flexDirection:'column',marginTop:10}}>
-                             <Text bold size={16} style={{color:'#004D40'}}>Any Notes :</Text>
+                             <Text bold size={16} style={{color:'#004D40',marginLeft:10}}>Any Notes :</Text>
                             <Text style={{color:'#333',marginLeft:10}} >{this.state.notes || "No Notes"}</Text>
                          </View>
                          <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
