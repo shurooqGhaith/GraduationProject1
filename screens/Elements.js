@@ -201,8 +201,8 @@ class Info extends React.Component {
               showsVerticalScrollIndicator={false}
               style={{ width, marginTop: '25%' }}
             >
-            <View style={{backgroundColor:'#eee',width:width*0.4}}>
-            <Text bold size={20} style={{color:'#000'}}>Sessions Report</Text>
+            <View style={{backgroundColor:'#eee',width:width*0.6}}>
+            <Text bold size={20} style={{color:'#000'}}>Session Report</Text>
             </View>
                     
                        
