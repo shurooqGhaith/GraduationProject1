@@ -49,7 +49,11 @@ export default class MyPanel extends React.Component {
       if(snap.val()){
         let app=Object.values(snap.val());
         a=app;
-        
+        app.map((item)=>{
+          if(item.available){
+            a.push({idDoctor:item.idDoctor,dateSelected:item.dateSelected,timeSelected:item.timeSelected,clinicName:item.clinicName,available:item.available});
+          }
+        })
         n=Math.ceil(a.length / 8)
        // console.log(a.length);
         this.setState({
@@ -132,7 +136,7 @@ this.setState({showToast:false});
         {this.state.appointment
         .slice(this.state.perPage * this.state.page, this.state.perPage * (this.state.page + 1))
         .map((item, i) => {
-          if(item.available){
+        //  if(item.available){
           return (
             <DataTable.Row key={i}
              onPress={()=>
@@ -154,7 +158,7 @@ this.setState({showToast:false});
               
             </DataTable.Row>
           );
-          }
+         // }
         })}
         
         <DataTable.Pagination

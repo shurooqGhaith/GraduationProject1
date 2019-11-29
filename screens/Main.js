@@ -174,11 +174,10 @@ export default class Main extends React.Component{
             <Block>
             <View style={styles.row}>
             <TextInput
-               inlineImageLeft='search_icon'
                placeholder="search"
                onChangeText={text=>this.search(text)}
                  />
-                <Icon name={ 'search'} size={30} />
+                <Icon name={'search'} size={30} />
 
                  </View>
                 {!this.state.nodata && this.state.type=="doctor" && this.state.users.map((item,index)=>{
