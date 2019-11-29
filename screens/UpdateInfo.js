@@ -50,6 +50,7 @@ class UpdateInfo extends React.Component {
     this.changePassword=this.changePassword.bind(this);
     this.changeEmail=this.changeEmail.bind(this);
     this.updateSpecialization=this.updateSpecialization.bind(this);
+    this.updatePhone=this.updatePhone.bind(this);
     this.state={
         id:'',
         type:'',
@@ -64,11 +65,14 @@ class UpdateInfo extends React.Component {
       emailEnable:false,
       passwordEnable:false,
       UploadEnable:false,
+      phoneEnable:false,
       currentPassword:'',
       newPassword:'',
       Specialization:'',
       SpecializationEnable:false,
       sp:'',
+      phone:'',
+      phoneNum:'',
       isShow:false,
       isShowEmail:false,
       isShowPass:false,
@@ -97,6 +101,11 @@ class UpdateInfo extends React.Component {
         fire.database().ref("users").child(id).child("email").on('value',(email)=>{
             this.setState({email:email.val(),em:email.val()})
         })
+        fire.database().ref("users").child(id).child("phone").on('value',(phone)=>{
+          if(phone.val()){
+          this.setState({phone:phone.val(),phoneNum:phone.val()})
+          }
+      })
         if(type=='doctor'){
             fire.database().ref("users").child(id).child("Specialization").on('value',(sp)=>{
                 this.setState({Specialization:sp.val(),sp:sp.val()})
@@ -197,9 +206,23 @@ class UpdateInfo extends React.Component {
                        this.setState({isShow:false});
                       }.bind(this),5000);
        }
-      
        )
-
+    }
+    updatePhone(){
+      fire.database().ref("users").child(this.state.id).child("phone").set(this.state.phone).then(()=>{
+        this.setState({isShow:true,phoneNum:this.state.phone,message:'Phone number is Updated successfully ! '});
+        setTimeout(function(){
+            this.setState({isShow:false});
+       }.bind(this),5000);
+        //alert("Updated successfully !")
+       }).catch((error)=>{
+                  // alert("an error happened !")
+                 this.setState({message:error.message,isShow:true});
+                 setTimeout(function(){
+                       this.setState({isShow:false});
+                      }.bind(this),5000);
+       }
+       )
 
     }
     updateSpecialization(){
@@ -253,7 +276,7 @@ class UpdateInfo extends React.Component {
                     <Block  width={width } style={{ marginBottom: 15,marginTop:50}}>
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({nameEnable:!this.state.nameEnable})}>
                 <Text color={this.state.nameEnable ? '#4A148C' : '#333'} size={14}>{"Change Name\n"}
-                <Text style={{color:'#aaa'}} size={10}>{this.state.name}</Text>
+                <Text style={{color:'#aaa'}} size={10}>{"Current:"+this.state.name}</Text>
                 </Text>
 
                 <Icon name={this.state.nameEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
@@ -263,8 +286,8 @@ class UpdateInfo extends React.Component {
                       {this.state.nameEnable && 
                       <View>
                       <TextInput
-                        placeholder="Name"
-                        value={this.state.username}
+                       placeholder="New Name"
+                        //value={this.state.username}
                         onChangeText={username => this.setState({username})}
                         style={styles.TextInputStyle}
                         //editable={this.state.nameEnable}
@@ -279,18 +302,56 @@ class UpdateInfo extends React.Component {
                         Save
                       </Text>  
                       </ComponentButton>  
-                      {/* <Toast visible={this.state.isShow} message="Name is Updated successfully"/>       */}
                       </View>
                       }
                       </View>
                       
                     </Block>
                     <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
+                    <Block  width={width } style={{ marginBottom: 15,marginTop:50}}>
+                    <TouchableOpacity style={styles.row} onPress={()=>this.setState({phoneEnable:!this.state.phoneEnable})}>
+                <Text color={this.state.phoneEnable ? '#4A148C' : '#333'} size={14}>{"Change PhoneNumber\n"}
+                <Text style={{color:'#aaa'}} size={10}>{"Current:"+this.state.phoneNum?this.state.phoneNum:'Not determined yet'}</Text>
+                </Text>
+
+                <Icon name={this.state.phoneEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
+                color={this.state.phoneEnable ? '#4A148C' : '#333'} />
+            </TouchableOpacity>
+                    <View style={{flexDirection:'column',alignItems:'center'}}>
+                      {this.state.phoneEnable && 
+                      <View>
+                      <TextInput
+                       placeholder="New Number"
+                       
+                        //value={this.state.username}
+                        onChangeText={phone => this.setState({phone})}
+                        style={styles.TextInputStyle}
+                        keyboardType='phone-pad'
+                        clearButtonMode='while-editing'
+                        //editable={this.state.nameEnable}
+                       // underlineColorAndroid='transparent' 
+                      />
+                             <ComponentButton
+                           small
+                           style={{backgroundColor:'#333',marginLeft:10}}
+                           onPress={this.updatePhone}
+                      >
+                      <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                        Save
+                      </Text>  
+                      </ComponentButton>  
+                      </View>
+                      }
+                      </View>
+                      
+                    </Block>
+                    <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
+
                     <Block  width={width } style={{ marginBottom: 15,marginTop:30}}>
                     
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({emailEnable:!this.state.emailEnable})}>
                 <Text color={this.state.emailEnable ? '#4A148C' : '#333'} size={14}>{"Change Email\n"}
-                <Text style={{color:'#aaa'}} size={10}>{this.state.em}</Text>
+                <Text style={{color:'#aaa'}} size={10}>{"Current:"+this.state.em}</Text>
                 </Text>
                 <Icon name={this.state.emailEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
                 color={this.state.emailEnable ? '#4A148C' : '#333'}  />
@@ -308,11 +369,12 @@ class UpdateInfo extends React.Component {
                         style={styles.TextInputStyle}
                       />
                       <TextInput
-                        placeholder="Email"
+                        placeholder="New Email"
                         onChangeText= {email => this.setState({ email })}
-                        value={this.state.email}
+                       // value={this.state.email}
                         style={styles.TextInputStyle}
                         keyboardType='email-address'
+                        autoCompleteType='email'
                         //  editable={this.state.emailEnable}
                        // underlineColorAndroid='transparent' 
                       />     
@@ -389,7 +451,7 @@ class UpdateInfo extends React.Component {
                     <Block width={width } style={{marginTop:30,marginBottom: 15}}>
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({SpecializationEnable:!this.state.SpecializationEnable})}>
                 <Text color={this.state.SpecializationEnable ? '#4A148C' : '#333'} size={14}>{"Edit Specialization\n"}
-                <Text style={{color:'#aaa'}} size={10}>{this.state.sp} </Text>
+                <Text style={{color:'#aaa'}} size={10}>{"Current:"+this.state.sp} </Text>
                     </Text>
                 <Icon name={this.state.SpecializationEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
                 color={this.state.SpecializationEnable ? '#4A148C' : '#333'}  />
@@ -401,7 +463,7 @@ class UpdateInfo extends React.Component {
                         <TextInput
                         autoCapitalize="none"
                         placeholder="new Specialization"
-                        value={this.state.Specialization}
+                       // value={this.state.Specialization}
                         onChangeText={Specialization => this.setState({Specialization: Specialization })}
                         style={styles.TextInputStyle}
                       />
