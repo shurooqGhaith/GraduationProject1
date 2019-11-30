@@ -296,56 +296,38 @@ backgroundColor='#fff'
                   <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
                     <Block style={styles.divider} />
                   </Block>
-                  <Block middle>
+                  <Block >
                     
 
                     
-                  <View style={{flexDirection:'row'}} >
-                  <View style={styles.iconButton}>
-                <Icon name={ 'loupe'} size={52}  color='#f45212'
+                  <View style={{flexDirection:'row',flexWrap:'wrap'}} >
+                  <View style={styles.iconButton1}>
+                <Icon type='material-community' name={ 'clock'} size={52}  color='#172B4D'
                onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
                 />
-                <Text>working hour</Text>
+                <Text  color='#172B4D'>working hours</Text>
                  </View>
-                  {/* <Button style={{width:width*0.3,backgroundColor:"#00897B"}}
-                  onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
-                  >
-                       Working hours
-                  </Button>
-                  <Button style={{width:width*0.3,backgroundColor:"#00897B"}}
-                  onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
-                  >
-                       Patients
-                  </Button>
-                  <Button style={{width:width*0.3,backgroundColor:"#00897B"}}
-                  onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
-                  >
-                      Appointments
-                  </Button> */}
+                  
+                 <View style={styles.iconButton1}>
+                <Icon name={ 'people'} size={52}  color='#172B4D'
+                 onPress={()=>this.props.navigation.navigate("PatientAfterSession",{id:this.state.id})}//show patient name
+                />
+                <Text style={{marginLeft:8}} color='#172B4D'>Patients</Text>
+                 </View>
 
-                  {/* {!this.state.nodata && this.state.workingHours.map((item,index)=>{
-                     //var d=item.days.split("-");
-                     if(item.enable){
-                       var i=0;
-                      //var len=d.length;
-                      
-                         return(
-                          <View key={index} style={{flexDirection:'column'}}>
-                         
-                          <Text style={{color:'#000'}}>{item.days}</Text>
-                          <Text style={{color:'#888'}}>-{item.selectedClinic}</Text>
-                          <View style={{flexDirection:'row'}}>
+                 <View style={styles.iconButton1}>
+                <Icon type='material-community' name={ 'account-clock'} size={52}  color='#172B4D'
+                 onPress={()=>this.props.navigation.navigate("DoctorAppointment",{id:this.state.id})}//show patient name
+                />
+                <Text  color='#172B4D'>Appointments</Text>
+                 </View>
+                 <View style={styles.iconButton1}>
+                <Icon type='material-community' name={ 'map-marker'} size={52}  color='#172B4D'
+                      onPress={()=>this.props.navigation.navigate("Pro",{id:this.state.id})}
+                />
+                <Text style={{marginLeft:7}} color='#172B4D'>Location</Text>
+                 </View>
 
-                          <Text style={{color:'#888'}}>{item.start}</Text>
-                          <Text style={{color:'#888'}}>-{item.end}</Text>
-                          </View>
-                          <Divider style={{backgroundColor:'#000000',marginTop:10}}/>
-
-                         </View>
-
-                         )
-                     }
-                   })} */}
                     </View>
                     
                     
@@ -445,19 +427,36 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', backgroundColor: '#FFF1C1' },
 
   iconButton:{
-    
     flexDirection: 'column',
-    justifyContent:'space-between',
+   // justifyContent:'space-between',
+    marginTop:5,
     height:130,
     padding:25,
-    borderColor:'#f45212',
-    borderWidth:2,
-    paddingRight:18,
+    borderColor:'#172B4D',
+    borderWidth:1,
+   // paddingRight:18,
     borderRadius:30,
-    width:120,
-    alignItems:'center',
+    width:130,
+    //alignItems:'center',
     backgroundColor: "#fff",
 },
+
+iconButton1:{
+  flexDirection: 'column',
+  marginLeft:7,
+  marginTop:5,
+ // justifyContent:'space-between',
+  height:130,
+  padding:25,
+  borderColor:'#172B4D',
+  borderWidth:1,
+ // paddingRight:18,
+  borderRadius:30,
+  width:130,
+  //alignItems:'center',
+  backgroundColor: "#fff",
+},
+
 
   headerText: {
     fontSize: 20,
