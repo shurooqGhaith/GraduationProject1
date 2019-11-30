@@ -305,27 +305,27 @@ backgroundColor='#fff'
                 <Icon type='material-community' name={ 'clock'} size={52}  color='#172B4D'
                onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
                 />
-                <Text  color='#172B4D'>working hours</Text>
+                <Text  color='#aaa'>working hours</Text>
                  </View>
                   
                  <View style={styles.iconButton1}>
                 <Icon name={ 'people'} size={52}  color='#172B4D'
                  onPress={()=>this.props.navigation.navigate("PatientAfterSession",{id:this.state.id})}//show patient name
                 />
-                <Text style={{marginLeft:8}} color='#172B4D'>Patients</Text>
+                <Text  color='#aaa'>Patients</Text>
                  </View>
 
                  <View style={styles.iconButton1}>
                 <Icon type='material-community' name={ 'account-clock'} size={52}  color='#172B4D'
                  onPress={()=>this.props.navigation.navigate("DoctorAppointment",{id:this.state.id})}//show patient name
                 />
-                <Text  color='#172B4D'>Appointments</Text>
+                <Text  color='#aaa'>Appointments</Text>
                  </View>
                  <View style={styles.iconButton1}>
                 <Icon type='material-community' name={ 'map-marker'} size={52}  color='#172B4D'
                       onPress={()=>this.props.navigation.navigate("Pro",{id:this.state.id})}
                 />
-                <Text style={{marginLeft:7}} color='#172B4D'>Location</Text>
+                <Text  color='#aaa'>Location</Text>
                  </View>
 
                     </View>
@@ -349,54 +349,8 @@ backgroundColor='#fff'
                     
                   </Block>
                   <Block >
-                  {/* <Appbar style={styles.bottom}>
-                          <Appbar.Content title="Appointment"  onPress={() =>this.props.navigation.navigate("DoctorAppointment",{id:this.state.id})} />
-                         <Appbar.Content title="Patients" onPress={() =>this.props.navigation.navigate("PatientAfterSession",{id:this.state.id})} />
-                         </Appbar> */}
-
-                  <View style={{marginLeft:60,marginTop:10}}>
-                  <Button
-                      onPress={()=>this.props.navigation.navigate("Pro",{id:this.state.id})}
-                      color="transparent"
-                      style={{width:width*0.5}}
-                      textStyle={{
-                        color: "#233DD2",
-                        fontWeight: "500",
-                        fontSize: 16
-                      }}
-                    >
-                       Location
-                    </Button>
-                    </View>
-                  <View style={{marginLeft:60,marginTop:10}}>
-                  <Button
-                      onPress={()=>this.props.navigation.navigate("DoctorAppointment",{id:this.state.id})}//show patient name
-                      color="transparent"
-                      style={{width:width*0.5}}
-                      textStyle={{
-                        color: "#233DD2",
-                        fontWeight: "500",
-                        fontSize: 16
-                      }}
-                    >
-                       Appointments
-                    </Button>
-                    </View>
-                    <View style={{marginLeft:60,marginTop:10}}>
-                    <Button
-                      
-                      onPress={()=>this.props.navigation.navigate("PatientAfterSession",{id:this.state.id})}//show patient name
-                      color="transparent"
-                      style={{width:width*0.5}}
-                      textStyle={{
-                        color: "#233DD2",
-                        fontWeight: "500",
-                        fontSize: 16
-                      }}
-                    >
-                       Patients
-                    </Button>
-                    </View>
+                  
+  
                     
                     
                   </Block>
@@ -443,16 +397,16 @@ const styles = StyleSheet.create({
 
 iconButton1:{
   flexDirection: 'column',
-  marginLeft:7,
+  marginLeft:10,
   marginTop:5,
  // justifyContent:'space-between',
   height:130,
-  padding:25,
+  paddingTop:25,
   borderColor:'#172B4D',
   borderWidth:1,
  // paddingRight:18,
-  borderRadius:30,
-  width:130,
+  borderRadius:20,
+  width:140,
   //alignItems:'center',
   backgroundColor: "#fff",
 },
