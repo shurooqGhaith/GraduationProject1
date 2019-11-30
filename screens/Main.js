@@ -8,9 +8,11 @@ import {
   FlatList,
   TouchableOpacity,
   View,
-  TextInput
+  TextInput,
+  ScrollView
 } from "react-native";
 import { Block, Button, Text, theme } from "galio-framework";
+import { Input,Icon as ComponentIcon } from "../components";
 import { Divider } from 'react-native-elements';
 import fire from "../constants/firebaseConfigrations";
 import argonTheme from "../constants/Theme";
@@ -32,7 +34,8 @@ export default class Main extends React.Component{
             type:'',
             users:[],
             nodata:true,
-            doctors:[]
+            doctors:[],
+            msg:''
         }
     }
 
@@ -126,7 +129,7 @@ export default class Main extends React.Component{
           //     return unique;
           // },[]);
 
-            this.setState({doctors:array2});
+            this.setState({doctors:array2,nodata:false});
 
 
           }
@@ -137,27 +140,37 @@ export default class Main extends React.Component{
 
     }
   search(text){
+    if(text==''){
+      this.authListener();
+    }
+    var patients=[];
+    var doctors=[];
     fire.database().ref("users").orderByChild('name').startAt(text.toLowerCase()).endAt(text.toLowerCase()+"\uf8ff").on('value',(snapshot)=>{
       if(snapshot.val()){
           let items = Object.values(snapshot.val());
+          items.map((item)=>{
+            if(item.type=="doctor"){doctors.push({id:item.id,name:item.name})}
+            if(item.type=="patient"){patients.push({id:item.id,name:item.name})}
+
+          })
          if(this.state.type=="doctor"){
           this.setState({
-            users:items,
+            users:patients,
             nodata:false,
         })
          }
          
          if(this.state.type=="patient"){
           this.setState({
-            doctors:items,
-           
-        })
-         }
+            doctors:doctors,
+            nodata:false,
 
-          
-      }
+        })
+         }          
+      }//if exist end
       else{
           this.setState({
+              msg:'No results found for \" '+text+'\"',
               nodata:true
           })
          // alert("no data available");
@@ -172,15 +185,20 @@ export default class Main extends React.Component{
             
             <View style={{marginTop:20,marginLeft:5,backgroundColor:'#eee',width:width}}><Text bold size={16}>Users Lists</Text></View>
             <Block>
-            <View style={styles.row}>
-            <TextInput
-            style={{borderRadius:10,borderColor:'#aaa'}}
+           
+            <View >
+            <Input
+               style={{borderRadius:15,borderColor:'#eee',backgroundColor:'#444',width:width,color:'#aaa',paddingLeft:5}}
                placeholder="search"
                onChangeText={text=>this.search(text)}
-                 />
+               iconContent={
                 <Icon name={'search'} size={30} color={'#aaa'} />
+               }
+                 />
 
                  </View>
+                 <View>
+                {this.state.nodata &&<View style={{marginTop:70,marginLeft:60}}><Text size={16} color={'#000'}>{this.state.msg}</Text></View>}
                 {!this.state.nodata && this.state.type=="doctor" && this.state.users.map((item,index)=>{
                   var name;
                   return(
@@ -204,7 +222,7 @@ export default class Main extends React.Component{
                   )
                 })}
 
-                {  this.state.type=="patient" && this.state.doctors.map((item,index)=>{
+                { !this.state.nodata && this.state.type=="patient" && this.state.doctors.map((item,index)=>{
                   
                   return(
                     <View style={{marginTop:20}}>
@@ -220,6 +238,7 @@ export default class Main extends React.Component{
                       </View>
                   )
                 })}
+                </View>
             </Block>
            
             </Block>

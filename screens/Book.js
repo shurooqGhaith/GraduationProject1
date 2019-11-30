@@ -244,6 +244,7 @@ class Book extends React.Component {
     }
 
     handle=input=>{
+        if(input==''){this.retrieveData()}
         if(this.state.searchParameter=="name"){
             fire.database().ref("users").orderByChild("name").startAt(this.state.search.toLowerCase()).endAt(this.state.search.toLowerCase()+"\uf8ff").on('value',(snap)=>{
                 if(snap.val()){
