@@ -188,7 +188,7 @@ export default class Main extends React.Component{
            
             <View >
             <Input
-               style={{borderRadius:15,borderColor:'#eee',backgroundColor:'#444',width:width,color:'#aaa',paddingLeft:5}}
+               style={{borderRadius:15,borderColor:'#eee',backgroundColor:'#444',width:width,color:'#fff',paddingLeft:5}}
                placeholder="search"
                onChangeText={text=>this.search(text)}
                iconContent={

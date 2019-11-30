@@ -19,7 +19,7 @@ import { HeaderHeight } from "../constants/utils";
 import fire from "../constants/firebaseConfigrations";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import MapView,{Marker} from "react-native-maps";
-import { Divider,Header } from 'react-native-elements';
+import { Divider,Header,Icon } from 'react-native-elements';
 import { Appbar } from 'react-native-paper';
 
 const { width, height } = Dimensions.get("screen");
@@ -182,11 +182,11 @@ class PatientProfile extends React.Component {
   
   <Block style={{ marginBottom: theme.SIZES.BASE,marginTop:70 }}>
   <Header
-  backgroundColor='#fff'
-    leftComponent={{ icon: 'home', color: '#000' }}
-    centerComponent={<Text style={{color:'#000'}}>{this.state.username}</Text>}
-    rightComponent={<TouchableOpacity style={{backgroundColor:'#fff'}} small onPress={()=>fire.auth().signOut()}><Text style={{color:'#000'}}>Logout</Text></TouchableOpacity>}
-  />
+backgroundColor='#fff'
+  leftComponent={{ icon: 'home', color: '#172B4D' }}
+  centerComponent={<Text style={{color:'#172B4D'}}></Text>}
+  rightComponent={<Button small style={{backgroundColor:'#172B4D'}} small onPress={()=>fire.auth().signOut()}><Text style={{color:'#fff'}}>Logout</Text></Button>}
+/>
             </Block>
   
               <ScrollView
@@ -231,6 +231,9 @@ class PatientProfile extends React.Component {
                    </Block> 
                   </Block>
                   <Block style={styles.info}>
+                  <Text bold size={20} color="#32325D" style={{marginLeft:43}}>
+                        {this.state.username}
+                      </Text>
                     <Block
                       middle
                       row
@@ -259,17 +262,15 @@ class PatientProfile extends React.Component {
   
                   <Block flex>
                     <Block middle style={styles.nameInfo}>
-                    <Text bold size={20} color="#32325D" id="name">
-                        {this.state.username}
-                      </Text>
+                   
                     <View  style={{flexDirection:'column',marginTop:5}}>
+                    <Text  style={{color:'#aaa'}} >Email:</Text>
+                    <Text  size={15} color="#32325D" > {this.state.email}</Text>
+                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,width:width*0.6}}/>
                     {this.state.phoneExist && <View>
                       <Text  style={{color:'#aaa'}} > Phone Number:</Text>
                     <Text  size={15} color="#32325D" > {this.state.phone}</Text>
                     </View>}
-                    <Text  style={{color:'#aaa'}} >Email:</Text>
-                    <Text  size={15} color="#32325D" > {this.state.email}</Text>
-
                     </View>
                       
                      
@@ -282,8 +283,28 @@ class PatientProfile extends React.Component {
                     <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
                       <Block style={styles.divider} />
                     </Block>
-                    <Block middle>
-                      
+                    <Block >
+                    <View style={{flexDirection:'row',flexWrap:'wrap'}} >
+                    <View style={styles.iconButton1}>
+                     <Icon type='material-community' name={ 'account-clock'} size={52}  color='#172B4D'
+                     onPress={() => this.props.navigation.navigate("MyPanel",{idPatient:this.state.id})}
+                       />
+                <Text style={{paddingHorizontal:18}}  color='#aaa'>Appointments</Text>
+                 </View>
+
+                 <View style={styles.iconButton1}>
+                <Icon type='material-community' name={ 'alarm-plus'} size={52}  color='#172B4D'
+                     onPress={() => this.props.navigation.navigate("Search",{idPatient:this.state.id})}
+                />
+                <Text style={{paddingHorizontal:5}} color='#aaa'>Make appointment</Text>
+                 </View>  
+                        </View>
+                        <View style={styles.iconButton1}>
+                <Icon type='material-community' name={ 'map-marker-multiple'} size={52}  color='#172B4D'
+                     onPress={() => this.props.navigation.navigate("ShowAllLocation",{id:this.state.id})}
+                />
+                <Text style={{paddingHorizontal:35}} color='#aaa'>Location</Text>
+                 </View>
                     </Block>
   
                     <Block
@@ -302,54 +323,9 @@ class PatientProfile extends React.Component {
                     <Block style={{ paddingBottom: -HeaderHeight * 2 }}>
                    
                     
-                    <View style={{marginLeft:60}}>
-                    <Button
-                     onPress={() => this.props.navigation.navigate("MyPanel",{idPatient:this.state.id})}
-                     color="transparent"
-                        style={{width:width*0.5}}
-                        textStyle={{
-                          color: "#233DD2",
-                          fontWeight: "500",
-                          fontSize: 16
-                        }} >
-                          
-                          <Text >
-                             Appointments
-                          </Text>
-                    </Button>
-                     </View>
-                     <View style={{marginLeft:60,marginTop:10}}>
-                    <Button
-                     onPress={() => this.props.navigation.navigate("Search",{idPatient:this.state.id})}
-                     color="transparent"
-                        style={{width:width*0.5}}
-                        textStyle={{
-                          color: "#233DD2",
-                          fontWeight: "500",
-                          fontSize: 16
-                        }} >
-                          
-                          <Text >
-                            make an appointment
-                          </Text>
-                    </Button>
-                     </View>
-                     <View style={{marginLeft:60,marginTop:10}}>
-                    <Button
-                     onPress={() => this.props.navigation.navigate("ShowAllLocation",{id:this.state.id})}
-                     color="transparent"
-                        style={{width:width*0.5}}
-                        textStyle={{
-                          color: "#233DD2",
-                          fontWeight: "500",
-                          fontSize: 16
-                        }} >
-                          
-                          <Text>
-                           location
-                          </Text>
-                    </Button>
-                    </View>
+                    
+                     
+                     
                     </Block>
                   </Block>
                 </Block>
@@ -368,6 +344,21 @@ class PatientProfile extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  iconButton1:{
+    flexDirection: 'column',
+    marginLeft:10,
+    marginTop:5,
+   // justifyContent:'space-between',
+    height:130,
+    paddingTop:25,
+    borderColor:'#172B4D',
+    borderWidth:1,
+   // paddingRight:18,
+    borderRadius:20,
+    width:130,
+    //alignItems:'center',
+    backgroundColor: "#fff",
+  },  
   bottom: {
     position: 'absolute',
     backgroundColor:'#333',

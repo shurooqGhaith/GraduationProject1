@@ -187,9 +187,9 @@ class Profile extends React.Component {
 <Block style={{ marginBottom: theme.SIZES.BASE,marginTop:70 }}>
 <Header
 backgroundColor='#fff'
-  leftComponent={{ icon: 'home', color: '#000' }}
-  centerComponent={<Text style={{color:'#000'}}>{this.state.username}</Text>}
-  rightComponent={<TouchableOpacity style={{backgroundColor:'#fff'}} small onPress={()=>fire.auth().signOut()}><Text style={{color:'#000'}}>Logout</Text></TouchableOpacity>}
+  leftComponent={{ icon: 'home', color: '#172B4D' }}
+  centerComponent={<Text style={{color:'#172B4D'}}></Text>}
+  rightComponent={<Button small style={{backgroundColor:'#172B4D'}} small onPress={()=>fire.auth().signOut()}><Text style={{color:'#fff'}}>Logout</Text></Button>}
 />
           </Block>
        
@@ -305,27 +305,27 @@ backgroundColor='#fff'
                 <Icon type='material-community' name={ 'clock'} size={52}  color='#172B4D'
                onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
                 />
-                <Text  color='#aaa'>working hours</Text>
+                <Text style={{paddingHorizontal:20,paddingVertical:10}} color='#aaa'>working hours</Text>
                  </View>
                   
                  <View style={styles.iconButton1}>
                 <Icon name={ 'people'} size={52}  color='#172B4D'
                  onPress={()=>this.props.navigation.navigate("PatientAfterSession",{id:this.state.id})}//show patient name
                 />
-                <Text  color='#aaa'>Patients</Text>
+                <Text style={{paddingHorizontal:35}}  color='#aaa'>Patients</Text>
                  </View>
 
                  <View style={styles.iconButton1}>
                 <Icon type='material-community' name={ 'account-clock'} size={52}  color='#172B4D'
                  onPress={()=>this.props.navigation.navigate("DoctorAppointment",{id:this.state.id})}//show patient name
                 />
-                <Text  color='#aaa'>Appointments</Text>
+                <Text style={{paddingHorizontal:18}}  color='#aaa'>Appointments</Text>
                  </View>
                  <View style={styles.iconButton1}>
                 <Icon type='material-community' name={ 'map-marker'} size={52}  color='#172B4D'
                       onPress={()=>this.props.navigation.navigate("Pro",{id:this.state.id})}
                 />
-                <Text  color='#aaa'>Location</Text>
+                <Text style={{paddingHorizontal:35}} color='#aaa'>Location</Text>
                  </View>
 
                     </View>
@@ -406,7 +406,7 @@ iconButton1:{
   borderWidth:1,
  // paddingRight:18,
   borderRadius:20,
-  width:140,
+  width:130,
   //alignItems:'center',
   backgroundColor: "#fff",
 },
