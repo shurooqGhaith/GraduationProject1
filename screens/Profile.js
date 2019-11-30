@@ -271,7 +271,8 @@ backgroundColor='#fff'
                   </Block>
                   <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
                   <Button style={{width:width*0.5,backgroundColor:"#00897B"}}
-                  onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
+                 // onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
+                 onPress={()=>this.props.navigation.navigate('ClinicName')}
                   >
                        Working hours
                   </Button>

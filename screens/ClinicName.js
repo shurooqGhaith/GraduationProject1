@@ -12,10 +12,11 @@ import {
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
 
-import { Button, Icon, Input } from "../components";
+import { Button, Input,Icon as ComponentIcon } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 import * as Facebook from 'expo-facebook';
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -191,7 +192,7 @@ this.setState({clinicNames:this.state.clinicNames})
 
                       <View style={{flexDirection:'column'}}>
                 <Picker 
-                    style={{height: 60, width: width*0.5}} 
+                    style={{height: 60, width: width*0.8}} 
                     selectedValue = {this.state.clinicNameFromPicker} 
                     onValueChange = {(value) => {this.setState({clinicNameFromPicker: value});
                     }}>
@@ -203,6 +204,8 @@ this.setState({clinicNames:this.state.clinicNames})
                          
                     </Picker>
                        </View>
+                       <View style={{marginTop:10}}>
+                       <Text style={{marginTop:5}}>Or add new clinic </Text>
                     {this.state.clinicNames.map((name,index)=>{
                       return(
                           <View key={index}>
@@ -213,10 +216,10 @@ this.setState({clinicNames:this.state.clinicNames})
                         onChangeText={(Cname)=>this.handleChange(Cname,index)}
                         value={name}
                         iconContent={
-                            <Icon
+                            <ComponentIcon
                             size={16}
                             color={argonTheme.COLORS.ICON}
-                            name="shop"
+                            name={'shop'}
                             family="ArgonExtra"
                             style={styles.inputIcons}
                           />
@@ -226,6 +229,7 @@ this.setState({clinicNames:this.state.clinicNames})
                           </View>
                       )
                     })}
+                    </View>
                     <Button
                       style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10, width: width * 0.5,borderRadius:10}}
                       onPress={this.addClinicName}
@@ -249,8 +253,8 @@ this.setState({clinicNames:this.state.clinicNames})
                             <Icon
                             size={16}
                             color={argonTheme.COLORS.ICON}
-                            name="shop"
-                            family="ArgonExtra"
+                            name={'school'}
+                           // family="ArgonExtra"
                             style={styles.inputIcons}
                           />
                           
@@ -336,7 +340,8 @@ const styles = StyleSheet.create({
   createButton: {
     width: width * 0.5,
     marginTop: 25,
-    borderRadius:15
+    borderRadius:15,
+    marginBottom:20
   }
 });
 
