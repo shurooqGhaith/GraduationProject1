@@ -37,6 +37,8 @@ class PatientProfile extends React.Component {
       from:'',
       to:'',
       email:'',
+      phone:'',
+      phoneExist:false,
       id:'',
       closedAt:'',
       appointment:[],
@@ -82,18 +84,30 @@ class PatientProfile extends React.Component {
        })
        fire.database().ref("users").child(id).child("name").on('value',datasnapshot =>{
        name=datasnapshot.val();//
+       if(datasnapshot.val()){
       this.setState({
           username:datasnapshot.val()
       })
+    }
     })
   
     fire.database().ref("users").child(id).child("email").on('value',datasnapshot =>{
       e=datasnapshot.val();//
+      if(datasnapshot.val()){
      this.setState({
          email:datasnapshot.val()
      })
+    }
    })
-  
+   fire.database().ref("users").child(id).child("phone").on('value',(datasnapshot)=>{
+    if(datasnapshot.val()){
+    this.setState({
+      phone:datasnapshot.val(),
+      phoneExist:true
+    })
+  }
+  })
+
    var today=new Date();
    const day   = today.getDate();
    const dayName=today.getDay();
@@ -245,11 +259,16 @@ class PatientProfile extends React.Component {
   
                   <Block flex>
                     <Block middle style={styles.nameInfo}>
-                    <View  style={{flexDirection:'column'}}>
-                    <Text bold style={{color:'#aaa'}}>Name:</Text>
-                    <Text bold size={15} color="#32325D" > {this.state.username}</Text>
-                    <Text bold style={{color:'#aaa'}} >Email:</Text>
-                    <Text bold size={15} color="#32325D" > {this.state.email}</Text>
+                    <Text bold size={20} color="#32325D" id="name">
+                        {this.state.username}
+                      </Text>
+                    <View  style={{flexDirection:'column',marginTop:5}}>
+                    {this.state.phoneExist && <View>
+                      <Text  style={{color:'#aaa'}} > Phone Number:</Text>
+                    <Text  size={15} color="#32325D" > {this.state.phone}</Text>
+                    </View>}
+                    <Text  style={{color:'#aaa'}} >Email:</Text>
+                    <Text  size={15} color="#32325D" > {this.state.email}</Text>
 
                     </View>
                       

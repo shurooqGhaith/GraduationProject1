@@ -203,6 +203,10 @@ export default class Main extends React.Component{
                   var name;
                   return(
                     <View key={index} style={{marginTop:20}}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                      style={{ width }}
+                            >
                     <TouchableOpacity
                          style={styles.row}
                          onPress={()=>
@@ -218,6 +222,7 @@ export default class Main extends React.Component{
                         <Icon name={'keyboard-arrow-right'} size={30}  />
                       </TouchableOpacity>
                       <Divider style={{backgroundColor:'#000000',width:width}}/>
+                      </ScrollView>
                       </View>
                   )
                 })}

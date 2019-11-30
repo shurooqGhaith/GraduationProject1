@@ -43,6 +43,8 @@ class Profile extends React.Component {
       username:"",
       email:'',
       clinicName:[],
+      phone:'',
+      phoneExist:false,
       from:"",
       to:"",
       id:"",
@@ -95,21 +97,35 @@ class Profile extends React.Component {
       })
       
       fire.database().ref("users").child(id).child("Specialization").on('value',(datasnapshot)=>{
+        if(datasnapshot.val()){
         this.setState({
           Specialization:datasnapshot.val()
         })
+      }
      })
   
      fire.database().ref("users").child(id).child("name").on('value',(datasnapshot)=>{
-      this.setState({
+      if(datasnapshot.val()){
+        this.setState({
         username:datasnapshot.val()
       })
+    }
    })
   
    fire.database().ref("users").child(id).child("email").on('value',(datasnapshot)=>{
+    if(datasnapshot.val()){
     this.setState({
       email:datasnapshot.val()
     })
+  }
+  })
+  fire.database().ref("users").child(id).child("phone").on('value',(datasnapshot)=>{
+    if(datasnapshot.val()){
+    this.setState({
+      phone:datasnapshot.val(),
+      phoneExist:true
+    })
+  }
   })
       
   
@@ -220,6 +236,9 @@ backgroundColor='#fff'
                  </Block> 
                 </Block>
                 <Block style={styles.info}>
+                <Text bold size={20} color="#32325D" style={{marginLeft:36}}>
+                        {this.state.username}
+                      </Text>
                   <Block
                     middle
                     row
@@ -243,19 +262,24 @@ backgroundColor='#fff'
                       MESSAGE 
                     </Button>
                   </Block>
-                  
+                  <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,width:width*0.8}}/>
                 </Block>
 
                 <Block flex>
                   <Block middle style={styles.nameInfo}>
-                  <Text bold size={20} color="#32325D" id="name">
-                        {this.state.username}
-                      </Text>
+                  
                   <View  style={{flexDirection:'column',marginTop:5}}>
                     <Text  style={{color:'#aaa'}} >Email:</Text>
                     <Text  size={15} color="#32325D" > {this.state.email}</Text>
+                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,width:width*0.6}}/>
+                    {this.state.phoneExist && <View>
+                      <Text  style={{color:'#aaa'}} > Phone Number:</Text>
+                    <Text  size={15} color="#32325D" > {this.state.phone}</Text>
+                    </View>}
+                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,width:width*0.6}}/>
                     <Text  style={{color:'#aaa'}} >Specialization:</Text>
                     <Text  size={15} color="#32325D" > {this.state.Specialization}</Text>
+                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,width:width*0.6}}/>
                     <Text  style={{color:'#aaa'}} >clinic Name:</Text>
                     <View  style={{flexDirection:'row' }}>
                      {this.state.clinicName.map((value,ind)=>{
