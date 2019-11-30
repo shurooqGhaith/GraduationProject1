@@ -226,6 +226,10 @@ export default class Main extends React.Component{
                   
                   return(
                     <View style={{marginTop:20}}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                      style={{ width }}
+                            >
                     <TouchableOpacity
                          style={styles.row}
                          onPress={()=>this.props.navigation.navigate("Chat",{sender:this.state.senderID,name:this.state.name,email:this.state.email,receiver:item.id,nameR:item.name})
@@ -235,6 +239,7 @@ export default class Main extends React.Component{
 
                       </TouchableOpacity>
                       <Divider style={{backgroundColor:'#000000',width:width}}/>
+                      </ScrollView>
                       </View>
                   )
                 })}
