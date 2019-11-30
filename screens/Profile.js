@@ -294,20 +294,36 @@ backgroundColor='#fff'
 
                   </Block>
                   <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
-                  <Button style={{width:width*0.5,backgroundColor:"#00897B"}}
-                  onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
-                 
-                  >
-                       Working hours
-                  </Button>
                     <Block style={styles.divider} />
                   </Block>
                   <Block middle>
                     
 
                     
-                  <View >
-                  {!this.state.nodata && this.state.workingHours.map((item,index)=>{
+                  <View style={{flexDirection:'row'}} >
+                  <View style={styles.iconButton}>
+                <Icon name={ 'loupe'} size={52}  color='#f45212'
+               onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
+                />
+                <Text>working hour</Text>
+                 </View>
+                  {/* <Button style={{width:width*0.3,backgroundColor:"#00897B"}}
+                  onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
+                  >
+                       Working hours
+                  </Button>
+                  <Button style={{width:width*0.3,backgroundColor:"#00897B"}}
+                  onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
+                  >
+                       Patients
+                  </Button>
+                  <Button style={{width:width*0.3,backgroundColor:"#00897B"}}
+                  onPress={()=> this.props.navigation.navigate("DoctorInfo",{id:this.state.id})}
+                  >
+                      Appointments
+                  </Button> */}
+
+                  {/* {!this.state.nodata && this.state.workingHours.map((item,index)=>{
                      //var d=item.days.split("-");
                      if(item.enable){
                        var i=0;
@@ -329,7 +345,7 @@ backgroundColor='#fff'
 
                          )
                      }
-                   })}
+                   })} */}
                     </View>
                     
                     
@@ -427,6 +443,21 @@ const styles = StyleSheet.create({
   head: { height: 40, backgroundColor: '#808B97' },
   text: { margin: 6 },
   row: { flexDirection: 'row', backgroundColor: '#FFF1C1' },
+
+  iconButton:{
+    
+    flexDirection: 'column',
+    justifyContent:'space-between',
+    height:130,
+    padding:25,
+    borderColor:'#f45212',
+    borderWidth:2,
+    paddingRight:18,
+    borderRadius:30,
+    width:120,
+    alignItems:'center',
+    backgroundColor: "#fff",
+},
 
   headerText: {
     fontSize: 20,
