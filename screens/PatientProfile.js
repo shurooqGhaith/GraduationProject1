@@ -48,7 +48,11 @@ class PatientProfile extends React.Component {
       time:'',
       date:'',
       enableNotification:true,
-      isVerified:false
+      isVerified:false,
+
+      changeAppColor:false,
+      changeMakeAppColor:false,
+      changeLocationColor:false,
     };
   }
 
@@ -286,22 +290,41 @@ backgroundColor='#fff'
                     <Block >
                     <View style={{flexDirection:'row',flexWrap:'wrap'}} >
                     <View style={styles.iconButton1}>
-                     <Icon type='material-community' name={ 'account-clock'} size={52}  color='#172B4D'
-                     onPress={() => this.props.navigation.navigate("MyPanel",{idPatient:this.state.id})}
+                     <Icon type='material-community' name={ 'account-clock'} size={52}   color={this.state.changeAppColor?'#B71C1C':'#172B4D'}
+                     onPress={() => {
+                      this.setState({changeAppColor:!this.state.changeAppColor});
+                 setTimeout(function(){
+                        this.setState({changeAppColor:!this.state.changeAppColor});
+                        this.props.navigation.navigate("MyPanel",{idPatient:this.state.id})
+                         }.bind(this),1000);
+                     }}
                        />
                 <Text style={{paddingHorizontal:18}}  color='#aaa'>Appointments</Text>
                  </View>
 
                  <View style={styles.iconButton1}>
-                <Icon type='material-community' name={ 'alarm-plus'} size={52}  color='#172B4D'
-                     onPress={() => this.props.navigation.navigate("Search",{idPatient:this.state.id})}
+                <Icon type='material-community' name={ 'alarm-plus'} size={52}   color={this.state.changeMakeAppColor?'#B71C1C':'#172B4D'}
+                     onPress={() =>{
+                      this.setState({changeMakeAppColor:!this.state.changeMakeAppColor});
+                 setTimeout(function(){
+                        this.setState({changeMakeAppColor:!this.state.changeMakeAppColor});
+                        this.props.navigation.navigate("Search",{idPatient:this.state.id})
+                         }.bind(this),1000);
+                     }}
+                     
                 />
                 <Text style={{paddingHorizontal:5}} color='#aaa'>Make appointment</Text>
                  </View>  
                         </View>
                         <View style={styles.iconButton1}>
-                <Icon type='material-community' name={ 'map-marker-multiple'} size={52}  color='#172B4D'
-                     onPress={() => this.props.navigation.navigate("ShowAllLocation",{id:this.state.id})}
+                <Icon type='material-community' name={ 'map-marker-multiple'} size={52}   color={this.state.changeLocationColor?'#B71C1C':'#172B4D'}
+                     onPress={() => {
+                      this.setState({changeLocationColor:!this.state.changeLocationColor});
+                 setTimeout(function(){
+                        this.setState({changeLocationColor:!this.state.changeLocationColor});
+                        this.props.navigation.navigate("ShowAllLocation",{id:this.state.id})
+                         }.bind(this),1000);
+                     }}
                 />
                 <Text style={{paddingHorizontal:35}} color='#aaa'>Location</Text>
                  </View>
