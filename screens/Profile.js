@@ -327,6 +327,12 @@ backgroundColor='#fff'
                 />
                 <Text style={{paddingHorizontal:35}} color='#aaa'>Location</Text>
                  </View>
+                 <View style={styles.iconButton1}>
+                <Icon type='material-community' name={ 'calendar-clock'} size={52}  color='#172B4D'
+                      onPress={()=>this.props.navigation.navigate("Table",{id:this.state.id})}
+                />
+                <Text style={{paddingHorizontal:35}} color='#aaa'>Agenda</Text>
+                 </View>
 
                     </View>
                     
