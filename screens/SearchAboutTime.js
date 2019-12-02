@@ -16,7 +16,8 @@ import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 import SearchBar from 'react-native-searchbar';
 import DateTimePicker from "react-native-modal-datetime-picker";
-import {Card,Button,Icon } from 'react-native-elements'; 
+import {Card,Button,Icon,Divider } from 'react-native-elements'; 
+import { List } from 'react-native-paper';
 
 const { width, height } = Dimensions.get("screen");
 
@@ -36,6 +37,8 @@ class SearchAboutTime extends React.Component {
 
         this.makeApp=this.makeApp.bind(this);
         this.do=this.do.bind(this);
+
+        this._handlePress=this._handlePress.bind(this);
         this.state={
             data:[],
             DrInfo:[],
@@ -53,7 +56,10 @@ class SearchAboutTime extends React.Component {
             workingHour:[],
             Specialties:[],
             spSelected:'',
-            filterEnable:false
+            filterEnable:false,
+
+            show:[]
+
         }
     }
     componentDidMount(){
@@ -197,9 +203,14 @@ class SearchAboutTime extends React.Component {
       return unique;
   },[]);
 
+  var ar=[];
+                    for(var i=0;i<result.length;i++){
+                               ar.push(false);
+                    }
   this.setState({
       data:result,
-      nodata:false
+      nodata:false,
+      show:ar
   })
 
   var sp=[];
@@ -265,7 +276,12 @@ else{
         const dayName=pickeddate.getDay();
         const  month = pickeddate.getMonth()+1;
         const  year  = pickeddate.getFullYear();
-          
+
+        var d=`${day}`;
+        if(d.length==1){d=`0${d}`}
+        var m=`${month}`;
+        if(m.length==1){m=`0${m}`}
+
         if(dayName==0){
             this.setState({
                 daySelected:"sunday"
@@ -309,7 +325,7 @@ if(dayName==6){
     })
 }
            this.setState({
-            dateToSearch:day + '-' + month + '-' + year
+            dateToSearch:d + '-' + m + '-' + year
            })
            // alert(this.state.dateToSearch);
            this.hideDatePicker();
@@ -354,6 +370,12 @@ if(dayName==6){
                    }).catch((error)=>alert("error !"))
           
           }
+
+          _handlePress(index) {
+            this.setState({
+              show: !this.state.show[index]
+            })
+        }
     render(){
         
         return(
@@ -432,7 +454,6 @@ if(dayName==6){
                     })}
                          
                     </Picker>
-                    <ComponentButton style={{marginTop:25,width:width*0.5}} onPress={this.do}><Text>Search</Text></ComponentButton>
                     <View style={{flexDirection:'row'}}>
                       <ComponentButton
                       small
@@ -483,24 +504,24 @@ if(dayName==6){
                                 return(
 
                                        <View key={index} style={{marginTop:20}}>
-                                         <Card
-                                             title={name}
-                                          >
-
-                                          <Text style={{marginBottom: 10}}>
-                                           email:{email}
-                                           </Text>
-
-                                        <Text style={{marginBottom: 10}}>
-                                      Specialization:{specialization}
-                                          </Text>
-
-                                           <Button
-                                                    onPress={()=>this.makeApp(value.id,value.clinic) }
-                                      icon={<Icon name='code' color='#ffffff' />}
-                                      buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor:"#444"}}
-                                      title='Book Now' />
-                                              </Card>
+                                       <List.Accordion
+                                       title={name}
+                                       left={props => <List.Icon {...props} icon="doctor" />}
+                                        expanded={this.state.show[index]}
+                                        onPress={()=>this._handlePress(index)}
+                                               >
+                            <List.Item titleStyle={{color:'#263238'}} title="Email"
+                               description={email}
+                                onPress={()=>alert("first item")} />
+                             <List.Item title="Specialization" titleStyle={{color:'#263238'}}
+                             description={specialization}  />
+                             <List.Item
+                             titleStyle={{color:'#1B5E20'}}
+                             title="Book Now"
+                              onPress={()=>this.makeApp(value.id,value.clinic)}
+                             />
+                                    </List.Accordion>
+                            <Divider style={{backgroundColor:'#000000',width:width*0.7,marginLeft:50}}/>
                                                     </View>
 
     
@@ -511,24 +532,24 @@ if(dayName==6){
                                 return(
 
                                        <View key={index} style={{marginTop:20}}>
-                                         <Card
-                                             title={name}
-                                          >
-
-                                          <Text style={{marginBottom: 10}}>
-                                           email:{email}
-                                           </Text>
-
-                                        <Text style={{marginBottom: 10}}>
-                                      Specialization:{specialization}
-                                          </Text>
-
-                                           <Button
-                                                    onPress={()=>this.makeApp(value.id,value.clinic)}
-                                      icon={<Icon name='code' color='#ffffff' />}
-                                      buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor:"#444"}}
-                                      title='Book NOW' />
-                                              </Card>
+                                       <List.Accordion
+                                       title={name}
+                                       left={props => <List.Icon {...props} icon="doctor" />}
+                                        expanded={this.state.show[index]}
+                                        onPress={()=>this._handlePress(index)}
+                                               >
+                            <List.Item titleStyle={{color:'#263238'}} title="Email"
+                               description={email}
+                                onPress={()=>alert("first item")} />
+                             <List.Item title="Specialization" titleStyle={{color:'#263238'}}
+                             description={specialization}  />
+                             <List.Item
+                             titleStyle={{color:'#1B5E20'}}
+                             title="Book Now"
+                              onPress={()=>this.makeApp(value.id,value.clinic)}
+                             />
+                                    </List.Accordion>
+                            <Divider style={{backgroundColor:'#000000',width:width*0.7,marginLeft:50}}/>
                                                     </View>
 
     

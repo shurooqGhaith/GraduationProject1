@@ -136,11 +136,16 @@ export default class Appointment extends React.Component {
   handleFromDatePicked =pickeddate=> {
    const day   = pickeddate.getDate();
    const dayName=pickeddate.getDay();
-  const  month = pickeddate.getMonth()+1;
+   const  month = pickeddate.getMonth()+1;
    const  year  = pickeddate.getFullYear();
     
+    var d=`${day}`;
+    if(d.length==1){d=`0${d}`}
+    var m=`${month}`;
+    if(m.length==1){m=`0${m}`}
+
       this.setState({
-          dateSelected:day + '-' + month + '-' + year
+          dateSelected:d + '-' + m + '-' + year
       })
        
     
