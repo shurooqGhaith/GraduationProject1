@@ -18,7 +18,7 @@ export default class Pro extends React.Component {
       id:''
     }
   }
-
+  
   componentDidMount(){
     const { navigation } = this.props;  
     var id=navigation.getParam('id');
@@ -36,36 +36,39 @@ export default class Pro extends React.Component {
     const { navigation } = this.props;
 
     return (
-      <Block flex style={styles.container}>
+      <Block flex  style={styles.container}>
         <StatusBar barStyle="light-content" />
         <Block flex>
          
           <Block space="between" style={styles.padded}>
             <Block>
-            <View style={{flexDirection:'column'}}>
-            <Text size={16} color='#000' style={{ marginTop: 35 }}>
-                      select name of clinic you want to set its location 
+            <View style={{flexDirection:'column',marginTop:height*0.2}}>
+            <Text size={20} color='#004D40' >
+                      Set your location :
+              </Text>
+            <Text size={14} color='#aaa' style={{ marginTop: 5 }}>
+                      Select name of clinic you want to edit its location 
               </Text>
                 <Picker 
-                    style={{height: 60, width: width*0.8}} 
+                    style={{height: 60, width: width*0.8,borderColor:'#004'}} 
                     selectedValue = {this.state.clinicName} 
                     onValueChange = {(value) => {this.setState({clinicName: value});
                     }}>
                     {this.state.clinicNames.map((value,index)=>{
                       return(
-                        <Picker.Item label = {value.clinic} value = {value.clinic} />
+                        <Picker.Item color="#004" label = {value.clinic} value = {value.clinic} />
                       )
                     })}
                          
                     </Picker>
                       
-                   
-                      <Button small onPress={()=>{
-                        console.log(this.state.clinicName+"select");
+                    
+                      <Button 
+                      style={{width:width*0.5,backgroundColor:'#004',marginLeft:width*0.3,marginTop:20}} onPress={()=>{
                         if(this.state.clinicName){
                           navigation.navigate('Location',{clinic:this.state.clinicName,id:this.state.id})
                         }
-                      }}><Text>Go</Text></Button>
+                      }}><Text color="#fff">Go to map</Text></Button>
                     </View>
 
              

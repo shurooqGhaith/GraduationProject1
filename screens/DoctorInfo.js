@@ -356,7 +356,7 @@ class DoctorInfo extends React.Component {
                     space="evenly"
                     style={{ marginTop: 20, paddingBottom: 24 }}
                   >
-                  <Text>Information</Text>
+                  <Text color="#004" bold>Information</Text>
                    
                   </Block>
                   </Block>
@@ -369,7 +369,7 @@ class DoctorInfo extends React.Component {
                     }}>
                     {this.state.clinicNames.map((value,index)=>{
                       return(
-                        <Picker.Item label = {value.clinic} value = {value.clinic} />
+                        <Picker.Item color="#004" label = {value.clinic} value = {value.clinic} />
                       )
                     })}
                          
@@ -383,7 +383,7 @@ class DoctorInfo extends React.Component {
                     style={{marginTop:10,width:width*0.6,marginLeft:10}}
                       color="transparent"
                       textStyle={{
-                        color: "#233DD2",
+                        color: "#00796B",
                         fontWeight: "500",
                         fontSize: 16
                       }}
@@ -407,7 +407,7 @@ class DoctorInfo extends React.Component {
                     onPress={this.showDateTimePickerTo}//to button
                       color="transparent"
                       textStyle={{
-                        color: "#233DD2",
+                        color: "#00796B",
                         fontWeight: "500",
                         fontSize: 16
                       }}
@@ -426,7 +426,7 @@ class DoctorInfo extends React.Component {
 
                      
                     
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'row' ,color:'#004' }}>
                     <CheckBox
                            value={this.state.checkedSaturday}
                            onValueChange={() => this.setState({ checkedSaturday: !this.state.checkedSaturday })}
@@ -498,8 +498,8 @@ class DoctorInfo extends React.Component {
                           return(
                             <View key={index} style={{flexDirection:'column'}}>
                             <View style={{flexDirection:'row'}}>
-                               <Text style={{fontWeight:'bold',fontSize:30}}>{item.start}</Text>
-                               <Text style={{fontWeight:'bold',fontSize:30}}>-{item.end}</Text>
+                               <Text style={{fontWeight:'bold',fontSize:30,color:'#004'}}>{item.start}</Text>
+                               <Text style={{fontWeight:'bold',fontSize:30,color:'#004'}}>-{item.end}</Text>
                                <Switch 
                                   // onValueChange={(value)=>this.setState({switch: value})}
                                   style={{marginRight:10}}
@@ -517,7 +517,7 @@ class DoctorInfo extends React.Component {
                                <Text style={{color:"#AAAAAA"}}>{item.days}</Text> 
                                <Text style={{color:"#AAAAAA"}}>{item.selectedClinic}</Text> 
 
-                                <Divider style={{backgroundColor:'#000000'}}/>
+                                <Divider style={{backgroundColor:'#004'}}/>
                                
                             </View>
                           )

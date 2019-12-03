@@ -141,6 +141,7 @@ class PatientAfterSession extends React.Component {
      }
     
      else{
+     
          this.setState({
              nodata:true
          })

@@ -77,7 +77,8 @@ class Profile extends React.Component {
     const { navigation } = this.props;  
    // var id=navigation.getParam('id');
     var name,start,end,close;
-  
+  console.log(height);
+  console.log(width);
     
     //  var user =fire.auth().currentUser;
      fire.auth().onAuthStateChanged((user)=>{
@@ -444,13 +445,13 @@ iconButton1:{
   marginLeft:10,
   marginTop:5,
  // justifyContent:'space-between',
-  height:130,
+  height:height*0.171,
   paddingTop:25,
   borderColor:'#172B4D',
   borderWidth:1,
  // paddingRight:18,
   borderRadius:20,
-  width:130,
+  width:width*0.361,
   //alignItems:'center',
   backgroundColor: "#fff",
 },

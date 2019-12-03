@@ -2,12 +2,25 @@ import React, { Component } from 'react'
 import MapView from 'react-native-maps';
 import fire from "../constants/firebaseConfigrations";
 const { width, height } = Dimensions.get("screen");
-import { StyleSheet, Text, View,  Alert, Dimensions,Picker } from 'react-native';
+import { StyleSheet, Text, View,  Alert, Dimensions,Picker,ToastAndroid } from 'react-native';
 import { Button } from "../components";
 const LATITUDE = 0;
 const LONGITUDE = 0;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = 0.0421;
+const Toast = (props) => {
+  if (props.visible) {
+    ToastAndroid.showWithGravityAndOffset(
+      props.message,
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50,
+    );
+    return null;
+  }
+  return null;
+};
 
 class Location extends Component {
  constructor(props) {
@@ -198,7 +211,7 @@ render () {
                              fire.database().ref("users").child(this.state.id).child("clinicName").child(Object.keys(snap.val())[index]).child("latitude").set(e.nativeEvent.coordinate.latitude);
                              fire.database().ref("users").child(this.state.id).child("clinicName").child(Object.keys(snap.val())[index]).child("longitude").set(e.nativeEvent.coordinate.longitude);
                           }
-                    }).then(()=>console.log("success!")).catch((error)=>console.log("error!"));
+                    }).then(()=>alert("success!")).catch((error)=>alert("error!"));
                   }
               })
       
@@ -218,7 +231,7 @@ render () {
 
 		    
 			</MapView>
-             
+ 
 		  </View>
 		)
 	}
