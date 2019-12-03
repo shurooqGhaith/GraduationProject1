@@ -83,9 +83,11 @@ retrieveData(){
 
                               names.map((value,index)=>{
                               //  console.log("clinic map");
-
+                                if(value.latitude!=0 && value.longitude!=0){
                                 array1.push({clinicName:value.clinic,latitude:value.latitude,longitude:value.longitude});
+                                }
                               })
+                              console.log(array1.length);
                           }
                       }) //clinic names fire
                   }//doctor if

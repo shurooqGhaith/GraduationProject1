@@ -36,7 +36,7 @@ class Location extends Component {
       },
 
        initialRegion: {
-        latitude: 32.22111,
+        latitude: 31.22111,
         longitude: 35.25444,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA
@@ -44,7 +44,6 @@ class Location extends Component {
        to:{
          latitude: 32.2276745735839,
          longitude: 35.215799398720264
-
        },
        from:{
          latitude: 32.22111,
@@ -71,8 +70,30 @@ class Location extends Component {
          id:id,
          clinicName:c
      })
+      var ar=[];
+     
+     fire.database().ref("users").child(id).child("clinicName").on('value',(datasnapshot) =>{
+      if(datasnapshot.val()){
+          let nameClinic = Object.values(datasnapshot.val());
+          nameClinic.map((value,index)=>{
+              if(value.clinic == c && value.latitude!=0 && value.longitude!=0){
+               //  ar.push({latitude:value.latitude,longitude:value.longitude,latitudeDelta:0.0922,longitudeDelta:0.0421});
+              
+               this.setState({initialRegion:{
+                latitude: value.latitude,
+                longitude: value.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421
+               }});
+              }
+          })
+         
+   
+          
+      }
+      
+   });
 
-        
 
     navigator.geolocation.getCurrentPosition(
       position => {
@@ -150,10 +171,10 @@ render () {
 			<MapView
       provider="google"
       showsBuildings={true}
-      //initialRegion={this.state.initialRegion}
+      initialRegion={this.state.initialRegion}
 			style={styles.mapStyle}
       showsUserLocation={true}
-      // region={ this.state.region }
+       //region={ this.state.region }
       // onRegionChange={ region => this.setState({region}) }
       // onRegionChangeComplete={ region => this.setState({region}) }
             >
@@ -162,7 +183,7 @@ render () {
 			  <MapView.Marker
 				title={this.state.clinicName}
 			  draggable = {true}
-				coordinate={this.state.region}
+				coordinate={this.state.initialRegion}
 				onDragEnd={(e) => {
          // this.setState({ region: e.nativeEvent.coordinate });
           fire.database().ref("users").child(this.state.id).child("clinicName").once('value',(datasnapshot) =>{
@@ -189,7 +210,7 @@ render () {
 			  />
 				<MapView.Circle
 
-				 center={this.state.x}
+				 center={this.state.initialRegion}
 				 radius={200}
 				 fillColor='rgba(255, 0, 0, 0.2)'
 				 strokeColor='rgba(0, 0, 0, 0.2)'
