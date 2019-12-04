@@ -320,7 +320,7 @@ class PatientProfile extends React.Component {
                 />
                 <Text style={{paddingHorizontal:5}} color='#aaa'>Make appointment</Text>
                  </View>  
-                        </View>
+                        
                         <View style={styles.iconButton1}>
                 <Icon type='material-community' name={ 'map-marker-multiple'} size={52}   color={this.state.changeLocationColor?'#B71C1C':'#172B4D'}
                      onPress={() => {
@@ -346,6 +346,7 @@ class PatientProfile extends React.Component {
                      
                 />
                 <Text style={{paddingHorizontal:35}} color='#aaa'>Agenda</Text>
+                 </View>
                  </View>
                     </Block>
   

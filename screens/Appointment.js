@@ -145,7 +145,7 @@ export default class Appointment extends React.Component {
     if(m.length==1){m=`0${m}`}
 
       this.setState({
-          dateSelected:d + '-' + m + '-' + year
+          dateSelected:year + '-' + m + '-' + d
       })
        
     

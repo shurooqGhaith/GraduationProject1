@@ -146,6 +146,11 @@ class PatientInfo extends React.Component {
     const  month = pickeddate.getMonth()+1;
     const  year  = pickeddate.getFullYear();
 
+    var d=`${day}`;
+    if(d.length==1){d=`0${d}`}
+    var m=`${month}`;
+    if(m.length==1){m=`0${m}`}
+
     if(dayName==0){
       this.setState({
         sessionDay:"sunday"
@@ -189,7 +194,7 @@ this.setState({
 })
 }
      this.setState({
-      sessionDate:day + '-' + month + '-' + year
+      sessionDate:year + '-' + m + '-' + d
      })
      
      this.hide();
@@ -284,7 +289,12 @@ this.setState({
     const dayName=pickeddate.getDay();
     const  month = pickeddate.getMonth()+1;
     const  year  = pickeddate.getFullYear();
-  
+
+    var d=`${day}`;
+    if(d.length==1){d=`0${d}`}
+    var m=`${month}`;
+    if(m.length==1){m=`0${m}`}
+
     if(dayName==0){
       this.setState({
           daySelected:"sunday"
@@ -328,7 +338,7 @@ this.setState({
 })
 }
      this.setState({
-      dateToSearch:day + '-' + month + '-' + year
+      dateToSearch:year + '-' + m + '-' + d
      })
      
      this.hideDatePicker();
