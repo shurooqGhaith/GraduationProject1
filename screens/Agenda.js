@@ -49,7 +49,7 @@ export default class AgendaScreen extends Component {
             'startAt': appointment.val().timeSelected,
             'Doctor': appointment.val().idDoctor,
             'DoctorName':appointment.val().doctortName,
-           'clincName': appointment.val().clinicName,
+            'clincName': appointment.val().clinicName,
             'key': appointment.key
           };
          
