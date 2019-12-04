@@ -240,7 +240,7 @@ class PatientProfile extends React.Component {
                    </Block> 
                   </Block>
                   <Block style={styles.info}>
-                  <Text bold size={20} color="#32325D" style={{marginLeft:43}}>
+                  <Text bold size={20} color="#32325D" style={{marginLeft:45}}>
                         {this.state.username}
                       </Text>
                     <Block
