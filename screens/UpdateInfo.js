@@ -82,7 +82,7 @@ class UpdateInfo extends React.Component {
       isShowSpecialization:false,
       
       message:'',
-      photo:null
+      photo:'https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?fit=crop&w=1650&q=80'
     }
   }
   
@@ -102,6 +102,10 @@ class UpdateInfo extends React.Component {
    
         fire.database().ref("users").child(id).child("name").on('value',(name)=>{
             this.setState({username:name.val(),name:name.val()})
+        })
+        fire.database().ref("users").child(id).child("avatar").on('value',(datasnapshot)=>{
+          if(datasnapshot.val()){this.setState({photo:datasnapshot.val() })
+        }
         })
         fire.database().ref("users").child(id).child("email").on('value',(email)=>{
             this.setState({email:email.val(),em:email.val()})
@@ -249,34 +253,7 @@ class UpdateInfo extends React.Component {
     
     }
 
-//     uploadResult = async () =>  {
-//       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-//      // const { onStartUpload } = this.props;
-//       console.log(status,'status');
-//       if (status !== 'granted') {
-//           if (Platform.OS === 'ios') {alert("allow access")};
-//           return;
-//       }
-//       ImagePicker.launchImageLibraryAsync({
-//           mediaTypes:'Images'
-//       }).then((result)=>{
-//           console.log(result,'result');
-//           const file = result.uri;
-//           console.log(file);
-//           if(!result.cancelled){
-//               // this.setState({
-//               //     loading:true
-//               // })
-//               uploadResponse =  this.uploadImageAsync(result.uri).then((reponse)=>{
-//                   console.log(reponse,'reponse');
-//                   this.setState({
-//                     //  loading:false,
-//                       photo:file
-//                   })
-//               });
-// }
-//       })
-//   }
+
 getPermissionAsync = async () => {
   
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -295,10 +272,25 @@ _pickImage = async () => {
   });
 
   console.log(result);
-
+   
   if (!result.cancelled) {
     this.setState({ photo: result.uri });
   }
+  fire.database().ref("users").child(this.state.id).child("avatar").set(this.state.photo).then(()=>{
+    this.setState({isShow:true,message:'Avatar is Updated successfully ! '});
+    setTimeout(function(){
+        this.setState({isShow:false});
+   }.bind(this),5000);
+    //alert("Updated successfully !")
+   }).catch((error)=>{
+    // alert("an error happened !")
+    this.setState({message:error.message,isShow:true});
+    setTimeout(function(){
+      this.setState({isShow:false});
+    }.bind(this),5000);
+           }
+
+   )
 };
   render() {
     return (
@@ -543,16 +535,27 @@ _pickImage = async () => {
                     <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
                     <Block width={width } style={{marginTop:30,marginBottom: 15}}>
                     <TouchableOpacity
-                   onPress={this._pickImage}
-                   
+                     onPress={()=>this.setState({UploadEnable:!this.state.UploadEnable})}
+                  
+                   style={styles.row}
                 >
-                <Text>photo</Text>
-
+                <Text color={this.state.UploadEnable ? '#4A148C' : '#333'} size={14}>{"Change Profile Image\n"}
+                    </Text>
+                <Icon name={this.state.UploadEnable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
+                color={this.state.UploadEnable ? '#4A148C' : '#333'}  />
                 </TouchableOpacity>
-                <View>
-                {this.state.photo &&
-          <Image source={{ uri: this.state.photo }} style={{ width: 200, height: 200 }} />}
-                </View>
+                <View style={{flexDirection:'column',alignItems:'center'}}>
+                {this.state.UploadEnable && <View>
+                
+          <Image source={{ uri: this.state.photo }} style={{ width: 200, height: 200 }} />
+          <ComponentButton   small
+                           style={{backgroundColor:'#333',marginLeft:10}}
+                           onPress={this._pickImage}>
+                           <Text bold size={14} color={argonTheme.COLORS.WHITE}>Change</Text>
+                           </ComponentButton>
+                </View> }
+               </View>
+                
                 </Block>
 
                     <Toast visible={this.state.isShow} message={this.state.message}/> 

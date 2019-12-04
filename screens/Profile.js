@@ -63,7 +63,7 @@ class Profile extends React.Component {
       changePatientColor:false,
       changeAgendaColor:false,
 
-      
+      avatar:'https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?fit=crop&w=1650&q=80'
     }
   }
 
@@ -126,6 +126,14 @@ class Profile extends React.Component {
     })
   }
   })
+  fire.database().ref("users").child(id).child("avatar").on('value',(datasnapshot)=>{
+    if(datasnapshot.val()){
+    this.setState({
+      avatar:datasnapshot.val()
+    })
+  }
+  })
+
   fire.database().ref("users").child(id).child("phone").on('value',(datasnapshot)=>{
     if(datasnapshot.val()){
     this.setState({
@@ -209,7 +217,7 @@ backgroundColor='#fff'
 
               <Block middle style={styles.avatarContainer}>
                     <Image
-                      source={{ uri: Images.ProfilePicture }}
+                      source={{ uri: this.state.avatar }}
                       style={styles.avatar}
                     />
                    <Block>
@@ -230,7 +238,7 @@ backgroundColor='#fff'
               <Block flex style={styles.profileCard}>
                 <Block middle style={styles.avatarContainer}>
                   <Image
-                    source={{ uri: Images.ProfilePicture }}
+                    source={{ uri: this.state.avatar}}
                     style={styles.avatar}
                   />
                  <Block>
