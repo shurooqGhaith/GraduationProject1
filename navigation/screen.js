@@ -21,15 +21,20 @@ import Chat from "../screens/Chat";
 import Location from "../screens/Location";
 import Pro from "../screens/SelectClinicName";
 import ShowAllLocation from "../screens/ShowAllLocation";
-import AppointmentTable from "../screens/Table";
+import DoctorAgenda from "../screens/Table";
 import PatientAppointment from "../screens/PatientAppointment";
 import UpdateInfo from "../screens/UpdateInfo";
 import EmailVerify from "../screens/VerifyEmail";
 import MyPanel from "../screens/Panel";
 import DetailsAboutPatients from "../screens/DetailsAboutPatient";
+import AgendaScreen from "../screens/Agenda";
 const AppNavigator = createStackNavigator(
     {
-
+      Agenda:{screen:AgendaScreen,
+        navigationOptions: {
+          header: null,
+        }
+      },
       DetailsAboutPatients:{screen:DetailsAboutPatients,
         navigationOptions: {
           header: null,
@@ -58,7 +63,7 @@ const AppNavigator = createStackNavigator(
           header: null,
         }
       },
-      AppointmentTable:{screen:AppointmentTable,
+      DoctorAgenda:{screen:DoctorAgenda,
         navigationOptions: {
           header: null,
         }

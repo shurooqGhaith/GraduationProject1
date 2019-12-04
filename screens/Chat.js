@@ -25,7 +25,7 @@ class Chat extends React.Component {
     email:'',
     todayDate:'',
     idR:'',
-    photo:''
+    photo:null
   };
 
   get user() {

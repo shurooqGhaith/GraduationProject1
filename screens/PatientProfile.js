@@ -53,7 +53,7 @@ class PatientProfile extends React.Component {
       changeAppColor:false,
       changeMakeAppColor:false,
       changeLocationColor:false,
-
+      changeAgendaColor:false,
       avatar:'https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?fit=crop&w=1650&q=80'
 
     };
@@ -332,6 +332,20 @@ class PatientProfile extends React.Component {
                      }}
                 />
                 <Text style={{paddingHorizontal:35}} color='#aaa'>Location</Text>
+                 </View>
+                 <View style={styles.iconButton1}>
+                 <Icon type='material-community' name={ 'calendar-multiselect'} size={52}  color={this.state.changeAgendaColor?'#B71C1C':'#172B4D'}
+
+                     onPress={() =>{
+                      this.setState({changeAgendaColor:!this.state.changeAgendaColor});
+                 setTimeout(function(){
+                        this.setState({changeAgendaColor:!this.state.changeAgendaColor});
+                        this.props.navigation.navigate("Agenda",{idPatient:this.state.id})
+                         }.bind(this),1000);
+                     }}
+                     
+                />
+                <Text style={{paddingHorizontal:35}} color='#aaa'>Agenda</Text>
                  </View>
                     </Block>
   

@@ -371,7 +371,7 @@ backgroundColor='#fff'
                   this.setState({changeAgendaColor:!this.state.changeAgendaColor});
                    setTimeout(function(){
                         this.setState({changeAgendaColor:!this.state.changeAgendaColor});
-                        this.props.navigation.navigate("Table",{id:this.state.id})
+                        this.props.navigation.navigate("DoctorAgenda",{id:this.state.id})
                          }.bind(this),1000);
                        }}
                 />
