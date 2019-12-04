@@ -24,13 +24,15 @@ class Chat extends React.Component {
     name:'',
     email:'',
     todayDate:'',
-    idR:''
+    idR:'',
+    photo:''
   };
 
   get user() {
     return {
       name: this.state.name,
       email: this.state.email,
+      avatar:this.state.photo,
       id: this.state.id,
       _id: this.state.id, // receiver ??
     };
@@ -74,7 +76,11 @@ class Chat extends React.Component {
     var email=navigation.getParam('email');
     var receiver=navigation.getParam('receiver'); //id
     var receiverName=navigation.getParam('nameR'); 
-
+    
+    fire.database().ref("users").child(id).child("avatar").on('value',(datasnapshot)=>{
+      if(datasnapshot.val()){this.setState({photo:datasnapshot.val() })
+    }
+    })
     
     this.setState({
         id:id,
@@ -99,6 +105,7 @@ class Chat extends React.Component {
                                  text,
                                  user,
                                  idR,
+                                 
                                 };
                 
                                 //id sender=8H...  state.id
