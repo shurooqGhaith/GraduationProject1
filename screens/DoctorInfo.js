@@ -388,7 +388,7 @@ class DoctorInfo extends React.Component {
                         fontSize: 16
                       }}
                     >
-                     <Text style={{color:argonTheme.COLORS.GRADIENT_START}}>{this.state.from || "start time"}</Text> 
+                     <Text style={{color:'#004'}}>{this.state.from || "start time"}</Text> 
                     </Button>
                     
 
@@ -412,7 +412,7 @@ class DoctorInfo extends React.Component {
                         fontSize: 16
                       }}
                     >
-                     <Text style={{color:argonTheme.COLORS.GRADIENT_START}}>{this.state.to || "end time"}</Text> 
+                     <Text style={{color:'#004'}}>{this.state.to || "end time"}</Text> 
                     </Button>
                     <DateTimePicker
                        isVisible={this.state.isDateTimePickerVisibleTo}

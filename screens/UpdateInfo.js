@@ -10,7 +10,8 @@ import {
   ScrollView,
   TouchableOpacity ,
   TextInput,
-  ToastAndroid
+  ToastAndroid,
+  Image
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
 import { Divider } from 'react-native-elements';
@@ -21,7 +22,9 @@ import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 import Panel from 'react-native-panel';
 import { List } from 'react-native-paper';
-
+// import { ImagePicker, Permissions } from 'expo';
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
 const { width, height } = Dimensions.get("screen");
 const Toast = (props) => {
     if (props.visible) {
@@ -78,11 +81,13 @@ class UpdateInfo extends React.Component {
       isShowPass:false,
       isShowSpecialization:false,
       
-      message:''
+      message:'',
+      photo:null
     }
   }
   
   componentDidMount(){ 
+    this.getPermissionAsync();
     this.authListener();
   }
   authListener(){
@@ -244,8 +249,57 @@ class UpdateInfo extends React.Component {
     
     }
 
-   
+//     uploadResult = async () =>  {
+//       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+//      // const { onStartUpload } = this.props;
+//       console.log(status,'status');
+//       if (status !== 'granted') {
+//           if (Platform.OS === 'ios') {alert("allow access")};
+//           return;
+//       }
+//       ImagePicker.launchImageLibraryAsync({
+//           mediaTypes:'Images'
+//       }).then((result)=>{
+//           console.log(result,'result');
+//           const file = result.uri;
+//           console.log(file);
+//           if(!result.cancelled){
+//               // this.setState({
+//               //     loading:true
+//               // })
+//               uploadResponse =  this.uploadImageAsync(result.uri).then((reponse)=>{
+//                   console.log(reponse,'reponse');
+//                   this.setState({
+//                     //  loading:false,
+//                       photo:file
+//                   })
+//               });
+// }
+//       })
+//   }
+getPermissionAsync = async () => {
+  
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to make this work!');
+    }
+  
+}
 
+_pickImage = async () => {
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1
+  });
+
+  console.log(result);
+
+  if (!result.cancelled) {
+    this.setState({ photo: result.uri });
+  }
+};
   render() {
     return (
       <Block style={{backgroundColor:'#eee',flex:1}} flex middle>
@@ -487,7 +541,19 @@ class UpdateInfo extends React.Component {
                     </Block>
                     }
                     <Divider style={{backgroundColor:'#444',width:width*0.9}}/>
-   
+                    <Block width={width } style={{marginTop:30,marginBottom: 15}}>
+                    <TouchableOpacity
+                   onPress={this._pickImage}
+                   
+                >
+                <Text>photo</Text>
+
+                </TouchableOpacity>
+                <View>
+                {this.state.photo &&
+          <Image source={{ uri: this.state.photo }} style={{ width: 200, height: 200 }} />}
+                </View>
+                </Block>
 
                     <Toast visible={this.state.isShow} message={this.state.message}/> 
                   </KeyboardAvoidingView>

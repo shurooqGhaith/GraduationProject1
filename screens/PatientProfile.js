@@ -172,9 +172,6 @@ class PatientProfile extends React.Component {
   
   
   render() {
-
-    
-
       return (
         <Block flex style={styles.profile}>
           <Block flex>
@@ -186,7 +183,7 @@ class PatientProfile extends React.Component {
   
   <Block style={{ marginBottom: theme.SIZES.BASE,marginTop:70 }}>
   <Header
-backgroundColor='#fff'
+  backgroundColor='#fff'
   leftComponent={{ icon: 'home', color: '#172B4D' }}
   centerComponent={<Text style={{color:'#172B4D'}}></Text>}
   rightComponent={<Button small style={{backgroundColor:'#172B4D'}} small onPress={()=>fire.auth().signOut()}><Text style={{color:'#fff'}}>Logout</Text></Button>}
@@ -208,12 +205,10 @@ backgroundColor='#fff'
                    <Block>
                      
                    <Block middle style={styles.nameInfo}>
-                   <View style={{flexDirection:'column'}}>
-                      <Text bold size={10} color="#32325D" id="name">
-                        Your email is not verified 
-                      </Text>
-                      <Text bold size={10} color="#32325D" id="name">
-                        check your email inbox and verify your email 
+                   <View style={{flexDirection:'column',marginTop:200}}>
+                      
+                      <Text bold size={15} color="#32325D" id="name">
+                        Check your email inbox and verify your email 
                       </Text>
                       </View>
                     </Block>
@@ -344,11 +339,7 @@ backgroundColor='#fff'
   
                     </Block>
                     <Block style={{ paddingBottom: -HeaderHeight * 2 }}>
-                   
-                    
-                    
-                     
-                     
+                                        
                     </Block>
                   </Block>
                 </Block>
@@ -372,13 +363,13 @@ const styles = StyleSheet.create({
     marginLeft:10,
     marginTop:5,
    // justifyContent:'space-between',
-    height:130,
-    paddingTop:25,
+   height:height*0.171,
+   paddingTop:25,
     borderColor:'#172B4D',
     borderWidth:1,
    // paddingRight:18,
     borderRadius:20,
-    width:130,
+    width:width*0.361,
     //alignItems:'center',
     backgroundColor: "#fff",
   },  

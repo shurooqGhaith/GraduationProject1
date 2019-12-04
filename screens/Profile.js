@@ -77,23 +77,21 @@ class Profile extends React.Component {
     const { navigation } = this.props;  
    // var id=navigation.getParam('id');
     var name,start,end,close;
-  console.log(height);
-  console.log(width);
     
     //  var user =fire.auth().currentUser;
      fire.auth().onAuthStateChanged((user)=>{
       if(user){
         if(user.emailVerified){
           this.setState({isVerified:true});
-          console.log("verified");
+         // console.log("verified");
        }
        else{
         this.setState({isVerified:false});
          user.sendEmailVerification().then(()=>{
-           console.log("sent");
+          // console.log("sent");
           if(user.emailVerified){
           this.setState({isVerified:true});
-          console.log("verified");
+          //console.log("verified");
   
        }
        
@@ -111,7 +109,8 @@ class Profile extends React.Component {
         })
       }
      })
-  
+    
+   
      fire.database().ref("users").child(id).child("name").on('value',(datasnapshot)=>{
       if(datasnapshot.val()){
         this.setState({
@@ -215,12 +214,10 @@ backgroundColor='#fff'
                     />
                    <Block>
                    <Block middle style={styles.nameInfo}>
-                   <View style={{flexDirection:'column'}}>
+                   <View style={{flexDirection:'column',marginTop:200}}>
+                      
                       <Text bold size={10} color="#32325D" id="name">
-                        Your email is not verified 
-                      </Text>
-                      <Text bold size={10} color="#32325D" id="name">
-                        check your email inbox and verify your email 
+                        Check your email inbox and verify your email 
                       </Text>
                       </View>
                     </Block>
