@@ -75,7 +75,7 @@ export default class DoctorAgenda extends Component {
             'patientName':appointment.val().PatientName,
             'DoctorName':appointment.val().doctortName,
            'clincName': appointment.val().clinicName,
-
+             'date':appointment.val().dateSelected,
             'key': appointment.key
           };
         
@@ -104,7 +104,7 @@ export default class DoctorAgenda extends Component {
     })
   }
 
-  deleteAppointmet(appointmentId,patient) {
+  deleteAppointmet(appointmentId,patient,date,time) {
 
     
     Alert.alert(
@@ -119,7 +119,19 @@ export default class DoctorAgenda extends Component {
         {
           text: 'OK', onPress: () => {
            fire.database().ref('users').child(this.state.USER_ID).child("appointment").child(appointmentId).remove();
-
+           fire.database().ref("users").child(patient).child("appointment").once('value',(snapshot)=>{
+            if(snapshot.val()){
+      let appointments = Object.values(snapshot.val());
+      appointments.map((va,i)=>{
+      if(va.idDoctor == this.state.USER_ID && va.dateSelected ==date && va.timeSelected==time){
+      fire.database().ref("users").child(patient).child("appointment").child(Object.keys(snapshot.val())[i]).remove();      
+      }
+      })//map app p
+            }
+      
+          })//app patient
+      
+           this.loadItems();
 
           }
 
@@ -269,7 +281,7 @@ export default class DoctorAgenda extends Component {
         <View style={styles.appinfo}>
           <Text>{'clinc Name:'+item.clincName} </Text>
           <Text>{'Time:'+item.startAt} - {endAt} </Text>
-          <Text>{'Patient Name:'+item.patientName}</Text>
+          <Text>{'Patient Name:'+item.patient}</Text>
 
           </View>
 
@@ -283,7 +295,7 @@ export default class DoctorAgenda extends Component {
              style={styles.inputIcons}
 
               size={30}
-              onPress={() => { this.deleteAppointmet(item.key,item.patient) }} />
+              onPress={() => { this.deleteAppointmet(item.key,item.patient,item.date,item.startAt) }} />
 
             <Icon
               name='timer' ///لسا هاد
