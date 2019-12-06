@@ -50,6 +50,7 @@ export default class AgendaScreen extends Component {
             'Doctor': appointment.val().idDoctor,
             'DoctorName':appointment.val().doctortName,
             'clincName': appointment.val().clinicName,
+            'date':appointment.val().dateSelected,
             'key': appointment.key
           };
          
@@ -68,7 +69,7 @@ export default class AgendaScreen extends Component {
   }
  
 
-  deleteAppointmet(appointmentId,idDoctor) {
+  deleteAppointmet(appointmentId,idDoctor,date,time) {
     Alert.alert(
       'Cancel Appointment',
       'Are you sure that you want to cancle this appointment !',
@@ -80,9 +81,20 @@ export default class AgendaScreen extends Component {
         },
         {
           text: 'OK', onPress: () => {
-            fire.database().ref('users').child(this.state.USER_ID).child("appointment").child(appointmentId).remove();
-            fire.database().ref('users').child(idDoctor).child("appointment").child(appointmentId).remove();
-           console.log(idDoctor);
+            fire.database().ref('users').child(this.state.USER_ID).child("appointment").child(appointmentId).remove();//delete for patient
+            // fire.database().ref('users').child(idDoctor).child("appointment").child(appointmentId).remove();//delete for doctor
+            //console.log(idDoctor);
+            fire.database().ref("users").child(idDoctor).child("appointment").once('value',(snapshot)=>{
+                if(snapshot.val()){
+          let appointments = Object.values(snapshot.val());
+          appointments.map((va,i)=>{
+          if(va.idPatient == this.state.USER_ID && va.dateSelected ==date && va.timeSelected==time){
+          fire.database().ref("users").child(idDoctor).child("appointment").child(Object.keys(snapshot.val())[i]).remove();  //delete for doctor
+          }
+          })//map app 
+                }
+          
+              })//app doctor
           }
         },
       ],
@@ -147,7 +159,7 @@ export default class AgendaScreen extends Component {
             color={argonTheme.COLORS.ICON}
             style={styles.inputIcons}
               size={30}
-              onPress={() => { this.deleteAppointmet(item.key,item.Doctor) }} />
+              onPress={() => { this.deleteAppointmet(item.key,item.Doctor,item.date,item.startAt) }} />
           </View>
          <View style={styles.move}>
             <Icon

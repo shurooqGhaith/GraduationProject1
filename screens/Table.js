@@ -118,13 +118,13 @@ export default class DoctorAgenda extends Component {
         },
         {
           text: 'OK', onPress: () => {
-           fire.database().ref('users').child(this.state.USER_ID).child("appointment").child(appointmentId).remove();
+           fire.database().ref('users').child(this.state.USER_ID).child("appointment").child(appointmentId).remove();//delete for doctor
            fire.database().ref("users").child(patient).child("appointment").once('value',(snapshot)=>{
             if(snapshot.val()){
       let appointments = Object.values(snapshot.val());
       appointments.map((va,i)=>{
       if(va.idDoctor == this.state.USER_ID && va.dateSelected ==date && va.timeSelected==time){
-      fire.database().ref("users").child(patient).child("appointment").child(Object.keys(snapshot.val())[i]).remove();      
+      fire.database().ref("users").child(patient).child("appointment").child(Object.keys(snapshot.val())[i]).remove();  //delete for patient
       }
       })//map app p
             }
