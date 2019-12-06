@@ -54,7 +54,7 @@ class PatientProfile extends React.Component {
       changeMakeAppColor:false,
       changeLocationColor:false,
       changeAgendaColor:false,
-      avatar:''
+      avatar:Images.initialProfilePicture
 
     };
   }

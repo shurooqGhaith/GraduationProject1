@@ -203,9 +203,6 @@ export default class AgendaScreen extends Component {
         <Text>{'clinc Name:'+item.clincName} </Text>
           <Text>{'Time:'+item.startAt} - {endAt} </Text>
           <Text>{'DoctorName:'+item.DoctorName}</Text>
-
-          <Toast visible={this.state.isShow} message={this.state.errorMessage}/>
-
         </View>
         
         <View style={styles.appActions}>
@@ -230,14 +227,8 @@ export default class AgendaScreen extends Component {
           </View>
        
         </View>
-
-       
       </View>
-
-
-
-      
-      
+      <Toast visible={this.state.isShow} message={this.state.errorMessage}/>
       </Block>
 
     );
@@ -245,7 +236,7 @@ export default class AgendaScreen extends Component {
 
   renderEmptyDate() {
     return (
-      <View style={styles.emptyDate}><Text>This is empty date!</Text></View>
+      <View style={styles.emptyDate}><Text>No appointments this day </Text></View>
     );
   }
 

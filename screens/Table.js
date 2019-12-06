@@ -153,6 +153,10 @@ export default class DoctorAgenda extends Component {
 
   
   _beforeMoveAppointmets(fromDate,toDate) {
+    var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var d = new Date(toDate);
+    var dayName = days[d.getDay()];
+    console.log(dayName);
     Alert.alert(
       'Shift All Appointments',
       'Are you sure that you want to shift all appointments of ' + fromDate + ' to ' + toDate +' ?',
@@ -163,14 +167,14 @@ export default class DoctorAgenda extends Component {
           style: 'cancel',
         },
         {
-          text: 'OK', onPress: () => {this._moveAppointmets(fromDate,toDate)}
+          text: 'OK', onPress: () => {this._moveAppointmets(fromDate,toDate,dayName)}
         },
       ],
       { cancelable: true },
     );
   }
 
-  _moveAppointmets(fromDate,toDate) {
+  _moveAppointmets(fromDate,toDate,dayName) {
     const appointments = fire.database().ref("users").child(this.state.USER_ID).child("appointment");
 
     //select appointment in specific date
@@ -181,7 +185,20 @@ export default class DoctorAgenda extends Component {
     //iterate over all appointment in that date and update there time 				
     query.once('value', sanp => {
       sanp.forEach(appointment => {
-        appointment.ref.update({'dateSelected' : toDate});
+        appointment.ref.update({'dateSelected' : toDate})
+        fire.database().ref("users").child(appointment.val().idPatient).child("appointment").once('value',(snapshot)=>{
+          if(snapshot.val()){
+    let appointments = Object.values(snapshot.val());
+    appointments.map((va,i)=>{
+    if(va.idDoctor == this.state.USER_ID && va.dateSelected ==fromDate ){
+    fire.database().ref("users").child(appointment.val().idPatient).child("appointment").child(Object.keys(snapshot.val())[i]).child("dateSelected").set(toDate);  
+    fire.database().ref("users").child(appointment.val().idPatient).child("appointment").child(Object.keys(snapshot.val())[i]).child("daySelected").set(dayName);  
+    //// بدي أعدل اليوم كيف أجيبه ؟؟  
+  }
+    })//map app p
+          }
+    
+        })//app patient
       });
       this.selectedDay = toDate;
       this.setModalVisible(false);
