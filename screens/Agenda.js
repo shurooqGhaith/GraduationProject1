@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Agenda } from 'react-native-calendars';
-import {  View, StyleSheet, Button, Alert } from 'react-native';
+import {  View, StyleSheet, Button, Alert,ToastAndroid } from 'react-native';
 import { Icon } from 'react-native-elements'
 import fire from "../constants/firebaseConfigrations";
 import { Block, Text, theme } from "galio-framework";
@@ -8,7 +8,20 @@ import { Images, argonTheme } from "../constants";
 
 
 import { FloatingAction } from "react-native-floating-action";
-
+const Toast = (props) => {
+    if (props.visible) {
+      ToastAndroid.showWithGravityAndOffset(
+        props.message,
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+        25,
+        50,
+      );
+      return null;
+    }
+    return null;
+  };
+  
 export default class AgendaScreen extends Component {
   constructor(props) {
     super(props);
@@ -17,7 +30,9 @@ export default class AgendaScreen extends Component {
     this.state = {
       items: {},
       USER_ID:'',
-     idDoctor:''
+     idDoctor:'',
+     errorMessage:'',
+     isShow:false
     };
   }
 
@@ -67,7 +82,43 @@ export default class AgendaScreen extends Component {
       }
     })
   }
- 
+  changeAppointment(appointmentId,idDoctor,date,time){
+    Alert.alert(
+        'Change Appointment',
+        'Are you sure that you want to change this appointment ?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => { },
+            style: 'cancel',
+          },
+          {
+            text: 'OK', onPress: () => {
+              fire.database().ref('users').child(this.state.USER_ID).child("appointment").child(appointmentId).remove();//delete for patient
+              // fire.database().ref('users').child(idDoctor).child("appointment").child(appointmentId).remove();//delete for doctor
+              //console.log(idDoctor);
+              fire.database().ref("users").child(idDoctor).child("appointment").once('value',(snapshot)=>{
+                  if(snapshot.val()){
+            let appointments = Object.values(snapshot.val());
+            appointments.map((va,i)=>{
+            if(va.idPatient == this.state.USER_ID && va.dateSelected ==date && va.timeSelected==time){
+            fire.database().ref("users").child(idDoctor).child("appointment").child(Object.keys(snapshot.val())[i]).remove();  //delete for doctor
+            }
+            })//map app 
+                  }
+            
+                })//app doctor
+        this.props.navigation.navigate("Search",{idPatient:this.state.USER_ID})
+
+
+            }
+          },
+        ],
+        { cancelable: true },
+      );
+  
+
+  }
 
   deleteAppointmet(appointmentId,idDoctor,date,time) {
     Alert.alert(
@@ -95,6 +146,10 @@ export default class AgendaScreen extends Component {
                 }
           
               })//app doctor
+              this.setState({errorMessage:'Deleted successfully !',isShow:true});
+                     setTimeout(function(){
+                    this.setState({isShow:false});
+                  }.bind(this),5000);
           }
         },
       ],
@@ -149,6 +204,8 @@ export default class AgendaScreen extends Component {
           <Text>{'Time:'+item.startAt} - {endAt} </Text>
           <Text>{'DoctorName:'+item.DoctorName}</Text>
 
+          <Toast visible={this.state.isShow} message={this.state.errorMessage}/>
+
         </View>
         
         <View style={styles.appActions}>
@@ -168,7 +225,8 @@ export default class AgendaScreen extends Component {
               color={argonTheme.COLORS.ICON}
               style={styles.inputIcons}
               size={30}
-              onPress={() => this.props.navigation.navigate("Search",{id:item.Doctor,idPatient:this.state.USER_ID})} />
+              onPress={() => this.changeAppointment(item.key,item.Doctor,item.date,item.startAt)
+              } />
           </View>
        
         </View>
