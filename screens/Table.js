@@ -25,6 +25,7 @@ export default class DoctorAgenda extends Component {
       clinicName:'',
       patientId:'',
       token:'',
+      available:false
      // notification:''
     };
   }
@@ -156,7 +157,24 @@ export default class DoctorAgenda extends Component {
     var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     var d = new Date(toDate);
     var dayName = days[d.getDay()];
-    console.log(dayName);
+
+    //بفحص ازا اليوم الجديد يوم دوام
+    var ar=[];
+    fire.database().ref("users").child(this.state.USER_ID).child("workingHours").on('value',(datasnapshot) =>{
+      if(datasnapshot.val()){
+       let items = Object.values(datasnapshot.val());
+       items.map((value,index)=>{
+        if(value.enable){
+          ar.push(value.days)
+        }
+       
+      })
+      }
+   })
+  // ar.map(v=>console.log(v));
+   console.log(dayName.toLowerCase());
+   console.log(ar.includes(dayName.toLowerCase()));
+   if(ar.includes(dayName.toLowerCase())){
     Alert.alert(
       'Shift All Appointments',
       'Are you sure that you want to shift all appointments of ' + fromDate + ' to ' + toDate +' ?',
@@ -172,6 +190,13 @@ export default class DoctorAgenda extends Component {
       ],
       { cancelable: true },
     );
+   
+   }
+   if(!ar.includes(dayName.toLowerCase())){
+     alert("select other day");
+   }
+    
+    
   }
 
   _moveAppointmets(fromDate,toDate,dayName) {
