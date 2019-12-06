@@ -186,13 +186,14 @@ export default class DoctorAgenda extends Component {
     query.once('value', sanp => {
       sanp.forEach(appointment => {
         appointment.ref.update({'dateSelected' : toDate})
+        appointment.ref.update({'daySelected' : dayName.toLowerCase()})
         fire.database().ref("users").child(appointment.val().idPatient).child("appointment").once('value',(snapshot)=>{
           if(snapshot.val()){
     let appointments = Object.values(snapshot.val());
     appointments.map((va,i)=>{
     if(va.idDoctor == this.state.USER_ID && va.dateSelected ==fromDate ){
     fire.database().ref("users").child(appointment.val().idPatient).child("appointment").child(Object.keys(snapshot.val())[i]).child("dateSelected").set(toDate);  
-    fire.database().ref("users").child(appointment.val().idPatient).child("appointment").child(Object.keys(snapshot.val())[i]).child("daySelected").set(dayName);  
+    fire.database().ref("users").child(appointment.val().idPatient).child("appointment").child(Object.keys(snapshot.val())[i]).child("daySelected").set(dayName.toLowerCase());  
     //// بدي أعدل اليوم كيف أجيبه ؟؟  
   }
     })//map app p
