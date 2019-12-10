@@ -82,7 +82,8 @@ class UpdateInfo extends React.Component {
       isShowSpecialization:false,
       
       message:'',
-      photo:'https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?fit=crop&w=1650&q=80'
+      photo:'',
+      uploaded:false
     }
   }
   
@@ -274,7 +275,7 @@ _pickImage = async () => {
   console.log(result);
    
   if (!result.cancelled) {
-    this.setState({ photo: result.uri });
+    this.setState({ photo: result.uri,uploaded:true });
   }
   fire.database().ref("users").child(this.state.id).child("avatar").set(this.state.photo).then(()=>{
     this.setState({isShow:true,message:'Avatar is Updated successfully ! '});
@@ -545,11 +546,14 @@ _pickImage = async () => {
                 color={this.state.UploadEnable ? '#4A148C' : '#333'}  />
                 </TouchableOpacity>
                 <View style={{flexDirection:'column',alignItems:'center'}}>
-                {this.state.UploadEnable && <View >
                 
-          <Image source={{ uri: this.state.photo }} style={{ width: width*0.555,height: height*0.2632,borderRadius: 82,borderWidth:0,marginLeft:10}} />
+                {this.state.UploadEnable && <View >
+               {!this.state.photo &&<View><Text>No image</Text></View>} 
+          {this.state.photo &&<View>
+            <Image source={{ uri: this.state.photo }} style={{ width: width*0.555,height: height*0.2632,borderRadius: 82,borderWidth:0,marginLeft:10}} />
+          </View>}
           <ComponentButton   small
-                           style={{backgroundColor:'#333',marginTop:10,marginLeft:40}}
+                           style={{backgroundColor:'#333',marginTop:10,marginLeft:60}}
                            onPress={this._pickImage}>
                            <Text bold size={14} color={argonTheme.COLORS.WHITE}>Change</Text>
                            </ComponentButton>

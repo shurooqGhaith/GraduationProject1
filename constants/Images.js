@@ -5,7 +5,7 @@ const LogoOnboarding = require("../assets/imgs/Dlogo2.png");
 const ProfileBackground = require("../assets/imgs/register-bg.png");
 const RegisterBackground = require("../assets/imgs/getPro-bg.png");
 const Pro = require("../assets/imgs/getPro-bg.png");
-const initialProfilePicture=require("../assets/imgs/profile.jpg")
+const initialProfilePicture=require("../assets/imgs/unknownProfile.png");
 //const ArgonLogo = require("../assets/imgs/argonlogo.png");
 const iOSLogo = require("../assets/imgs/ios.png");
 const androidLogo = require("../assets/imgs/android.png");
@@ -38,6 +38,7 @@ export default {
   Viewed,
   Products,
   Pro,
+  initialProfilePicture,
  // ArgonLogo,
   iOSLogo,
   androidLogo,

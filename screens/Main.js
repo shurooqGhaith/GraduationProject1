@@ -218,6 +218,7 @@ export default class Main extends React.Component{
                            }
                           
                          }>
+                         
                         <Text bold size={16}> {item.name} </Text>
                         <Icon name={'keyboard-arrow-right'} size={30}  />
                       </TouchableOpacity>
@@ -239,6 +240,8 @@ export default class Main extends React.Component{
                          style={styles.row}
                          onPress={()=>this.props.navigation.navigate("Chat",{sender:this.state.senderID,name:this.state.name,email:this.state.email,receiver:item.id,nameR:item.name})
                     }>
+                   
+                        
                         <Text  bold size={16}>{item.name}</Text>
                         <Icon name={'keyboard-arrow-right'} size={30}  />
 
@@ -269,7 +272,12 @@ const styles =StyleSheet.create({
     alignItems:'center',
     backgroundColor: "#fff",
 },
-
+avatar:{
+  width: 40,
+  height:40,
+  borderRadius: 15,
+  borderWidth: 0
+},
       button: {
        // alignItems: 'center',
         backgroundColor: '#fff',

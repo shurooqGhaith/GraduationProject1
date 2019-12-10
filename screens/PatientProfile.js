@@ -54,7 +54,9 @@ class PatientProfile extends React.Component {
       changeMakeAppColor:false,
       changeLocationColor:false,
       changeAgendaColor:false,
-      avatar:Images.initialProfilePicture
+      avatar:'',
+      avatarExist:false
+      //Images.initialProfilePicture
 
     };
   }
@@ -109,7 +111,8 @@ class PatientProfile extends React.Component {
    fire.database().ref("users").child(id).child("avatar").on('value',(datasnapshot)=>{
     if(datasnapshot.val()){
     this.setState({
-      avatar:datasnapshot.val()
+      avatar:datasnapshot.val(),
+      avatarExist:true
     })
   }
   })
@@ -205,7 +208,7 @@ class PatientProfile extends React.Component {
                 style={{ width, marginTop: '25%' }}
               >
 
-              {!this.state.isVerified && <Block flex style={styles.profileCard}>
+              {/* {!this.state.isVerified && <Block flex style={styles.profileCard}>
 
               <Block middle style={styles.avatarContainer}>
                     <Image
@@ -215,7 +218,7 @@ class PatientProfile extends React.Component {
                    <Block>
                      
                    <Block middle style={styles.nameInfo}>
-                   <View style={{flexDirection:'column',marginTop:200}}>
+                   <View style={{flexDirection:'column',marginTop:100}}>
                       
                       <Text bold size={15} color="#32325D" id="name">
                         Check your email inbox and verify your email 
@@ -225,14 +228,20 @@ class PatientProfile extends React.Component {
                    </Block> 
                   </Block>
 
-              </Block> }
+              </Block> } */}
 
-                {this.state.isVerified && <Block flex style={styles.profileCard}>
+                {/* {this.state.isVerified &&  */}
+                <Block flex style={styles.profileCard}>
                   <Block middle style={styles.avatarContainer}>
-                    <Image
-                      source={{ uri: this.state.avatar }}
-                      style={styles.avatar}
-                    />
+                  {this.state.avatarExist &&<View><Image
+                    source={{ uri: this.state.avatar}}
+                    style={styles.avatar}
+                  /></View>}
+                 
+                 {!this.state.avatarExist &&<View><Image
+                    source={Images.initialProfilePicture}
+                    style={styles.avatar}
+                  /></View>}
                    <Block>
 
                    
@@ -368,7 +377,7 @@ class PatientProfile extends React.Component {
                     </Block>
                   </Block>
                 </Block>
-                }
+                {/* } */}
               </ScrollView>
             </ImageBackground>
           </Block>

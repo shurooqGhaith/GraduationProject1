@@ -62,8 +62,10 @@ class Profile extends React.Component {
       changeLocationColor:false,
       changePatientColor:false,
       changeAgendaColor:false,
-
-      avatar:Images.initialProfilePicture
+  
+      avatar:'',
+      avatarExist:false
+      //Images.initialProfilePicture
     }
   }
 
@@ -129,9 +131,11 @@ class Profile extends React.Component {
   fire.database().ref("users").child(id).child("avatar").on('value',(datasnapshot)=>{
     if(datasnapshot.val()){
     this.setState({
-      avatar:datasnapshot.val()
+      avatar:datasnapshot.val(),
+      avatarExist:true
     })
   }
+ 
   })
 
   fire.database().ref("users").child(id).child("phone").on('value',(datasnapshot)=>{
@@ -213,34 +217,21 @@ backgroundColor='#fff'
               style={{ width, marginTop: '25%' }}
             >
 
-            {!this.state.isVerified && <Block flex style={styles.profileCard}>
+            
 
-              <Block middle style={styles.avatarContainer}>
-                    <Image
-                      source={{ uri: this.state.avatar }}
-                      style={styles.avatar}
-                    />
-                   <Block>
-                   <Block middle style={styles.nameInfo}>
-                   <View style={{flexDirection:'column',marginTop:200}}>
-                      
-                      <Text bold size={10} color="#32325D" id="name">
-                        Check your email inbox and verify your email 
-                      </Text>
-                      </View>
-                    </Block>
-                   </Block> 
-                  </Block>
-
-              </Block> }
-
-            {this.state.isVerified && 
+            {!this.state.isVerified && 
               <Block flex style={styles.profileCard}>
                 <Block middle style={styles.avatarContainer}>
-                  <Image
+                {this.state.avatarExist &&<View><Image
                     source={{ uri: this.state.avatar}}
                     style={styles.avatar}
-                  />
+                  /></View>}
+                 
+                 {!this.state.avatarExist &&<View><Image
+                    source={Images.initialProfilePicture}
+                    style={styles.avatar}
+                  /></View>}
+                 
                  <Block>
                    
 
