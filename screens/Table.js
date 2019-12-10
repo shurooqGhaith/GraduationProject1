@@ -172,8 +172,8 @@ export default class DoctorAgenda extends Component {
       }
    })
   // ar.map(v=>console.log(v));
-   console.log(dayName.toLowerCase());
-   console.log(ar.includes(dayName.toLowerCase()));
+  //  console.log(dayName.toLowerCase());
+  //  console.log(ar.includes(dayName.toLowerCase()));
    if(ar.includes(dayName.toLowerCase())){
     Alert.alert(
       'Shift All Appointments',

@@ -126,7 +126,7 @@ class PatientInfo extends React.Component {
 
       showModal:false,
       showModal2:false,
-      showForm:false,
+      showForm:true,
       notes:'',
       showMedicine:false,
       showExam:false,
@@ -266,9 +266,9 @@ this.setState({
   this.setState({isShow:true,msg:'Added successfully !'});
   setTimeout(function(){
    this.setState({isShow:false});
+   this.props.navigation.navigate("DoctorAppointment",{id:this.state.idDoctor});
   }.bind(this),5000);
 
-  this.props.navigation.navigate("DoctorAppointment",{id:this.state.idDoctor});
 
   }).catch((error)=>{
     this.setState({isShow:true,msg:error.message});
@@ -280,7 +280,7 @@ this.setState({
    // alert("The time is changed to "+this.state.dateToSearch+"\n"+this.state.timeToSearch);
    // this.setState({availableSlots:[]});
   
-   this.setState({showModal2:false});
+   //this.setState({showModal2:false});
   }
 
   handleDate =pickeddate=> {
@@ -753,9 +753,9 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                           </View>
                        </View>
                   </Block>
-                  <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
+                  <Divider style={{backgroundColor:'#000000',width:width}}/>
 
-                  <View style={{flexDirection:'row'}}>
+                  {/* <View style={{flexDirection:'row'}}>
               <Button
                       onPress={this.showDatePicker}
                       style={{backgroundColor:'#455A64',marginLeft:30,marginTop:60,width:width*0.4}}
@@ -791,9 +791,9 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                        datePickerModeAndroid={'spinner'}
                              />
 
-                  </View>
+                  </View> */}
 
-                  <View style={{marginTop:200,flexDirection:'row',alignItems:'center'}}>
+                  <View style={{marginTop:100,flexDirection:'row',alignItems:'center'}}>
                   <Toast visible={this.state.flag} message={this.state.msg}/> 
                   <Modal transparent={true} visible={this.state.showModal}>
                   <View style={{backgroundColor:'#ffffff80',flexDirection:'row',marginTop:250,alignItems:'center',justifyContent:'center',height:height*0.3}}>
@@ -830,19 +830,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 </View>
 
 
-                  {/* <View style={{width:width*0.4,marginTop:20,flex:1}}>
-                             <Autocomplete
-                                    data={this.state.medicineNameFromDB}
-                                    listStyle={{zIndex: 1, position: 'absolute'}}
-                                    defaultValue={this.state.medicine}
-                                     onChangeText={text => this.setState({ medicine: text })}
-                                 renderItem={({ item, i }) => (
-                                         <TouchableOpacity onPress={() => this.setState({ medicine: item })}>
-                                                         <Text>{item.medicine}</Text>
-                                            </TouchableOpacity>
-                                            )}
-                                                    />
-                             </View> */}
+                  
                  {this.state.showForm && <View style={{flexDirection:'column'}}>
                    <View style={{flexDirection:'row'}}>
                        <TextInput  
@@ -863,8 +851,9 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                                </View>
                                <View style={{width:width*0.9}}>
                                <TouchableOpacity style={styles.row} onPress={()=>this.setState({showProcess:!this.state.showProcess})}>
-                <Text style={styles.title}>Add process</Text>
-                <Icon name={this.state.showProcess ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+                <Text color={this.state.showProcess ? '#4A148C' : '#333'}>Add process</Text>
+                <Icon name={this.state.showProcess ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
+                color={this.state.showProcess ? '#4A148C' : '#333'} />
             </TouchableOpacity>
                    {this.state.showProcess && 
                               <View style={{flexDirection:'column',marginLeft:40}}>
@@ -976,22 +965,23 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 
                    <View style={{width:width*0.9}}>
                    <TouchableOpacity style={styles.row} onPress={()=>this.setState({showMedicine:!this.state.showMedicine})}>
-                <Text style={styles.title}>Add Medicine</Text>
-                <Icon name={this.state.showMedicine ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+                <Text  color={this.state.showMedicine ? '#4A148C' : '#333'}>Add Medicine</Text>
+                <Icon name={this.state.showMedicine ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
+                 color={this.state.showMedicine ? '#4A148C' : '#333'} />
             </TouchableOpacity>
 
             <View>
               {this.state.showMedicine && <View>
                 <Button
                       small
-                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10,borderRadius:5,marginLeft:10}}
+                      style={{ backgroundColor:'#004',marginTop:10,borderRadius:5,marginLeft:50}}
                       onPress={this.addMedicineName}
                     >
                      Add  
                     </Button>
                     {this.state.medicinesName.map((name,index)=>{
                       return(
-                          <View key={index} style={{marginLeft:10,width:width*0.5}}>
+                          <View key={index} style={{marginLeft:50,width:width*0.5}}>
                           <TextInput
                         
                         style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#fff',backgroundColor:'#fff',marginTop:10,marginTop:10,paddingLeft:5}}
@@ -1009,15 +999,16 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 
                     <View style={{width:width*0.9}} >
                     <TouchableOpacity style={styles.row} onPress={()=>this.setState({showExam:!this.state.showExam})}>
-                <Text style={styles.title}>Add Medical checkup</Text>
-                <Icon name={this.state.showExam ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color="#333" />
+                <Text  color={this.state.showExam ? '#4A148C' : '#333'}>Add Medical checkup</Text>
+                <Icon name={this.state.showExam ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} 
+                color={this.state.showExam ? '#4A148C' : '#333'} />
             </TouchableOpacity>
 
              <View>
                {this.state.showExam && <View>
                 <Button
                       small
-                      style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START,marginTop:10,borderRadius:5,marginLeft:10}}
+                      style={{ backgroundColor: '#004',marginTop:10,borderRadius:5,marginLeft:50}}
                       onPress={this.addMedicalExaminations}
                     >
                      Add
@@ -1025,7 +1016,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 
                     {this.state.medicalExaminations.map((name,index)=>{
                       return(
-                          <View key={index} style={{marginLeft:10,width:width*0.5}}>
+                          <View key={index} style={{marginLeft:50,width:width*0.5}}>
                           <TextInput
                         style={{borderRadius: 5,borderWidth: 0.5,borderColor: '#fff',backgroundColor:'#fff',marginTop:10,paddingLeft:5}}
                         placeholder="medical exam"
@@ -1057,19 +1048,19 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                              
                                   
 
-                     <View style={{flexDirection:'row',marginLeft:50,marginTop:20}}>
+                     <View style={{flexDirection:'row',marginLeft:60,marginTop:20}}>
                     <Button  
-                    style={{width:width*0.3,backgroundColor:'#263238',color:'#fff'}} 
+                    style={{width:width*0.3,backgroundColor:'#006'}} 
                     onPress={this.submit}>
-                    <Text>add</Text>
+                    <Text color='#fff'>add</Text>
                     
                     </Button>
 
                     <Button  
-                    style={{width:width*0.3,backgroundColor:"#263238",marginLeft:15,color:'#fff'}} 
+                    style={{width:width*0.3,backgroundColor:"#006",marginLeft:15}} 
                     onPress={()=>this.setState({nextSession:true})}
                     >
-                    <Text>{this.state.sessionDate || "next session"}</Text>
+                    <Text color='#fff'>{this.state.sessionDate || "next session"}</Text>
                     
                     </Button>
                     </View>
@@ -1088,8 +1079,8 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 <Toast visible={this.state.isShow} message={this.state.msg}/> 
                   <Modal transparent={true} visible={this.state.showModal2}>
                   <View style={{backgroundColor:'#ffffff80',flexDirection:'row',marginTop:250,alignItems:'center',justifyContent:'center',height:height*0.3}}>
-                  <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 50,width:width*0.8,height:height*0.3}}>
-                  <Text style={{color:'#3E2723'}}>Available times </Text>
+                  <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 50,width:width,height:height*0.8}}>
+                  <Text style={{color:'#fff'}}>Available times </Text>
                   <ScrollView showsVerticalScrollIndicator={true}>
                   <View style={{flexDirection:'row',flexWrap:'wrap'}}>
 
@@ -1097,22 +1088,24 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                        if(slot.time){
                                return(
                                    <View style={{marginTop:5}}>
-                             <Button style={{backgroundColor:'#eee',marginLeft:10}} small onPress={()=>this.makeNextSessionAppointment(slot.time)}>
-                                  <Text style={{color:'#00897b'}}>{slot.time}</Text>
+                             <Button style={{backgroundColor:'#fff',marginLeft:10,width:width*0.3}}  onPress={()=>this.makeNextSessionAppointment(slot.time)}>
+                                  <Text style={{color:'#004'}}>{slot.time}</Text>
                                  </Button>
                                             </View>
                                                        ) }
                 })}
 
-                {!this.state.nextEnable && <View style={{marginTop:5}} >
-                                     <Text style={{color:'#00897b'}}>Doctor is busy at this day</Text>
-                                     <Button small style={{marginTop:5,marginLeft:35,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal2:false})}><Text>cancel</Text></Button>
+                {!this.state.nextEnable && <View style={{marginTop:150}} >
+                                     <Text style={{color:'#fff'}}>No available time at this day</Text>
+                                     <Button small style={{marginTop:5,marginLeft:45,backgroundColor:'#3E2723'}} onPress={()=>this.setState({sessionDate:'',showModal2:false,showForm:true})}>
+                                     <Text color='#fff'>cancel</Text></Button>
 
                                       </View> }
 
                      </View>
                      {this.state.nextEnable &&
-                      <Button small style={{marginTop:5,marginLeft:50,backgroundColor:'#3E2723'}} onPress={()=>this.setState({showModal2:false})}><Text>cancel</Text></Button>
+                      <Button small style={{marginTop:5,marginLeft:90,backgroundColor:'#3E2723'}} onPress={()=>this.setState({sessionDate:'',showModal2:false,showForm:true})}>
+                      <Text color='#fff'>cancel</Text></Button>
 
                      }
                   </ScrollView>

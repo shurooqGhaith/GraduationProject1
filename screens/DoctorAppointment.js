@@ -57,8 +57,14 @@ class DoctorAppointment extends React.Component {
     const day   = today.getDate();
     const  month = today.getMonth()+1;
     const  year  = today.getFullYear();
+
+    var d=`${day}`;
+    if(d.length==1){d=`0${d}`}
+    var m=`${month}`;
+    if(m.length==1){m=`0${m}`}
+
     this.setState({
-      todayDate:day + '-' + month + '-' + year
+      todayDate:year + '-' + m + '-' + d
     }) 
   }
 
@@ -266,9 +272,8 @@ class DoctorAppointment extends React.Component {
                           }}
                           ><Text style={{color:'#000'}}>edit</Text></Button>
                           <View style={{flexDirection:'row'}}>
-                          <Text style={{color:'#000'}}>{item.daySelected}</Text>
-                          <Text style={{color:'#000'}}>-{item.dateSelected}</Text>
-                          <Text style={{color:'#000'}}>-{item.timeSelected}</Text>
+                          <Text style={{color:'#000'}}>{item.dateSelected}</Text>
+                          <Text style={{color:'#000'}}>,{item.timeSelected}</Text>
                           </View>
                           
 

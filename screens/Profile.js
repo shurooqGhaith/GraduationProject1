@@ -351,7 +351,7 @@ backgroundColor='#fff'
                          }.bind(this),1000);
                  }}
                 />
-                <Text style={{paddingHorizontal:18}}  color='#aaa'>Appointments</Text>
+                <Text style={{paddingHorizontal:35}}  color='#aaa'>Sessions</Text>
                  </View>
                  <View style={styles.iconButton1}>
                 <Icon type='material-community' name={ 'map-marker'} size={52}  color={this.state.changeLocationColor?'#B71C1C':'#172B4D'}
