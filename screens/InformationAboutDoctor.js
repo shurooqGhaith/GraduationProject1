@@ -11,7 +11,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
-
+import { Table, TableWrapper, Row, Cell, Col,Rows } from 'react-native-table-component';
 import { Input, Button as ComponentButton } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
@@ -27,6 +27,7 @@ class InformationAboutDoctor extends React.Component {
        
 
         this.state={
+            head:["day","Start","End"],
             id:'',
             idPatient:'',
             clinicName:[],
@@ -142,21 +143,21 @@ class InformationAboutDoctor extends React.Component {
             >
             
                   <Block>
-                  <View  style={{flexDirection:'column',marginTop:50}}>
+                  <View  style={{flexDirection:'column',marginTop:10,marginLeft:width*0.2}}>
                   <Text  style={{color:'#aaa'}} >Name:</Text>
                     <Text  size={15} color="#32325D" > {this.state.name}</Text>
-                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,width:width*0.6}}/>
+                    <Divider style={{backgroundColor:'#004',marginTop:10,width:width*0.6}}/>
                     <Text  style={{color:'#aaa'}} >Email:</Text>
                     <Text  size={15} color="#32325D" > {this.state.email}</Text>
-                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,width:width*0.6}}/>
+                    <Divider style={{backgroundColor:'#004',marginTop:10,width:width*0.6}}/>
                     {this.state.phoneExist && <View>
                       <Text  style={{color:'#aaa'}} > Phone Number:</Text>
                     <Text  size={15} color="#32325D" > {this.state.phone}</Text>
                     </View>}
-                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,width:width*0.6}}/>
+                    <Divider style={{backgroundColor:'#004',marginTop:10,width:width*0.6}}/>
                     <Text  style={{color:'#aaa'}} >Specialization:</Text>
                     <Text  size={15} color="#32325D" > {this.state.specialty}</Text>
-                    <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,width:width*0.6}}/>
+                    <Divider style={{backgroundColor:'#004',marginTop:10,width:width*0.6}}/>
                     <Text  style={{color:'#aaa'}} >clinic Name:</Text>
                     <View  style={{flexDirection:'row' }}>
                      {this.state.clinicName.map((value,ind)=>{
@@ -167,33 +168,35 @@ class InformationAboutDoctor extends React.Component {
                     </View>
                      </View>
                     </Block>
-                    
-                    <View style={{flexDirection:'column',marginTop:10}}>
-                    <Text color="#32325D">workingHours:</Text>
-                      {!this.state.nodata && this.state.workingHours.map((item,index)=>{
-                          
-                          return(
-                            <View key={index} style={{flexDirection:'column',marginTop:5}}>
-                            <View style={{flexDirection:'row'}}>
-                               <Text style={{fontWeight:'bold',fontSize:30,color:'#004'}}>{item.start}</Text>
-                               <Text style={{fontWeight:'bold',fontSize:30,color:'#004'}}>-{item.end}</Text>
-                               
-                               </View>
-
-                               <Text style={{color:"#AAAAAA"}}>{item.days}</Text> 
-                               <Text style={{color:"#AAAAAA"}}>{item.selectedClinic}</Text> 
-
-                                <Divider style={{backgroundColor:'#004'}}/>
-                               
-                            </View>
-                          )
-                      })}
+                    <Divider style={{backgroundColor:'#004',marginTop:10,width:width*0.9,marginLeft:10}}/>
+                    <View style={{flexDirection:'column',marginTop:30,marginLeft:40}}>
+                    <Text color="#32325D" size={16} bold >workingHours:</Text>
+                    {!this.state.nodata && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+        <Table borderStyle={{borderColor: 'transparent'}}>
+          <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
+          {
+             this.state.workingHours.map((data, index) => {
+                  //  return this.state.appointment.map((app,appIndex)=>{
+                      if(data.enable){
+                        return(
+              <TableWrapper key={index} style={styles.row}>
+                    <Cell data={data.days} textStyle={styles.text}/>
+                    <Cell data={data.start} textStyle={styles.text}/>
+                    <Cell data={data.end} textStyle={styles.text}/>
+             </TableWrapper>
+                )
+                      }
+                        
+            })
+          }
+        </Table>
+      </View> }     
                  </View>
 
                        <View style={{marginTop:20}}>
-                           <TouchableOpacity style={{backgroundColor:'#eee'}}
+                           <TouchableOpacity style={{backgroundColor:'#eee',marginLeft:width*0.6,width:width*0.3,marginBottom:20}}
                              onPress={()=>this.props.navigation.navigate("Appointment",{id:this.state.id,idPatient:this.state.idPatient})}>
-                               <Text color='#1B5E20'>Book Now</Text>
+                               <Text color='#1B5E20' bold size={15}>Book Now</Text>
                            </TouchableOpacity>
                        </View>        
       
@@ -204,6 +207,9 @@ class InformationAboutDoctor extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    head: { height: 40, backgroundColor: '#333' },
+  text: { margin: 6 },
+  row: { flexDirection: 'row', backgroundColor: '#eee' },
 
 });
 export default InformationAboutDoctor;
