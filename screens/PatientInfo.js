@@ -63,6 +63,7 @@ class PatientInfo extends React.Component {
     this.showInfoForm=this.showInfoForm.bind(this);
         this.state={
       username:"",
+      patientName:'',
       idDoctor:"",
       idPatient:'',
       clinic:'',
@@ -251,6 +252,8 @@ this.setState({
       'dateSelected':this.state.sessionDate,
       'timeSelected':time,
       'clinicName':this.state.clinic,
+      'patientName':this.state.patientName,
+      'doctorName':this.state.username,
       'available':false
   }).then(()=>{
     fire.database().ref("users").child(this.state.idPatient).child("appointment").push().set({
@@ -259,6 +262,8 @@ this.setState({
       'dateSelected':this.state.sessionDate,
       'timeSelected':time,
       'clinicName':this.state.clinic,
+      'patientName':this.state.patientName,
+      'doctorName':this.state.username,
       'available':false
   });
   /////////
@@ -473,9 +478,14 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
      
    fire.database().ref("users").child(idP).child("name").on('value',(datasnapshot)=>{
     this.setState({
-      username:datasnapshot.val()
+      patientName:datasnapshot.val()
     })
  })
+ fire.database().ref("users").child(idD).child("name").on('value',(datasnapshot)=>{
+  this.setState({
+    username:datasnapshot.val()
+  })
+})
     
  fire.database().ref("users").child(idP).child("email").on('value',(datasnapshot)=>{
     this.setState({
@@ -744,7 +754,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                   <View style={{flexDirection:'row',marginTop:10}}>
                           <View style={{flexDirection:'column',marginLeft:20}}>
                               <Text bold size={14} style={{color:'#004D40'}}>Name</Text>
-                              <Text style={{color:'#aaa'}}>{this.state.username}</Text>
+                              <Text style={{color:'#aaa'}}>{this.state.patientName}</Text>
                           </View>
 
                           <View style={{flexDirection:'column',marginLeft:60}}>
@@ -1080,7 +1090,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                   <Modal transparent={true} visible={this.state.showModal2}>
                   <View style={{backgroundColor:'#ffffff80',flexDirection:'row',marginTop:250,alignItems:'center',justifyContent:'center',height:height*0.3}}>
                   <View style={{backgroundColor: '#ffffff80',alignItems:'center' ,padding: 50,width:width,height:height*0.8}}>
-                  <Text style={{color:'#fff'}}>Available times </Text>
+                  <Text style={{color:'#000'}}>Available times </Text>
                   <ScrollView showsVerticalScrollIndicator={true}>
                   <View style={{flexDirection:'row',flexWrap:'wrap'}}>
 
@@ -1096,7 +1106,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                 })}
 
                 {!this.state.nextEnable && <View style={{marginTop:150}} >
-                                     <Text style={{color:'#fff'}}>No available time at this day</Text>
+                                     <Text style={{color:'#000'}}>No available time at this day</Text>
                                      <Button small style={{marginTop:5,marginLeft:45,backgroundColor:'#3E2723'}} onPress={()=>this.setState({sessionDate:'',showModal2:false,showForm:true})}>
                                      <Text color='#fff'>cancel</Text></Button>
 

@@ -73,8 +73,8 @@ export default class DoctorAgenda extends Component {
           item = {
             'startAt': appointment.val().timeSelected,
             'patient': appointment.val().idPatient,
-            'patientName':appointment.val().PatientName,
-            'DoctorName':appointment.val().doctortName,
+            'patientName':appointment.val().patientName,
+            'DoctorName':appointment.val().doctorName,
            'clincName': appointment.val().clinicName,
              'date':appointment.val().dateSelected,
             'key': appointment.key
@@ -324,7 +324,7 @@ export default class DoctorAgenda extends Component {
         <View style={styles.appinfo}>
           <Text>{'clinc Name:'+item.clincName} </Text>
           <Text>{'Time:'+item.startAt} - {endAt} </Text>
-          <Text>{'Patient Name:'+item.patient}</Text>
+          <Text>{'Patient Name:'+item.patientName}</Text>
 
           </View>
 

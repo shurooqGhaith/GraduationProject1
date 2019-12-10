@@ -229,6 +229,8 @@ export default class SelectTime extends React.Component {
       'dateSelected':this.state.dateSelected,
       'timeSelected':time,
       'clinicName':this.state.clinicSelected,
+      'patientName':this.state.patientName,
+      'doctorName':this.state.username,
       'available':false
   }).then(()=>{
     fire.database().ref("users").child(this.state.idPatient).child("appointment").push().set({
@@ -237,6 +239,8 @@ export default class SelectTime extends React.Component {
       'dateSelected':this.state.dateSelected,
       'timeSelected':time,
       'clinicName':this.state.clinicSelected,
+      'patientName':this.state.patientName,
+      'doctorName':this.state.username,
       'available':false
   });
   
