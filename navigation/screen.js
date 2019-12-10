@@ -28,8 +28,14 @@ import EmailVerify from "../screens/VerifyEmail";
 import MyPanel from "../screens/Panel";
 import DetailsAboutPatients from "../screens/DetailsAboutPatient";
 import AgendaScreen from "../screens/Agenda";
+import InformationAboutDoctor from "../screens/InformationAboutDoctor";
 const AppNavigator = createStackNavigator(
     {
+      InformationAboutDoctor:{screen:InformationAboutDoctor,
+        navigationOptions:{
+          title:'Back',
+        }
+      },
       Agenda:{screen:AgendaScreen,
         navigationOptions: {
           header: null,

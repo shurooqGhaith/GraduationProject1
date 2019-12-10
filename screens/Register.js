@@ -145,7 +145,7 @@ class Register extends React.Component {
       quality: 1
     });
   
-    console.log(result);
+    //console.log(result);
      
     if (!result.cancelled) {
       this.setState({ photo: result.uri,uploaded:'Avatar is Uploaded ' });
@@ -236,7 +236,7 @@ class Register extends React.Component {
                     </Block>
                     <Block width={width * 0.8}>
                      <TouchableOpacity
-                     style={{backgroundColor:'#eee',height:40,padding:5}}
+                     style={{backgroundColor:'#eee',height:40,padding:5,borderRadius:10}}
                      onPress={this._pickImage}>
                        <Text color="#000" style={{paddingLeft:width*0.2}}>{this.state.uploaded || "Upload profile picture"}</Text>
                      </TouchableOpacity>
