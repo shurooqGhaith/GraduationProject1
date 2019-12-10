@@ -11,13 +11,14 @@ import {
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
 
-import {  Button as ComponentButton } from "../components";
+import { Input, Button as ComponentButton } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 import {Divider } from 'react-native-elements'; 
 import SearchBar from 'react-native-searchbar';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { List } from 'react-native-paper';
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -52,7 +53,8 @@ class Book extends React.Component {
             latitude:'',
             longitude:'',
             nearest:false,
-            show:[]
+            show:[],
+            msg:''
 
         }
     }
@@ -243,10 +245,10 @@ class Book extends React.Component {
     }
     }
 
-    handle=input=>{
+    handle(input){
         if(input==''){this.retrieveData()}
         if(this.state.searchParameter=="name"){
-            fire.database().ref("users").orderByChild("name").startAt(this.state.search.toLowerCase()).endAt(this.state.search.toLowerCase()+"\uf8ff").on('value',(snap)=>{
+            fire.database().ref("users").orderByChild("name").startAt(input.toLowerCase()).endAt(input.toLowerCase()+"\uf8ff").on('value',(snap)=>{
                 if(snap.val()){
                 let items = Object.values(snap.val());
                 var ar5=[];
@@ -261,6 +263,7 @@ class Book extends React.Component {
             }
             else{
                 this.setState({
+                    msg:'No results found for \" '+input+'\"',
                     nodata:true
                 })
                 // alert("no data available");
@@ -269,7 +272,7 @@ class Book extends React.Component {
             })
         }
         if(this.state.searchParameter=="specialization"){
-            fire.database().ref("users").orderByChild("Specialization").startAt(this.state.search.toLowerCase()).endAt(this.state.search.toLowerCase()+"\uf8ff").on('value',(snap)=>{
+            fire.database().ref("users").orderByChild("Specialization").startAt(input.toLowerCase()).endAt(input.toLowerCase()+"\uf8ff").on('value',(snap)=>{
                if(snap.val()){
                 let items = Object.values(snap.val());
                 var ar6=[];
@@ -284,6 +287,7 @@ class Book extends React.Component {
             }
             else{
                 this.setState({
+                    msg:'No results found for \" '+input+'\"',
                     nodata:true
                 })
               //  alert("no data available");
@@ -314,7 +318,7 @@ class Book extends React.Component {
              
                     </Block>
                     
-                    <View style={{marginTop:5}}>
+                    {/* <View style={{marginTop:5}}>
                          <SearchBar
                         // style={{marginTop:5}}
                            handleChangeText={(text) => this.setState({search:text})}
@@ -326,12 +330,23 @@ class Book extends React.Component {
                            backgroundColor="#444"
                            handleSearch={(input)=>this.handle(input)}
                                />
-                               </View>
+                               </View> */}
 
+                               <View >
+            <Input
+               style={{borderRadius:15,borderColor:'#eee',backgroundColor:'#444',width:width,color:'#fff',paddingLeft:5}}
+               placeholder={"search on "+" "+ this.state.searchParameter}
+               onChangeText={text=>this.handle(text)}
+               iconContent={
+                <Icon name={'search'} size={30} color={'#aaa'} />
+               }
+                 />
 
+                 </View>
                            
                                
             <View style={styles.itemsList}>
+            {this.state.nodata &&<View style={{marginTop:70,marginLeft:60}}><Text size={16} color={'#000'}>{this.state.msg}</Text></View>}
         {!this.state.nodata && this.state.data.map((item, index) => {
             if(item.type=="doctor"){
                 return(
