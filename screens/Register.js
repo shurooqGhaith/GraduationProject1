@@ -17,6 +17,9 @@ import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import fire from "../constants/firebaseConfigrations";
 import * as Facebook from 'expo-facebook';
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+
 const Toast = (props) => {
   if (props.visible) {
     ToastAndroid.showWithGravityAndOffset(
@@ -48,11 +51,14 @@ class Register extends React.Component {
       password:'',
       errorMessage:null,
       checked:false,
-      isShow:false
+      isShow:false,
+      uploaded:'',
+      photo:''
     }
   }
   
   componentDidMount(){ 
+    this.getPermissionAsync();
     this.authListener();
   }
   authListener(){
@@ -82,6 +88,7 @@ class Register extends React.Component {
     fire.database().ref("users").child(id).child("name").set(this.state.username.toLowerCase());
     fire.database().ref("users").child(id).child("email").set(this.state.email.trim());
     fire.database().ref("users").child(id).child("id").set(id);
+    fire.database().ref("users").child(id).child("avatar").set(this.state.photo);
     if(this.state.checked){
       fire.database().ref("users").child(id).child("type").set("doctor");
       this.props.navigation.navigate('ClinicName');
@@ -94,7 +101,7 @@ class Register extends React.Component {
    }
    )
    
-   .catch(function(error) {
+   .catch((error)=> {
     this.setState({errorMessage:error.message,isShow:true});
     setTimeout(function(){
       this.setState({isShow:false});
@@ -121,6 +128,30 @@ class Register extends React.Component {
     alert(type);
   }
   }
+  getPermissionAsync = async () => {
+  
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to make this work!');
+    }
+  
+}
+
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1
+    });
+  
+    console.log(result);
+     
+    if (!result.cancelled) {
+      this.setState({ photo: result.uri,uploaded:'Avatar is Uploaded ' });
+    }
+    
+  };
   render() {
     return (
       <Block flex middle>
@@ -203,6 +234,15 @@ class Register extends React.Component {
                       />
                         
                     </Block>
+                    <Block width={width * 0.8}>
+                     <TouchableOpacity
+                     style={{backgroundColor:'#eee',height:40,padding:5}}
+                     onPress={this._pickImage}>
+                       <Text color="#000" style={{paddingLeft:width*0.2}}>{this.state.uploaded || "Upload profile picture"}</Text>
+                     </TouchableOpacity>
+                        
+                    </Block>
+                    
                     <Block width={width * 0.8} style={{ marginBottom: 15 }}>
                     <View style={{ flexDirection: 'row' }}>
                      <CheckBox
