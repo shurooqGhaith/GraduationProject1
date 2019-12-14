@@ -8,6 +8,8 @@ import {
   ToastAndroid
 } from "react-native";
 import { Button,Block, Checkbox, Text, theme } from "galio-framework";
+import { Notifications } from 'expo';
+
 
 import {  Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
@@ -37,15 +39,44 @@ class Login extends React.Component {
             email:'',
             password:'',
             errorMessage:null,
-            isShow:false
+            isShow:false,
+            notification:{},
         }
     }
+
+
+    componentDidMount() {
+      this._notificationSubscription = Notifications.addListener(this._handleNotification);
+      
+      
+    }
+    async getDeviceNotificationToken(user_id){
+
+
+      let token = await Notifications.getExpoPushTokenAsync();
+      console.log("hi there this is my device tokennnnnn")
     
-    handleLogin(){
+      console.log(token)
+      alert("we took your token");
+    
+    return token
+    }
+
+
+    _handleNotification = (notification) => {
+
+///هون حنحط فيها جملة navigation بس نصور
+
+    
+    };
+
+
+    
+     async handleLogin(){
       var name;
       fire.auth()
     .signInWithEmailAndPassword(this.state.email.trim(), this.state.password)
-    .then(() => //this.props.navigation.navigate('Profile')
+    .then(async () =>  //this.props.navigation.navigate('Profile')
       {
       var user=fire.auth().currentUser;
       var id= user.uid;
@@ -55,8 +86,26 @@ class Login extends React.Component {
    
       });
       this.setState({errorMessage:''});
-      if(name ==="doctor"){this.props.navigation.navigate('Profile',{id:id})}
-      if(name =="patient"){this.props.navigation.navigate('PatientProfile')}
+      if(name ==="doctor"){
+        
+        
+        let token = await this.getDeviceNotificationToken(user_id=id)
+        fire.database().ref("users").child(user_id).child("token").set(token);
+        
+        this.props.navigation.navigate('Profile',{id:id})
+
+    
+    }
+      if(name =="patient"){
+        let token = await this.getDeviceNotificationToken(user_id=id)
+        fire.database().ref("users").child(user_id).child("token").set(token);
+        
+        
+        
+        this.props.navigation.navigate('PatientProfile')
+
+    
+    }
     })
     .catch((error)=> { 
       this.setState({errorMessage:error.message,isShow:true});
@@ -137,7 +186,9 @@ class Login extends React.Component {
                         </Text>
                       </Button>
                     </Block>
-
+                    <Block middle>
+                          <Text color="#aaa" style={{marginTop:20}} >OR</Text>
+                          </Block>
                     <Block middle>
                       <Button
                        onPress={() => navigation.navigate("Account")}

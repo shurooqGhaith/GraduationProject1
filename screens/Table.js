@@ -25,6 +25,7 @@ export default class DoctorAgenda extends Component {
       clinicName:'',
       patientId:'',
       token:'',
+      token2:[],
       available:false
      // notification:''
     };
@@ -127,6 +128,12 @@ export default class DoctorAgenda extends Component {
       if(va.idDoctor == this.state.USER_ID && va.dateSelected ==date && va.timeSelected==time){
       fire.database().ref("users").child(patient).child("appointment").child(Object.keys(snapshot.val())[i]).remove();  //delete for patient
       }
+      fire.database().ref("users").child(patient).child("token").on('value',(datasnapshot)=>{
+        this.setState({
+          token:datasnapshot.val()
+        })
+      })
+      
       })//map app p
             }
       
@@ -145,8 +152,63 @@ export default class DoctorAgenda extends Component {
       { cancelable: true },
     );
     
+    this.callNotification()
   }
- 
+  async sendNotification(title="hello", body="sending a fucking notification", token="ExponentPushToken[OVK81WCGfOHwHyu1s3FRua]"){
+	
+    PUSH_ENDPOINT = 'https://exp.host/--/api/v2/push/send'
+    let response =  await fetch(PUSH_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+    "to": token,
+    "title":title,
+    "body": body,
+  }),
+    })
+    return response
+  }
+
+  
+  
+  async  registerForPushNotificationsAsync(){
+    var id;
+    id=fire.auth().currentUser.uid;
+  
+    try {
+      // Get the token that uniquely identifies this device
+      let token = await Notifications.getExpoPushTokenAsync();
+      console.log("hi there this is my device tokennnnnn")
+  
+      console.log(token)
+      fire.database().ref("users").child(id).child("token").set(token);
+
+     
+    } catch (error) {
+      console.log(error);
+    }
+    return token
+  }
+  
+    
+  
+    
+  
+    
+    
+   
+  callNotification(){
+      to_token = this.state.token
+      messageTitle = "Your Doctor delete your appointment"
+      messageBody = " click"
+      sound=true
+      priority="high" 
+      this.registerForPushNotificationsAsync()
+     this.sendNotification(title=messageTitle, body=messageBody, token=to_token)
+  }
   _openShiftAppointmetsModal(date) {
     this.selectedCalenderDay = date;
     this.setModalVisible(true);
@@ -210,6 +272,8 @@ export default class DoctorAgenda extends Component {
     //iterate over all appointment in that date and update there time 				
     query.once('value', sanp => {
       sanp.forEach(appointment => {
+        
+
         appointment.ref.update({'dateSelected' : toDate})
         appointment.ref.update({'daySelected' : dayName.toLowerCase()})
         fire.database().ref("users").child(appointment.val().idPatient).child("appointment").once('value',(snapshot)=>{

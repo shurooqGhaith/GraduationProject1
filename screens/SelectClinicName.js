@@ -56,7 +56,7 @@ export default class Pro extends React.Component {
                     }}>
                     {this.state.clinicNames.map((value,index)=>{
                       return(
-                        <Picker.Item color="#004" label = {value.clinic} value = {value.clinic} />
+                        <Picker.Item key={index} color="#004" label = {value.clinic} value = {value.clinic} />
                       )
                     })}
                          

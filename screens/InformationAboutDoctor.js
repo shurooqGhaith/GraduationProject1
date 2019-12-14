@@ -135,48 +135,57 @@ class InformationAboutDoctor extends React.Component {
     render(){
         
         return(
-            <Block flex style={{flex:1,backgroundColor:"#eee"}}>
+            <Block flex style={{flex:1,backgroundColor:"#fff"}}>
    
             <ScrollView
-              showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator={true}
               style={{ width, marginTop: '25%' }}
             >
-            
                   <Block>
-                  <View  style={{flexDirection:'column',marginTop:10,marginLeft:width*0.2}}>
-                  <Text  style={{color:'#aaa'}} >Name:</Text>
-                    <Text  size={15} color="#32325D" > {this.state.name}</Text>
-                    <Divider style={{backgroundColor:'#004',marginTop:10,width:width*0.6}}/>
-                    <Text  style={{color:'#aaa'}} >Email:</Text>
-                    <Text  size={15} color="#32325D" > {this.state.email}</Text>
-                    <Divider style={{backgroundColor:'#004',marginTop:10,width:width*0.6}}/>
-                    {this.state.phoneExist && <View>
-                      <Text  style={{color:'#aaa'}} > Phone Number:</Text>
-                    <Text  size={15} color="#32325D" > {this.state.phone}</Text>
-                    </View>}
-                    <Divider style={{backgroundColor:'#004',marginTop:10,width:width*0.6}}/>
-                    <Text  style={{color:'#aaa'}} >Specialization:</Text>
-                    <Text  size={15} color="#32325D" > {this.state.specialty}</Text>
-                    <Divider style={{backgroundColor:'#004',marginTop:10,width:width*0.6}}/>
-                    <Text  style={{color:'#aaa'}} >clinic Name:</Text>
-                    <View  style={{flexDirection:'row' }}>
-                     {this.state.clinicName.map((value,ind)=>{
-                       return(
-                         <Text style={{marginLeft:2}} color="#32325D">{value.clinic}</Text>
+                   <View style={{flexDirection:'row'}}>
+                          <View style={{flexDirection:'column',marginLeft:20}}>
+                              <Text bold size={14} style={{color:'#004D40'}}>Name:</Text>
+                              <Text style={{color:'#32325D'}}>{this.state.name}</Text>
+                          </View>
+
+                          <View style={{flexDirection:'column',marginLeft:60}}>
+                              <Text bold size={14} style={{color:'#004D40'}}>Email:</Text>
+                              <Text style={{color:'#32325D'}}>{this.state.email}</Text>
+                          </View>
+                       </View>
+                       <View style={{flexDirection:'row',marginTop:10}}>
+                          <View style={{flexDirection:'column',marginLeft:20}}>
+                              <Text bold size={14} style={{color:'#004D40'}}>Phone Number:</Text>
+                              <Text style={{color:'#32325D'}}>{this.state.phone ||"none determined"}</Text>
+                          </View>
+
+                          <View style={{flexDirection:'column',marginLeft:60}}>
+                              <Text bold size={14} style={{color:'#004D40'}}>specialty:</Text>
+                              <Text style={{color:'#32325D'}}>{this.state.specialty}</Text>
+                          </View>
+                       </View>
+                       <View style={{flexDirection:'row',marginTop:10}}>
+                          <View style={{flexDirection:'column',marginLeft:20}}>
+                              <Text bold size={14} style={{color:'#004D40'}}>Clinic name:</Text>
+                              <View  style={{flexDirection:'column' }}>
+                           {this.state.clinicName.map((value,ind)=>{
+                             return(
+                            <Text key={ind} style={{marginLeft:2}} color="#32325D">{value.clinic}</Text>
                        )
                      })}
                     </View>
-                     </View>
+                          </View>
+                       </View>
+                                            
                     </Block>
                     <Divider style={{backgroundColor:'#004',marginTop:10,width:width*0.9,marginLeft:10}}/>
-                    <View style={{flexDirection:'column',marginTop:30,marginLeft:40}}>
+                    <View style={{flexDirection:'column',marginTop:30,marginLeft:5}}>
                     <Text color="#32325D" size={16} bold >workingHours:</Text>
-                    {!this.state.nodata && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff',marginTop:100}}>
+                    {!this.state.nodata && <View style={{flex: 1, padding: 16, paddingTop: 30, backgroundColor:'#fff',marginTop:10}}>
         <Table borderStyle={{borderColor: 'transparent'}}>
-          <Row data={this.state.head} style={styles.head} textStyle={styles.text}/>
+          <Row data={this.state.head} style={styles.head} textStyle={{margin:6,color:'#fff'}}/>
           {
              this.state.workingHours.map((data, index) => {
-                  //  return this.state.appointment.map((app,appIndex)=>{
                       if(data.enable){
                         return(
               <TableWrapper key={index} style={styles.row}>
@@ -194,10 +203,13 @@ class InformationAboutDoctor extends React.Component {
                  </View>
 
                        <View style={{marginTop:20}}>
-                           <TouchableOpacity style={{backgroundColor:'#eee',marginLeft:width*0.6,width:width*0.3,marginBottom:20}}
-                             onPress={()=>this.props.navigation.navigate("Appointment",{id:this.state.id,idPatient:this.state.idPatient})}>
-                               <Text color='#1B5E20' bold size={15}>Book Now</Text>
-                           </TouchableOpacity>
+                       <ComponentButton 
+                       style={{backgroundColor:'#eee',marginLeft:width*0.5,width:width*0.4,marginBottom:30,borderRadius:10}}
+                       onPress={()=>this.props.navigation.navigate("Appointment",{id:this.state.id,idPatient:this.state.idPatient})}>
+                         <Text color='#1B5E20' >Book Now</Text>
+
+                       </ComponentButton>
+                           
                        </View>        
       
       </ScrollView>
@@ -207,9 +219,17 @@ class InformationAboutDoctor extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    head: { height: 40, backgroundColor: '#333' },
-  text: { margin: 6 },
-  row: { flexDirection: 'row', backgroundColor: '#eee' },
+    head: { 
+      height: 40, 
+      backgroundColor: '#333'
+    },
+  text: { 
+    margin: 6
+   },
+  row: {
+     flexDirection: 'row', 
+     backgroundColor: '#eee'
+     },
 
 });
 export default InformationAboutDoctor;

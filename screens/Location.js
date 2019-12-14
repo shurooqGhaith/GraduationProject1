@@ -132,7 +132,9 @@ class Location extends Component {
             longitudeDelta: 0.100421
           }
         });
-      }
+      },
+      (error) => console.log("error"),
+     {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
     );
 	
 	

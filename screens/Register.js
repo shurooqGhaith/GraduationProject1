@@ -19,6 +19,8 @@ import fire from "../constants/firebaseConfigrations";
 import * as Facebook from 'expo-facebook';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import { Notifications } from 'expo';
+
 
 const Toast = (props) => {
   if (props.visible) {
@@ -53,14 +55,34 @@ class Register extends React.Component {
       checked:false,
       isShow:false,
       uploaded:'',
-      photo:''
-    }
+      photo:'',
+      checkedP:false
+
+        }
   }
   
   componentDidMount(){ 
     this.getPermissionAsync();
     this.authListener();
   }
+
+
+
+  async getDeviceNotificationToken(user_id){
+
+
+    let token = await Notifications.getExpoPushTokenAsync();
+    console.log("hi there this is my device tokennnnnn")
+
+    console.log(token)
+    alert("Done");
+    alert(token);
+
+//        fire.database().ref("users").child(user_id).child("token").update(token);
+
+
+  return token
+}
   authListener(){
     fire.auth().onAuthStateChanged((user)=>{
       if(user){//this.props.navigation.navigate('Home')
@@ -80,8 +102,10 @@ class Register extends React.Component {
   // }
 
 
-  handleSignup(){
+  async handleSignup(){
     var id;
+    var token = await this.getDeviceNotificationToken()
+
    fire.auth().createUserWithEmailAndPassword(this.state.email.trim(),this.state.password)//trim remove white spaces
    .then(() =>{ 
     id=fire.auth().currentUser.uid;
@@ -91,10 +115,14 @@ class Register extends React.Component {
     fire.database().ref("users").child(id).child("avatar").set(this.state.photo);
     if(this.state.checked){
       fire.database().ref("users").child(id).child("type").set("doctor");
+      fire.database().ref("users").child(id).child("token").set(token);
+
       this.props.navigation.navigate('ClinicName');
     }
     else{
       fire.database().ref("users").child(id).child("type").set("patient");
+      fire.database().ref("users").child(id).child("token").set(token);
+
       this.props.navigation.navigate('PatientProfile');
     }
     
@@ -235,10 +263,10 @@ class Register extends React.Component {
                         
                     </Block>
                     <Block width={width * 0.8}>
-                     <TouchableOpacity
-                     style={{backgroundColor:'#eee',height:40,padding:5,borderRadius:10}}
+                    <TouchableOpacity
+                     style={{backgroundColor:'#004ff3',height:40,padding:5,borderRadius:10}}
                      onPress={this._pickImage}>
-                       <Text color="#000" style={{paddingLeft:width*0.2}}>{this.state.uploaded || "Upload profile picture"}</Text>
+                       <Text color="#fff" style={{paddingLeft:width*0.2,paddingTop:5}}>{this.state.uploaded || "Upload profile picture"}</Text>
                      </TouchableOpacity>
                         
                     </Block>
@@ -250,7 +278,13 @@ class Register extends React.Component {
                            onValueChange={() => this.setState({ checked: !this.state.checked })}
                             />
                      <Text style={{marginTop: 5}}> Doctor</Text>
-
+                     <View style={{ flexDirection: 'row',marginLeft:40 }}>
+                     <CheckBox
+                           value={this.state.checkedP}
+                           onValueChange={() => this.setState({ checkedP: !this.state.checkedP })}
+                            />
+                     <Text style={{marginTop: 5}}> Patient</Text>
+                     </View>
                      <Toast visible={this.state.isShow} message={this.state.errorMessage}/>
 
 

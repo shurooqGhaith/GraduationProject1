@@ -231,7 +231,7 @@ export default class Main extends React.Component{
                 { !this.state.nodata && this.state.type=="patient" && this.state.doctors.map((item,index)=>{
                   
                   return(
-                    <View style={{marginTop:20}}>
+                    <View key={index} style={{marginTop:20}}>
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                       style={{ width }}

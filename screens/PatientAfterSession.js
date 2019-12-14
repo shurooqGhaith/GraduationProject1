@@ -226,7 +226,7 @@ viewInfo(id){
                 
                 <Block style={styles.info}>
                   <Block middle>
-                  {this.state.noPatient && <View style={{marginTop:100,marginLeft:50}}><Text bold size={20}>No patients yet </Text></View>}
+                  {this.state.noPatient && <View style={{marginTop:250,marginLeft:35}}><Text bold size={20}>No patients yet </Text></View>}
 
                   <View style={{marginTop:100}}>
                   {!this.state.nodata && this.state.patientData.map((item,index)=>{

@@ -29,6 +29,9 @@ import MyPanel from "../screens/Panel";
 import DetailsAboutPatients from "../screens/DetailsAboutPatient";
 import AgendaScreen from "../screens/Agenda";
 import InformationAboutDoctor from "../screens/InformationAboutDoctor";
+import answer from '../screens/answer';
+
+import Questions from '../screens/questions';
 const AppNavigator = createStackNavigator(
     {
       InformationAboutDoctor:{screen:InformationAboutDoctor,
@@ -117,6 +120,15 @@ const AppNavigator = createStackNavigator(
         navigationOptions: {
           header: null,
         } },
+
+
+        answer:{screen:answer,
+          navigationOptions: {
+            header: null,
+          }
+    
+        },
+
       SearchAboutTime:{ screen: SearchAboutTime,
         navigationOptions: {
           header: null,
@@ -174,9 +186,19 @@ const AppNavigator = createStackNavigator(
   Login:{screen:Login,
     navigationOptions:{
       header:null,
-    }}
+    }},
+
+
+    Questions:{screen:Questions,
+      navigationOptions:{
+        header:null,
+      }}
   
 },
+
+
+
+
 {
     initialRouteName:'Onboarding'
 }

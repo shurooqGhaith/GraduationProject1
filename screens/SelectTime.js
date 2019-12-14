@@ -27,6 +27,8 @@ import { slotCreator } from "react-native-slot-creator";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import moment from 'moment';
 import { element } from "prop-types";
+import { Notifications } from 'expo';
+
 
 const { width, height } = Dimensions.get("screen");
 const Toast = (props) => {
@@ -79,7 +81,8 @@ export default class SelectTime extends React.Component {
       availableSlots:[],
       isShow:false,
       message:'',
-      noAvailable:false
+      noAvailable:false,
+      token:''
 
     }
   }
@@ -172,6 +175,12 @@ export default class SelectTime extends React.Component {
     let slot = Object.values(datasnapshot.val());
     this.setState({slots:slot})
  })
+ fire.database().ref("users").child(id).child("token").on('value',(datasnapshot)=>{
+  this.setState({
+    token:datasnapshot.val()
+  })
+})
+
 
  fire.database().ref("users").child(id).child("appointment").on('value',(datasnapshot) =>{
     if(datasnapshot.val()){
@@ -222,7 +231,7 @@ export default class SelectTime extends React.Component {
 
   
   makeAppointment(time){
-
+   
     fire.database().ref("users").child(this.state.idDoctor).child("appointment").push().set({
       'idPatient':this.state.idPatient,
       'daySelected':this.state.daySelected,
@@ -244,6 +253,8 @@ export default class SelectTime extends React.Component {
       'available':false
   });
   
+  this.callNotification()
+
   this.setState({isShow:true,message:'Added successfully !'});
   setTimeout(function(){
    this.setState({isShow:false});
@@ -258,7 +269,7 @@ export default class SelectTime extends React.Component {
 
    // alert("The time is changed to "+this.state.dateToSearch+"\n"+this.state.timeToSearch);
    // this.setState({availableSlots:[]});
-  
+
    this.update();
   }
 
@@ -303,7 +314,61 @@ export default class SelectTime extends React.Component {
   
     })//working hour database
   }
+  async sendNotification(title="hello", body="sending a fucking notification", token="ExponentPushToken[OVK81WCGfOHwHyu1s3FRua]"){
+	
+    PUSH_ENDPOINT = 'https://exp.host/--/api/v2/push/send'
+    let response =  await fetch(PUSH_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+    "to": token,
+    "title":title,
+    "body": body,
+  }),
+    })
+    return response
+  }
 
+  
+  
+  async  registerForPushNotificationsAsync(){
+    var id;
+    id=fire.auth().currentUser.uid;
+  
+    try {
+      // Get the token that uniquely identifies this device
+      let token = await Notifications.getExpoPushTokenAsync();
+      console.log("hi there this is my device tokennnnnn")
+  
+      console.log(token)
+      fire.database().ref("users").child(id).child("token").set(token);
+
+     
+    } catch (error) {
+      console.log(error);
+    }
+    return token
+  }
+  
+    
+  
+    
+  
+    
+    
+   
+  callNotification(){
+      to_token = this.state.token
+      messageTitle = "You have a new Appointment "
+      messageBody = "  New Appointment"
+      sound=true
+      priority="high" 
+      this.registerForPushNotificationsAsync()
+     this.sendNotification(title=messageTitle, body=messageBody, token=to_token)
+  }
 
   
 
@@ -339,7 +404,7 @@ export default class SelectTime extends React.Component {
 
                     <View style={{flexDirection:'column',marginTop:10,marginLeft:20}}>
                           <View style={{flexDirection:'row'}}>
-                              <Text bold size={14} style={{color:'#004D40'}}>Name:</Text>
+                              <Text bold size={14} style={{color:'#004D40'}}>DoctorName:</Text>
                               <Text style={{color:'#aaa'}}>{this.state.username}</Text>
                           </View>
                           <View style={{flexDirection:'row',marginTop:10}}>
@@ -357,14 +422,14 @@ export default class SelectTime extends React.Component {
                 
                     <Divider style={{backgroundColor:'#000000',width:width*0.9}}/>
                     <Text bold style={{color:'#004D40',marginLeft:140,marginTop:15}}>{this.state.dateSelected}</Text>
-                    <Text bold style={{color:'#004D40',marginLeft:20,marginTop:15}}>Available times</Text>
+                    <Text bold style={{color:'#004D40',marginLeft:15,marginTop:20}}>Available times</Text>
 
                     <View style={{marginTop:60,flexDirection:'row',flexWrap:'wrap',marginLeft:15}}>
 
                     { this.state.availableSlots.map((slot,index)=>{
    if(slot.time){
     return(
-     <View style={{marginTop:5}}>
+     <View style={{marginTop:5}} key={index}>
       <Button style={{backgroundColor:'#eee',marginLeft:10}} small onPress={()=>this.makeAppointment(slot.time)}>
       <Text style={{color:'#00897b'}}>{slot.time}</Text>
       </Button>

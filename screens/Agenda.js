@@ -32,7 +32,8 @@ export default class AgendaScreen extends Component {
       USER_ID:'',
      idDoctor:'',
      errorMessage:'',
-     isShow:false
+     isShow:false,
+     token:''
     };
   }
 
@@ -106,8 +107,10 @@ export default class AgendaScreen extends Component {
             }
             })//map app 
                   }
+                  
             
                 })//app doctor
+                
         this.props.navigation.navigate("Search",{idPatient:this.state.USER_ID})
 
 
@@ -116,7 +119,7 @@ export default class AgendaScreen extends Component {
         ],
         { cancelable: true },
       );
-  
+
 
   }
 
@@ -146,6 +149,11 @@ export default class AgendaScreen extends Component {
                 }
           
               })//app doctor
+              fire.database().ref("users").child(idDoctor).child("token").on('value',(datasnapshot)=>{
+                this.setState({
+                  token:datasnapshot.val()
+                })
+              })
               this.setState({errorMessage:'Deleted successfully !',isShow:true});
                      setTimeout(function(){
                     this.setState({isShow:false});
@@ -155,6 +163,63 @@ export default class AgendaScreen extends Component {
       ],
       { cancelable: true },
     );
+    this.callNotification()
+
+  }
+  async sendNotification(title="hello", body="sending a fucking notification", token="ExponentPushToken[OVK81WCGfOHwHyu1s3FRua]"){
+	
+    PUSH_ENDPOINT = 'https://exp.host/--/api/v2/push/send'
+    let response =  await fetch(PUSH_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+    "to": token,
+    "title":title,
+    "body": body,
+  }),
+    })
+    return response
+  }
+
+  
+  
+  async  registerForPushNotificationsAsync(){
+    var id;
+    id=fire.auth().currentUser.uid;
+  
+    try {
+      // Get the token that uniquely identifies this device
+      let token = await Notifications.getExpoPushTokenAsync();
+      console.log("hi there this is my device tokennnnnn")
+  
+      console.log(token)
+      fire.database().ref("users").child(id).child("token").set(token);
+
+     
+    } catch (error) {
+      console.log(error);
+    }
+    return token
+  }
+  
+    
+  
+    
+  
+    
+    
+   
+  callNotification(){
+      to_token = this.state.token
+      messageTitle = "Your patient delete your appointment"
+      messageBody = " click to see"
+      sound=true
+      priority="high" 
+      this.registerForPushNotificationsAsync()
+     this.sendNotification(title=messageTitle, body=messageBody, token=to_token)
   }
 
 

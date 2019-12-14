@@ -170,6 +170,7 @@ render () {
   {!this.state.nodata && this.state.clinics.map((marker) => {
       return(
         <MapView.Marker
+        key={index}
       coordinate={{
                       latitude: marker.latitude,
                       longitude: marker.longitude,

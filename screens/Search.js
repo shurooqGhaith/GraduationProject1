@@ -181,15 +181,10 @@ class Search extends React.Component {
                        expanded={this.state.show[index]}
                        onPress={()=>this._handlePress(index)}
                            >
-                            <List.Item titleStyle={{color:'#263238'}} title="Email"
-                               description={item.email}
-                                onPress={()=>alert("first item")} />
-                             <List.Item title="Specialization" titleStyle={{color:'#263238'}}
-                             description={item.Specialization}  />
-                             <List.Item
+                            <List.Item
                              titleStyle={{color:'#1B5E20'}}
-                             title="Book Now"
-                              onPress={()=>this.props.navigation.navigate("Appointment",{id:item.id,idPatient:this.state.idP})}
+                             title="Information"
+                              onPress={()=>this.props.navigation.navigate("InformationAboutDoctor",{id:item.id,idPatient:this.state.idP})}
                              />
                     </List.Accordion>
                     <Divider style={{backgroundColor:'#000000',width:width*0.7,marginLeft:50}}/>

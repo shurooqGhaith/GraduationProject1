@@ -9,7 +9,7 @@ import {
   Platform,
   Picker,
   TouchableOpacity
-  
+
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
@@ -18,8 +18,8 @@ import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
 import fire from "../constants/firebaseConfigrations";
 import DateTimePicker from "react-native-modal-datetime-picker";
-import MapView,{Marker} from "react-native-maps";
-import { Divider,Header,Icon } from 'react-native-elements';
+import MapView, { Marker } from "react-native-maps";
+import { Divider, Header, Icon } from 'react-native-elements';
 import { Appbar } from 'react-native-paper';
 
 const { width, height } = Dimensions.get("screen");
@@ -28,165 +28,125 @@ const thumbMeasure = (width - 48 - 32) / 3;
 
 class PatientProfile extends React.Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.authListener=this.authListener.bind(this);
-        this.state={
-      user:[],
-      username:"",
-      from:'',
-      to:'',
-      email:'',
-      phone:'',
-      phoneExist:false,
-      id:'',
-      closedAt:'',
-      appointment:[],
-      nodata:false,
-      session:[],
-      noSession:false,
-      time:'',
-      date:'',
-      enableNotification:true,
-      isVerified:false,
+    this.authListener = this.authListener.bind(this);
+    this.state = {
+      user: null,
+      username: "",
+      from: '',
+      to: '',
+      email: '',
+      phone: '',
+      phoneExist: false,
+      id: '',
+      closedAt: '',
+      appointment: [],
+      nodata: false,
+      session: [],
+      noSession: false,
+      time: '',
+      date: '',
+      enableNotification: true,
+      isVerified: false,
 
-      changeAppColor:false,
-      changeMakeAppColor:false,
-      changeLocationColor:false,
-      changeAgendaColor:false,
-      avatar:'',
-      avatarExist:false
+      changeAppColor: false,
+      changeMakeAppColor: false,
+      changeLocationColor: false,
+      changeAgendaColor: false,
+      avatar: '',
+      avatarExist: false
       //Images.initialProfilePicture
 
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.authListener();
   }
 
 
+  authListener() {
 
+    let name, start, end, close;
+    fire.auth().onAuthStateChanged((user) => {
+      if (user) {
+        if (user.emailVerified) {
+          this.setState({ isVerified: true });
+        } else {
+          this.setState({ isVerified: false });
+          user.sendEmailVerification().then(() => {
+            console.log("sent");
+            if (user.emailVerified) {
+              this.setState({ isVerified: true });
+            }
 
-  authListener(){
-  
-   var name,start,end,close;
-  //  var user =fire.auth().currentUser;
-   fire.auth().onAuthStateChanged((user)=>{
-      if(user){
-        if(user.emailVerified){
-          this.setState({isVerified:true});
-       }
-       else{
-        this.setState({isVerified:false});
-         user.sendEmailVerification().then(()=>{
-           console.log("sent");
-          if(user.emailVerified){
-          this.setState({isVerified:true});
-       }
-       
-         }).catch(()=>console.log("error"))
-       }
-       var id=user.uid;
-       this.setState({
-         id:id
-       })
-       fire.database().ref("users").child(id).child("name").on('value',datasnapshot =>{
-       name=datasnapshot.val();//
-       if(datasnapshot.val()){
-      this.setState({
-          username:datasnapshot.val()
-      })
-    }
-    })
-  
-    fire.database().ref("users").child(id).child("email").on('value',datasnapshot =>{
-      e=datasnapshot.val();//
-      if(datasnapshot.val()){
-     this.setState({
-         email:datasnapshot.val()
-     })
-    }
-   })
-   fire.database().ref("users").child(id).child("avatar").on('value',(datasnapshot)=>{
-    if(datasnapshot.val()){
-    this.setState({
-      avatar:datasnapshot.val(),
-      avatarExist:true
-    })
-  }
-  })
-   fire.database().ref("users").child(id).child("phone").on('value',(datasnapshot)=>{
-    if(datasnapshot.val()){
-    this.setState({
-      phone:datasnapshot.val(),
-      phoneExist:true
-    })
-  }
-  })
+          }).catch(() => console.log("error"))
+        }
 
-   var today=new Date();
-   const day   = today.getDate();
-   const dayName=today.getDay();
-   const  month = today.getMonth()+1;
-   const  year  = today.getFullYear();
-  
-      this.setState({
-          date:day+'-'+month+'-'+year
-      })
-  
-    fire.database().ref("users").child(id).child("appointment").on('value',(snapshot)=>{
-      if(snapshot.val()){
-        let app=Object.values(snapshot.val());
-        // app.map((value,index)=>{
-        //   if(value.dateSelected == this.state.date){
-        //       this.setState({time:value.timeSelected})
-        //   }
-        // })
-        this.setState({
-            appointment:app,
-            nodata:false
-        })
-      }
-      else{
+        const id = user.uid;
+
+        const today = new Date();
+        const day = today.getDate();
+        const dayName = today.getDay();
+        const month = today.getMonth() + 1;
+        const year = today.getFullYear();
+        const date = day + '-' + month + '-' + year;
+
+        fire.database().ref("users").child(id).on('value', (dataSnapshot) => {
+          let appointment = [], nodata = true, session = [], noSession = true, avatarExist = false, phoneExist = false;
+
+          if (dataSnapshot.val().appointment) {
+            appointment = Object.values(dataSnapshot.val().appointment);
+            nodata = false;
+          }
+
+          if (dataSnapshot.val().session) {
+            session = Object.values(dataSnapshot.val().session);
+            noSession = false;
+          }
+
+          if (dataSnapshot.val().avatar) {
+            avatarExist = true;
+          }
+
+          if (dataSnapshot.val().phone) {
+            phoneExist = true;
+          }
+
           this.setState({
-              nodata:true
-          })
-      }
-    })
-  
-    fire.database().ref("users").child(id).child("session").on('value',(snapshot)=>{
-      if(snapshot.val()){
-        let app=Object.values(snapshot.val());
-        this.setState({
-            session:app,
-            noSession:false
-        })
-      }
-      else{
-          this.setState({
-            noSession:true
-          })
-      }
-    })
-  
+            id: id,
+            date: date,
+            user: dataSnapshot,
+            username: dataSnapshot.val().name,
+            email: dataSnapshot.val().email,
+            appointment: appointment,
+            nodata: nodata,
+            session: session,
+            noSession: noSession,
+            avatar: dataSnapshot.val().avatar,
+            avatarExist: avatarExist,
+            phone: dataSnapshot.val().phone,
+            phoneExist: phoneExist
+          });
+        });
+
       }//if user
 
-      else{
+      else {
         this.props.navigation.navigate("Login");
       }
-   })
-  
-   
-  
+    })
+
+
   }
 
-  
-  
-  
+
   render() {
-      return (
-        <Block flex style={styles.profile}>
+
+
+    return (
+      <Block flex style={styles.profile}>
           <Block flex>
             <ImageBackground
               source={Images.ProfileBackground}
@@ -313,7 +273,7 @@ class PatientProfile extends React.Component {
                          }.bind(this),1000);
                      }}
                        />
-                <Text style={{paddingHorizontal:18}}  color='#aaa'>Appointments</Text>
+                <Text style={{paddingHorizontal:20,paddingVertical:10}}  color='#aaa'>Sessions Info.</Text>
                  </View>
 
                  <View style={styles.iconButton1}>
@@ -327,7 +287,7 @@ class PatientProfile extends React.Component {
                      }}
                      
                 />
-                <Text style={{paddingHorizontal:5}} color='#aaa'>Make appointment</Text>
+                <Text style={{paddingHorizontal:5,paddingVertical:10}} color='#aaa'>Make appointment</Text>
                  </View>  
                         
                         <View style={styles.iconButton1}>
@@ -340,7 +300,7 @@ class PatientProfile extends React.Component {
                          }.bind(this),1000);
                      }}
                 />
-                <Text style={{paddingHorizontal:35}} color='#aaa'>Location</Text>
+                <Text style={{paddingHorizontal:35,paddingVertical:10}} color='#aaa'>Location</Text>
                  </View>
                  <View style={styles.iconButton1}>
                  <Icon type='material-community' name={ 'calendar-multiselect'} size={52}  color={this.state.changeAgendaColor?'#B71C1C':'#172B4D'}
@@ -354,8 +314,24 @@ class PatientProfile extends React.Component {
                      }}
                      
                 />
-                <Text style={{paddingHorizontal:35}} color='#aaa'>Agenda</Text>
+                <Text style={{paddingHorizontal:35,paddingVertical:10}} color='#aaa'>Agenda</Text>
                  </View>
+
+
+                 <View style={styles.iconButton1}>
+                        <Icon type='material-community' name={'calendar-multiselect'} size={52} color={this.state.changeAgendaColor ? '#B71C1C' : '#172B4D'}
+
+                          onPress={() => {
+                            this.setState({ changeAgendaColor: !this.state.changeAgendaColor });
+                            setTimeout(function () {
+                              this.setState({ changeAgendaColor: !this.state.changeAgendaColor });
+                              this.props.navigation.navigate("Questions", { user: this.state.user })
+                            }.bind(this), 1000);
+                          }}
+
+                        />
+                        <Text style={{ paddingHorizontal: 35,paddingVertical:10 }} color='#aaa'>Community</Text>
+                      </View>
                  </View>
                     </Block>
   
@@ -383,35 +359,32 @@ class PatientProfile extends React.Component {
           </Block>
           
         </Block>
-      );
+    );
 
-      
-    
-    
   }
 }
 
 const styles = StyleSheet.create({
-  iconButton1:{
+  iconButton1: {
     flexDirection: 'column',
-    marginLeft:10,
-    marginTop:5,
-   // justifyContent:'space-between',
-   height:height*0.171,
-   paddingTop:25,
-    borderColor:'#172B4D',
-    borderWidth:1,
-   // paddingRight:18,
-    borderRadius:20,
-    width:width*0.361,
+    marginLeft: 10,
+    marginTop: 5,
+    // justifyContent:'space-between',
+    height: height * 0.171,
+    paddingTop: 25,
+    borderColor: '#172B4D',
+    borderWidth: 1,
+    // paddingRight:18,
+    borderRadius: 20,
+    width: width * 0.361,
     //alignItems:'center',
     backgroundColor: "#fff",
-  },  
+  },
   bottom: {
     position: 'absolute',
-    backgroundColor:'#333',
-    width:width,
-    height:30,
+    backgroundColor: '#333',
+    width: width,
+    height: 30,
     left: 0,
     right: 0,
     bottom: 0,

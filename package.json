@@ -25,6 +25,7 @@
     "expo-permissions": "^5.0.1",
     "firebase": "^6.6.0",
     "galio-framework": "^0.5.3",
+    "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",

@@ -43,8 +43,13 @@ class Chat extends React.Component {
     const day   = today.getDate();
     const  month = today.getMonth()+1;
     const  year  = today.getFullYear();
+    var d=`${day}`;
+    if(d.length==1){d=`0${d}`}
+    var m=`${month}`;
+    if(m.length==1){m=`0${m}`}
+
     this.setState({
-      todayDate:day + '-' + month + '-' + year
+      todayDate:year + '-' + m + '-' + d
     }) 
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
