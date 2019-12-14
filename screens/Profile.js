@@ -181,7 +181,7 @@ class Profile extends React.Component {
 
 
 
-              {!this.state.isVerified &&
+              {/* {!this.state.isVerified && */}
                 <Block flex style={styles.profileCard}>
                   <Block middle style={styles.avatarContainer}>
                     {this.state.avatarExist && <View><Image
@@ -369,7 +369,8 @@ class Profile extends React.Component {
 
                     </Block>
                   </Block>
-                </Block>}
+                </Block>
+                {/* } */}
             </ScrollView>
           </ImageBackground>
         </Block>

@@ -56,8 +56,8 @@ class Login extends React.Component {
       let token = await Notifications.getExpoPushTokenAsync();
       console.log("hi there this is my device tokennnnnn")
     
-      console.log(token)
-      alert("we took your token");
+      //console.log(token)
+      //alert("we took your token");
     
     return token
     }

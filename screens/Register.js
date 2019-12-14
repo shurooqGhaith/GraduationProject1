@@ -72,11 +72,11 @@ class Register extends React.Component {
 
 
     let token = await Notifications.getExpoPushTokenAsync();
-    console.log("hi there this is my device tokennnnnn")
+   // console.log("hi there this is my device tokennnnnn")
 
-    console.log(token)
-    alert("Done");
-    alert(token);
+   // console.log(token)
+  //  alert("Done");
+    //alert(token);
 
 //        fire.database().ref("users").child(user_id).child("token").update(token);
 
@@ -153,7 +153,7 @@ class Register extends React.Component {
     })
   }
   else {
-    alert(type);
+   // alert(type);
   }
   }
   getPermissionAsync = async () => {

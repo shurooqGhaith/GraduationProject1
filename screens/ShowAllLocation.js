@@ -167,7 +167,7 @@ render () {
           initialRegion={this.state.region}
           showsUserLocation={true}
               >
-  {!this.state.nodata && this.state.clinics.map((marker) => {
+  {!this.state.nodata && this.state.clinics.map((marker,index) => {
       return(
         <MapView.Marker
         key={index}
