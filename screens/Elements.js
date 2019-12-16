@@ -237,11 +237,12 @@ class Info extends React.Component {
                     <Text bold size={16} style={{color:'#004D40',marginLeft:10}}>Processes</Text>
                     <View style={{flexDirection:'row',flexWrap:'wrap'}}>
 
-                        { this.state.process.map((pro=>{
+                        { this.state.process.map((pro,index)=>{
                             return(
                                 <View style={{marginLeft:10,marginTop:5
                                 //,flex: 1, justifyContent: 'center',alignItems: 'flex-start'
-                                }}>
+                                }}
+                                key={index}>
                                 <Text
                                    style={{borderRadius:4,backgroundColor:'#eee',padding:10}}
                                         >
@@ -250,7 +251,7 @@ class Info extends React.Component {
                                         
                                 </View>
                             )
-                        }))}
+                        })}
                     </View>
                     </View>
                     <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
@@ -258,9 +259,9 @@ class Info extends React.Component {
                     <View style={{marginTop:10,flexDirection:'column'}}>
                     <Text bold size={16} style={{color:'#004D40',marginLeft:10}}>Medicines :</Text>
                            <View style={{flexDirection:'row',flexWrap:'wrap'}}>
-                        { this.state.medicines.map((med=>{
+                        { this.state.medicines.map((med,index)=>{
                             return(
-                                <View style={{marginLeft:10,marginTop:5}}>
+                                <View style={{marginLeft:10,marginTop:5}} key={index}>
                                 <Text 
                                    style={{borderRadius:4,backgroundColor:'#eee',padding:10}}
                                         >
@@ -268,7 +269,7 @@ class Info extends React.Component {
                                         </Text>
                                 </View>
                             )
-                        }))}
+                        })}
                         </View>
                     </View>
                     <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
@@ -278,9 +279,9 @@ class Info extends React.Component {
                     <Text bold size={16} style={{color:'#004D40',marginLeft:10}}>Medical checkup :</Text>
                     <View style={{flexDirection:'row'}}>
 
-                        { this.state.exams.map((ex=>{
+                        { this.state.exams.map((ex,index)=>{
                             return(
-                                <View style={{marginLeft:10,marginTop:5}}>
+                                <View style={{marginLeft:10,marginTop:5}} key={index}>
                                 <Text 
                                    style={{borderRadius:4,backgroundColor:'#eee',padding:10}}
                                         >
@@ -289,7 +290,7 @@ class Info extends React.Component {
                                         
                                 </View>
                             )
-                        }))}
+                        })}
                         </View>
                     </View>
                     <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>

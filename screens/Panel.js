@@ -138,7 +138,6 @@ this.setState({showToast:false});
         .map((item, i) => {
           if(item.available){
           return (
-            
             <DataTable.Row key={i}
              onPress={()=>
              {this.show(item.idDoctor,item.dateSelected,item.timeSelected,item.clinicName,item.available);
