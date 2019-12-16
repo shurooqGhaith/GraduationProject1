@@ -54,6 +54,7 @@ class PatientProfile extends React.Component {
       changeMakeAppColor: false,
       changeLocationColor: false,
       changeAgendaColor: false,
+      changeCommunityColor:false,
       avatar: '',
       avatarExist: false
       //Images.initialProfilePicture
@@ -319,18 +320,18 @@ class PatientProfile extends React.Component {
 
 
                  <View style={styles.iconButton1}>
-                        <Icon type='material-community' name={'calendar-multiselect'} size={52} color={this.state.changeAgendaColor ? '#B71C1C' : '#172B4D'}
+                        <Icon type='material-community' name={'cloud-question'} size={52} color={this.state.changeCommunityColor ? '#B71C1C' : '#172B4D'}
 
                           onPress={() => {
-                            this.setState({ changeAgendaColor: !this.state.changeAgendaColor });
+                            this.setState({ changeCommunityColor: !this.state.changeCommunityColor });
                             setTimeout(function () {
-                              this.setState({ changeAgendaColor: !this.state.changeAgendaColor });
+                              this.setState({ changeCommunityColor: !this.state.changeCommunityColor });
                               this.props.navigation.navigate("Questions", { user: this.state.user })
                             }.bind(this), 1000);
                           }}
 
                         />
-                        <Text style={{ paddingHorizontal: 35,paddingVertical:10 }} color='#aaa'>Community</Text>
+                        <Text style={{ paddingHorizontal: 20,paddingVertical:10 }} color='#aaa'>Community</Text>
                       </View>
                  </View>
                     </Block>

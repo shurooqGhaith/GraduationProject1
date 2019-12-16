@@ -82,6 +82,7 @@ export default class answer extends React.Component {
             doctorId: this.user.key,
             doctor: this.userInfo.name
         })
+        this.closeModal();
     }
 
 
@@ -174,7 +175,8 @@ export default class answer extends React.Component {
                                         textStyle={{ color: argonTheme.COLORS.BLACK }}
                                     />
                                     <Button
-                                        color={argonTheme.COLORS.WARNING}
+                                        style={{marginTop:10}}
+                                        color={argonTheme.COLORS.LABEL}
                                         onPress={() => this.closeModal()}
                                         title="Dismiss"
                                         textStyle={{ color: argonTheme.COLORS.BLACK }}

@@ -121,7 +121,7 @@ this.setState({showToast:false});
   render() {
     //حطي كي لكل خليه
     return (
-      <DataTable style={{marginTop:30}}>
+      <DataTable style={{marginTop:100}}>
         <DataTable.Header>
           <DataTable.Title >Date</DataTable.Title>
           <DataTable.Title >Time</DataTable.Title>
@@ -136,8 +136,9 @@ this.setState({showToast:false});
         {this.state.appointment
         .slice(this.state.perPage * this.state.page, this.state.perPage * (this.state.page + 1))
         .map((item, i) => {
-        //  if(item.available){
+          if(item.available){
           return (
+            
             <DataTable.Row key={i}
              onPress={()=>
              {this.show(item.idDoctor,item.dateSelected,item.timeSelected,item.clinicName,item.available);
@@ -158,7 +159,7 @@ this.setState({showToast:false});
               
             </DataTable.Row>
           );
-         // }
+          }
         })}
         
         <DataTable.Pagination

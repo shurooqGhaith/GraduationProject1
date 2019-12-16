@@ -140,6 +140,7 @@ class DetailsAboutPatients extends React.Component {
     //get process
     var array1=[];
     fire.database().ref("users").child(this.state.idDoctor).child("processes").on('value',(pro)=>{
+        if(pro.val()){
         let res=Object.values(pro.val());
         res.map((value)=>{
             if(value.idPatient ==id && value.sessionNumber==num){
@@ -151,6 +152,7 @@ class DetailsAboutPatients extends React.Component {
         this.setState({
             process:array1
         })
+    }
     }) //pro fire
 
     //get medicines
@@ -175,6 +177,7 @@ class DetailsAboutPatients extends React.Component {
      //get exams
      var array3=[];
      fire.database().ref("users").child(this.state.idDoctor).child("checkup").on('value',(ch)=>{
+         if(ch.val()){
          let res=Object.values(ch.val());
          res.map((value)=>{
              if(value.idPatient ==id && value.sessionNumber==num){
@@ -186,6 +189,7 @@ class DetailsAboutPatients extends React.Component {
          this.setState({
             exams:array3
          })
+        }
      }) //medicine fire
     
  }

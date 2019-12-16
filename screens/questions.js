@@ -21,6 +21,7 @@ const QuestionDetailsForPatient = props => {
                     style={styles.exitButton}
                     color={argonTheme.COLORS.WHITE}
                 >
+                   
                     X
                 </Text>
             </TouchableHighlight>
