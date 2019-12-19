@@ -153,6 +153,7 @@ export default class answer extends React.Component {
 
 
                             <View id="doctorContainer" style={styles.modalContent}>
+                            <ScrollView showsVerticalScrollIndicator={false}>
                                 <Text style={styles.questionModalText}>
                                     {this.state.summary}
                                 </Text>
@@ -171,17 +172,18 @@ export default class answer extends React.Component {
                                         style={styles.saveButton}
                                         color={argonTheme.COLORS.SECONDARY}
                                         onPress={() => this.saveAnswer(this.state.answerQQ)}
-                                        title="Save answer"
+                                        title="Save"
                                         textStyle={{ color: argonTheme.COLORS.BLACK }}
                                     />
                                     <Button
-                                        style={{marginTop:10}}
+                                        style={{marginTop:20,backgroundColor:argonTheme.COLORS.ERROR}}
                                         color={argonTheme.COLORS.LABEL}
                                         onPress={() => this.closeModal()}
                                         title="Dismiss"
                                         textStyle={{ color: argonTheme.COLORS.BLACK }}
                                     />
                                 </Block>
+                                </ScrollView>
                             </View>
 
 

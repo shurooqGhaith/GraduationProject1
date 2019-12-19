@@ -7,24 +7,25 @@ import { argonTheme } from "../constants";
 import AddQuestions from "../components/add-question";
 import Moment from 'moment';
 import fire from "../constants/firebaseConfigrations";
+import { Icon } from 'react-native-elements'
 import _ from "lodash";
 
 const QuestionDetailsForPatient = props => {
     const answers = props.question.val().answers;
     return (
         <View id="userContainer" style={styles.userModalContent}>
-             <TouchableOpacity
-                style={{zIndex: 1000}}
-                onPress={() => props.closeModal()}
-            >
-                <Text
-                    style={styles.exitButton}
-                    color="#000"
-                >
-                   
-                    X
-                </Text>
-            </TouchableOpacity>
+         <TouchableHighlight
+                    style={{alignSelf:'flex-end'}}
+                    onPress={() =>{props.closeModal()} }
+                    >
+                      <Icon
+                          name='close'
+                          type='material'
+                          color='#517fa4'
+                          size={28}/>
+
+                  </TouchableHighlight>
+             
             
             <View>
 
