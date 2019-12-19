@@ -483,12 +483,13 @@ export default class DoctorAgenda extends Component {
                   />
                 </View>
                 <ScrollView showsVerticalScrollIndicator={true}>
-                <View style={{flexDirection:'row',flexWrap:'wrap',marginTop:10}}>
+                <View style={{flexDirection:'row',flexWrap:'wrap',marginTop:10,marginLeft:10}}>
+                {this.state.change && <View style={{marginLeft:10}}><Text>available times</Text></View>}
                 {this.state.change && this.state.availableSlots.map((slot,index)=>{
                       if(slot.time){
                            return(
                                    <View style={{marginTop:5}} key={index} >
-                                     <Button style={{backgroundColor:'#eee',marginLeft:10,width:width*0.3}} small 
+                                     <Button style={{backgroundColor:'#eee',marginLeft:10,width:width*0.3}}  
                                     // onPress={()=>this.changeTime(slot.time)}
                                      >
                                      <Text style={{color:'#00897b'}}>{slot.time}</Text>
@@ -499,9 +500,9 @@ export default class DoctorAgenda extends Component {
                 })}
                 
                                       {this.state.change && <View>
-                  <Button small style={{marginTop:5,marginLeft:45,backgroundColor:'#3E2723'}}  
-                 onPress={() => {this.setModal2Visible(false)}}>
-                  <Text>cancel</Text></Button>
+                  <Button small style={{marginTop:5,marginLeft:80,backgroundColor:'#3E2723'}}  
+                 onPress={() => {this.setState({change:false})}}>
+                  <Text color="#fff">cancel</Text></Button>
 
                 </View>}
                 </View>
