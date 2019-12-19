@@ -294,7 +294,7 @@ this.setState({
     const dayName=pickeddate.getDay();
     const  month = pickeddate.getMonth()+1;
     const  year  = pickeddate.getFullYear();
-
+//
     var d=`${day}`;
     if(d.length==1){d=`0${d}`}
     var m=`${month}`;
@@ -815,7 +815,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                   {this.state.change && this.state.availableSlots.map((slot,index)=>{
                       if(slot.time){
                            return(
-                                   <View style={{marginTop:5}} >
+                                   <View style={{marginTop:5}} key={index} >
                                      <Button style={{backgroundColor:'#eee',marginLeft:10}} small onPress={()=>this.changeTime(slot.time)}>
                                      <Text style={{color:'#00897b'}}>{slot.time}</Text>
                                       </Button>
@@ -1097,7 +1097,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                   {this.state.nextEnable && this.state.sessionAvailable.map((slot,index)=>{
                        if(slot.time){
                                return(
-                                   <View style={{marginTop:5}}>
+                                   <View style={{marginTop:5}} key={index}>
                              <Button style={{backgroundColor:'#fff',marginLeft:10,width:width*0.3}}  onPress={()=>this.makeNextSessionAppointment(slot.time)}>
                                   <Text style={{color:'#004'}}>{slot.time}</Text>
                                  </Button>

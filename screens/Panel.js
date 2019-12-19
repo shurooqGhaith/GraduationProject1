@@ -54,8 +54,9 @@ export default class MyPanel extends React.Component {
             a.push({idDoctor:item.idDoctor,dateSelected:item.dateSelected,timeSelected:item.timeSelected,clinicName:item.clinicName,available:item.available});
           }
         })
-        n=Math.ceil(a.length / 8)
-       // console.log(a.length);
+       
+        n=Math.ceil(app.length / 8)
+        console.log(app.length);
         this.setState({
           numberOfPages:n,
           appointment:app,

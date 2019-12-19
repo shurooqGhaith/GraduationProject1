@@ -449,7 +449,7 @@ if(dayName==6){
                     }}>
                     {this.state.Specialties.map((value,index)=>{
                       return(
-                        <Picker.Item label = {value.sp} value = {value.sp} />
+                        <Picker.Item key={index} label = {value.sp} value = {value.sp} />
                       )
                     })}
                          

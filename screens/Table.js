@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Agenda,Calendar } from 'react-native-calendars';
-import { Modal, Text,TouchableHighlight, View, StyleSheet, Button, Alert ,Dimensions} from 'react-native';
+import { Modal, Text,TouchableHighlight, View, StyleSheet, Alert ,Dimensions,ScrollView} from 'react-native';
 import { Icon } from 'react-native-elements'
 import fire from "../constants/firebaseConfigrations";
 import { isString } from 'util';
 import { Images, argonTheme } from "../constants";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Notifications } from 'expo';
+import { Button } from "../components";
+import { slotCreator } from "react-native-slot-creator";
+
 import * as Permissions from 'expo-permissions';
 
 const { width, height } = Dimensions.get("screen");
@@ -26,7 +29,11 @@ export default class DoctorAgenda extends Component {
       patientId:'',
       token:'',
       token2:[],
-      available:false
+      available:false,
+
+      modal2Visible:false,
+      change:false,
+      availableSlots:[]
      // notification:''
     };
   }
@@ -213,8 +220,98 @@ export default class DoctorAgenda extends Component {
     this.selectedCalenderDay = date;
     this.setModalVisible(true);
   }
+  _openShiftAppointmetsModal2(date) {
+    this.selectedCalenderDay = date;
+    this.setModal2Visible(true);
+  }
 
-  
+
+  _beforeChange(fromDate,toDate){
+    var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var d = new Date(toDate);
+    var dayName = days[d.getDay()];
+
+    //بفحص ازا اليوم الجديد يوم دوام
+    var ar=[];
+    fire.database().ref("users").child(this.state.USER_ID).child("workingHours").on('value',(datasnapshot) =>{
+      if(datasnapshot.val()){
+       let items = Object.values(datasnapshot.val());
+       items.map((value,index)=>{
+        if(value.enable){
+          ar.push(value.days)
+        }
+       
+      })
+      }
+   })
+   if(ar.includes(dayName.toLowerCase())){
+    Alert.alert(
+      'Shift All Appointments',
+      'Are you sure that you want to shift all appointments of ' + fromDate + ' to ' + toDate +' ?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => { },
+          style: 'cancel',
+        },
+        {
+          text: 'OK', onPress: () => {this._changeTime(fromDate,toDate,dayName)}
+        },
+      ],
+      { cancelable: true },
+    );
+   
+   }
+   if(!ar.includes(dayName.toLowerCase())){
+     alert("select other day");
+   }
+    
+
+  }
+  _changeTime(fromDate,toDate,dayName) {
+    console.log(toDate);
+    console.log(dayName);
+
+    var ar=[];
+    fire.database().ref("users").child(this.state.USER_ID).child("workingHours").on('value',(work)=>{
+      let workHour=Object.values(work.val());
+      workHour.map(w=>{
+        if(w.days == dayName.toLowerCase() && w.enable){
+          this.setState({change:true});
+          
+         let requiredArray = slotCreator.createSlot(w.start,w.end,"30");//2 2.5 3 3.5
+         ar=requiredArray;
+         requiredArray.map(v=>{ar.push({time:v})})
+         console.log(ar.length);//ما طبع شي ، شكله م بيدخل هون أصلا !!!!!!1
+
+         requiredArray.map((slot,index)=>{
+           // var flag=false;
+          
+           fire.database().ref("users").child(this.state.USER_ID).child("appointment").on('value',(app)=>{
+             let appointment=Object.values(app.val());
+             appointment.map((ap)=>{
+               if(ap.dateSelected == toDate && ap.timeSelected==slot && !ap.available){
+                 ar = ar.filter(function( obj ) {
+                   return obj.time !== slot;
+               });
+               }
+          
+             })//app map
+           })//app fire
+
+           //if(flag){ar.push({time:slot}) }
+         })//slot arrays
+        }
+       
+      })//work map
+      if(ar.length==0){this.setState({change:false})}
+  // console.log(ar.length);//0
+       this.setState({
+        availableSlots:ar
+      })
+    })//working hour database
+    
+  }
   _beforeMoveAppointmets(fromDate,toDate) {
     var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     var d = new Date(toDate);
@@ -299,6 +396,9 @@ export default class DoctorAgenda extends Component {
     this.setState({modalVisible: visible});
   }
 
+  setModal2Visible(visible){
+    this.setState({modal2Visible:visible})
+  }
   render() {
     return (
       <View style={{flex:1}}>
@@ -342,6 +442,74 @@ export default class DoctorAgenda extends Component {
                 </View>
               </View>
             </Modal>
+
+            {/* change appointment */}
+            <Modal
+              style={{flex:1,marginTop: 22}}
+              animationType="slide"
+              transparent={false}
+              visible={this.state.modal2Visible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+              }}>
+              <View style={{
+                  flex:1,
+                  flexDirection:'column',
+                  marginTop: 22,
+                  padding:10,
+                  backgroundColor: '#f4f4f4',
+                  borderRadius:10
+                  }}>
+                <View>
+                <TouchableHighlight
+                    style={{alignSelf:'flex-end'}}
+                    onPress={() => {
+                      this.setModal2Visible(!this.state.modal2Visible);
+                    }}>
+                      <Icon
+                          name='close'
+                          type='material'
+                          color='#517fa4'
+                          size={28}/>
+                  </TouchableHighlight>
+                  <Text style={{fontSize:22}}>Selecte a day</Text>
+                  <Calendar
+                    style={{borderRadius:5,marginTop:10}}
+                    current={this.selectedCalenderDay}
+                    minDate={'2019-01-01'}
+                    maxDate={'2022-01-01'} 
+                    markedDates={this.state.calendarDots}
+                    onDayPress={(day) => {this._beforeChange(this.selectedCalenderDay, day.dateString)}}
+                  />
+                </View>
+                <ScrollView showsVerticalScrollIndicator={true}>
+                <View style={{flexDirection:'row',flexWrap:'wrap',marginTop:10}}>
+                {this.state.change && this.state.availableSlots.map((slot,index)=>{
+                      if(slot.time){
+                           return(
+                                   <View style={{marginTop:5}} key={index} >
+                                     <Button style={{backgroundColor:'#eee',marginLeft:10,width:width*0.3}} small 
+                                    // onPress={()=>this.changeTime(slot.time)}
+                                     >
+                                     <Text style={{color:'#00897b'}}>{slot.time}</Text>
+                                      </Button>
+                                      </View>
+                              )
+                            }
+                })}
+                
+                                      {this.state.change && <View>
+                  <Button small style={{marginTop:5,marginLeft:45,backgroundColor:'#3E2723'}}  
+                 onPress={() => {this.setModal2Visible(false)}}>
+                  <Text>cancel</Text></Button>
+
+                </View>}
+                </View>
+                </ScrollView>
+              </View>
+            </Modal>
+
+
           <Agenda
               items={this.state.items}
               selected={this.selectedDay}
@@ -410,7 +578,7 @@ export default class DoctorAgenda extends Component {
               color={argonTheme.COLORS.ICON}
               style={styles.inputIcons}
               size={30}
-              //onPress={() => this.props.navigation.navigate("Search",{id:item.Doctor,idPatient:this.state.USER_ID})}
+              onPress={() => { this._openShiftAppointmetsModal2(item.date) }}
                />
           
           

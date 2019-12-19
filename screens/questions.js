@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, ScrollView, TouchableHighlight, TextInput } from "react-native";
+import { StyleSheet, View, ScrollView, TouchableHighlight, TextInput,TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 import { Button } from "react-native-elements";
 import { Block, Text } from "galio-framework";
@@ -13,18 +13,18 @@ const QuestionDetailsForPatient = props => {
     const answers = props.question.val().answers;
     return (
         <View id="userContainer" style={styles.userModalContent}>
-             <TouchableHighlight
+             <TouchableOpacity
                 style={{zIndex: 1000}}
                 onPress={() => props.closeModal()}
             >
                 <Text
                     style={styles.exitButton}
-                    color={argonTheme.COLORS.WHITE}
+                    color="#000"
                 >
                    
                     X
                 </Text>
-            </TouchableHighlight>
+            </TouchableOpacity>
             
             <View>
 
@@ -242,12 +242,12 @@ const styles = StyleSheet.create({
         top: 10,
         right: 0,
         backgroundColor: "transparent",
-        fontSize: 18
+        fontSize: 20
     },
     answerContainer: {
         width: "100%",
         backgroundColor: "white",
-        marginTop: 10,
+        marginTop: 40,
        
         marginBottom: 10,
         padding: 20,
