@@ -448,7 +448,7 @@ fire.database().ref("users").child(this.state.idP).child("appointment").child(Ob
               transparent={false}
               visible={this.state.modalVisible}
               onRequestClose={() => {
-                //Alert.alert('Modal has been closed.');
+                this.setModalVisible(!this.state.modalVisible);
               }}>
               <View style={{
                   flex:1,
@@ -490,7 +490,7 @@ fire.database().ref("users").child(this.state.idP).child("appointment").child(Ob
               transparent={false}
               visible={this.state.modal2Visible}
               onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
+                this.setModal2Visible(!this.state.modal2Visible);
               }}>
               <View style={{
                   flex:1,
@@ -504,6 +504,7 @@ fire.database().ref("users").child(this.state.idP).child("appointment").child(Ob
                 <TouchableHighlight
                     style={{alignSelf:'flex-end'}}
                     onPress={() => {
+                      this.setState({change:false});
                       this.setModal2Visible(!this.state.modal2Visible);
                     }}>
                       <Icon
@@ -523,7 +524,7 @@ fire.database().ref("users").child(this.state.idP).child("appointment").child(Ob
                   />
                 </View>
                 <ScrollView showsVerticalScrollIndicator={true}>
-                {this.state.change && <View style={{marginLeft:80}}><Text>available times</Text></View>}
+                {this.state.change && <View style={{marginLeft:120}}><Text>available times</Text></View>}
                 <View style={{flexDirection:'row',flexWrap:'wrap',marginTop:10,marginLeft:40}}>
                 {this.state.change && this.state.availableSlots.map((slot,index)=>{
                       if(slot.time){
@@ -542,7 +543,7 @@ fire.database().ref("users").child(this.state.idP).child("appointment").child(Ob
                 </View>
                 
                 {this.state.change && <View>
-                  <Button small style={{marginTop:5,marginLeft:90,backgroundColor:'#3E2723'}}  
+                  <Button small style={{marginTop:5,marginLeft:120,backgroundColor:'#3E2723'}}  
                  onPress={() => {this.setState({change:false})}}>
                   <Text color="#fff">cancel</Text></Button>
 
