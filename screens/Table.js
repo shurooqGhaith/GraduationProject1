@@ -33,7 +33,12 @@ export default class DoctorAgenda extends Component {
 
       modal2Visible:false,
       change:false,
-      availableSlots:[]
+      availableSlots:[],
+      newDate:'',
+      newDay:'',
+      currentTime:'',
+      currentDate:'',
+      idP:''
      // notification:''
     };
   }
@@ -220,8 +225,9 @@ export default class DoctorAgenda extends Component {
     this.selectedCalenderDay = date;
     this.setModalVisible(true);
   }
-  _openShiftAppointmetsModal2(date) {
+  _openShiftAppointmetsModal2(date,id,time) {
     this.selectedCalenderDay = date;
+    this.setState({idP:id,currentTime:time})
     this.setModal2Visible(true);
   }
 
@@ -230,7 +236,7 @@ export default class DoctorAgenda extends Component {
     var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     var d = new Date(toDate);
     var dayName = days[d.getDay()];
-
+    this.setState({newDay:dayName.toLowerCase(),newDate:toDate,currentDate:fromDate});
     //بفحص ازا اليوم الجديد يوم دوام
     var ar=[];
     fire.database().ref("users").child(this.state.USER_ID).child("workingHours").on('value',(datasnapshot) =>{
@@ -311,6 +317,41 @@ export default class DoctorAgenda extends Component {
       })
     })//working hour database
     
+  } 
+  updateTime(time){
+        
+    fire.database().ref("users").child(this.state.idP).child("appointment").once('value',(snapshot)=>{
+      if(snapshot.val()){
+let appointments = Object.values(snapshot.val());
+
+appointments.map((va,i)=>{
+if(va.idDoctor == this.state.USER_ID && va.dateSelected ==this.state.currentDate && va.timeSelected==this.state.currentTime){
+
+fire.database().ref("users").child(this.state.idP).child("appointment").child(Object.keys(snapshot.val())[i]).child("timeSelected").set(time);
+fire.database().ref("users").child(this.state.idP).child("appointment").child(Object.keys(snapshot.val())[i]).child("dateSelected").set(this.state.newDate);
+fire.database().ref("users").child(this.state.idP).child("appointment").child(Object.keys(snapshot.val())[i]).child("daySelected").set(this.state.newDay)
+.then(()=>{
+  fire.database().ref("users").child(this.state.idDoctor).child("appointment").once('value',(s)=>{
+    let appointments = Object.values(s.val());
+    this.setState({app:appointments});
+    this.state.app.map((v,ind)=>{
+      if(v.idPatient == this.state.idP && v.dateSelected ==this.state.currentDate && v.timeSelected==this.state.currentTime){//وصلت الموعد يلي بدي اغيره
+        fire.database().ref("users").child(this.state.USER_ID).child("appointment").child(Object.keys(s.val())[ind]).child("timeSelected").set(time);
+        fire.database().ref("users").child(this.state.USER_ID).child("appointment").child(Object.keys(s.val())[ind]).child("dateSelected").set(this.state.newDate);
+        fire.database().ref("users").child(this.state.USER_ID).child("appointment").child(Object.keys(s.val())[ind]).child("daySelected").set(this.state.newDay);
+
+      }
+    })//app doctor map
+   
+  })//app doctor
+
+})//then end
+
+}
+})//map app p
+      }
+
+    })//app patient
   }
   _beforeMoveAppointmets(fromDate,toDate) {
     var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -490,7 +531,7 @@ export default class DoctorAgenda extends Component {
                            return(
                                    <View style={{marginTop:5}} key={index} >
                                      <Button style={{backgroundColor:'#eee',marginLeft:10,width:width*0.3}}  
-                                    // onPress={()=>this.changeTime(slot.time)}
+                                     onPress={()=>this.updateTime(slot.time)}
                                      >
                                      <Text style={{color:'#00897b'}}>{slot.time}</Text>
                                       </Button>
@@ -579,7 +620,7 @@ export default class DoctorAgenda extends Component {
               color={argonTheme.COLORS.ICON}
               style={styles.inputIcons}
               size={30}
-              onPress={() => { this._openShiftAppointmetsModal2(item.date) }}
+              onPress={() => { this._openShiftAppointmetsModal2(item.date,item.patient,item.startAt) }}
                />
           
           
