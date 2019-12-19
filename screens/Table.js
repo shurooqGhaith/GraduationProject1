@@ -253,7 +253,7 @@ export default class DoctorAgenda extends Component {
    if(ar.includes(dayName.toLowerCase())){
     Alert.alert(
       'Shift All Appointments',
-      'Are you sure that you want to shift all appointments of ' + fromDate + ' to ' + toDate +' ?',
+      'Are you sure that you want to update this appointments from ' + fromDate + ' to ' + toDate +' ?',
       [
         {
           text: 'Cancel',
@@ -269,7 +269,7 @@ export default class DoctorAgenda extends Component {
    
    }
    if(!ar.includes(dayName.toLowerCase())){
-     alert("select other day");
+     alert("No work at this day !");
    }
     
 
@@ -331,10 +331,9 @@ fire.database().ref("users").child(this.state.idP).child("appointment").child(Ob
 fire.database().ref("users").child(this.state.idP).child("appointment").child(Object.keys(snapshot.val())[i]).child("dateSelected").set(this.state.newDate);
 fire.database().ref("users").child(this.state.idP).child("appointment").child(Object.keys(snapshot.val())[i]).child("daySelected").set(this.state.newDay)
 .then(()=>{
-  fire.database().ref("users").child(this.state.idDoctor).child("appointment").once('value',(s)=>{
+  fire.database().ref("users").child(this.state.USER_ID).child("appointment").once('value',(s)=>{
     let appointments = Object.values(s.val());
-    this.setState({app:appointments});
-    this.state.app.map((v,ind)=>{
+    appointments.map((v,ind)=>{
       if(v.idPatient == this.state.idP && v.dateSelected ==this.state.currentDate && v.timeSelected==this.state.currentTime){//وصلت الموعد يلي بدي اغيره
         fire.database().ref("users").child(this.state.USER_ID).child("appointment").child(Object.keys(s.val())[ind]).child("timeSelected").set(time);
         fire.database().ref("users").child(this.state.USER_ID).child("appointment").child(Object.keys(s.val())[ind]).child("dateSelected").set(this.state.newDate);
@@ -393,7 +392,7 @@ fire.database().ref("users").child(this.state.idP).child("appointment").child(Ob
    
    }
    if(!ar.includes(dayName.toLowerCase())){
-     alert("select other day");
+     alert("No work at this day!!");
    }
     
     
@@ -449,7 +448,7 @@ fire.database().ref("users").child(this.state.idP).child("appointment").child(Ob
               transparent={false}
               visible={this.state.modalVisible}
               onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
+                //Alert.alert('Modal has been closed.');
               }}>
               <View style={{
                   flex:1,
@@ -524,8 +523,8 @@ fire.database().ref("users").child(this.state.idP).child("appointment").child(Ob
                   />
                 </View>
                 <ScrollView showsVerticalScrollIndicator={true}>
-                <View style={{flexDirection:'row',flexWrap:'wrap',marginTop:10,marginLeft:10}}>
-                {this.state.change && <View style={{marginLeft:10}}><Text>available times</Text></View>}
+                {this.state.change && <View style={{marginLeft:80}}><Text>available times</Text></View>}
+                <View style={{flexDirection:'row',flexWrap:'wrap',marginTop:10,marginLeft:40}}>
                 {this.state.change && this.state.availableSlots.map((slot,index)=>{
                       if(slot.time){
                            return(
@@ -540,13 +539,14 @@ fire.database().ref("users").child(this.state.idP).child("appointment").child(Ob
                             }
                 })}
                 
-                                      {this.state.change && <View>
-                  <Button small style={{marginTop:5,marginLeft:80,backgroundColor:'#3E2723'}}  
+                </View>
+                
+                {this.state.change && <View>
+                  <Button small style={{marginTop:5,marginLeft:90,backgroundColor:'#3E2723'}}  
                  onPress={() => {this.setState({change:false})}}>
                   <Text color="#fff">cancel</Text></Button>
 
                 </View>}
-                </View>
                 </ScrollView>
               </View>
             </Modal>
