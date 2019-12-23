@@ -118,7 +118,7 @@ class SearchAboutTime extends React.Component {
                              this.setState({appointments:appointment})
 
                              //map appointments state
-                             this.state.appointments.map((element,index)=>{////////////////////////
+                             appointment.map((element,index)=>{////////////////////////
                              // alert(this.state.dateToSearch + "\ntime:"+this.state.timeToSearch);
                                  if(element.timeSelected==this.state.timeToSearch && element.available && element.dateSelected==this.state.dateToSearch ){
                                     // alert(element.dateSelected+element.daySelected);

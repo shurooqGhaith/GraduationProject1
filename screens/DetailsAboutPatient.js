@@ -190,6 +190,9 @@ class DetailsAboutPatients extends React.Component {
             exams:array3
          })
         }
+        else{
+            array3.push({exam:'No medical checkup needed'})
+        }
      }) //medicine fire
     
  }

@@ -427,6 +427,7 @@ fire.database().ref("users").child(this.state.idP).child("appointment").child(Ob
     
         })//app patient
       });
+      alert("Shifted successfully !");
       this.selectedDay = toDate;
       this.setModalVisible(false);
     });

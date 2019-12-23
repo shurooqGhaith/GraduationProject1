@@ -250,6 +250,10 @@ class PatientProfile extends React.Component {
                       <Text  style={{color:'#aaa'}} > Phone Number:</Text>
                     <Text  size={15} color="#32325D" > {this.state.phone}</Text>
                     </View>}
+                    {!this.state.phoneExist && <View>
+                      <Text  style={{color:'#aaa'}} > Phone Number:</Text>
+                    <Text  size={15} color="#32325D" >Not determined</Text>
+                    </View>}
                     </View>
                       
                      

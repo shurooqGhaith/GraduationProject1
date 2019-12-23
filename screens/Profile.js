@@ -243,6 +243,10 @@ class Profile extends React.Component {
                           <Text style={{ color: '#aaa' }} > Phone Number:</Text>
                           <Text size={15} color="#32325D" > {this.state.phone}</Text>
                         </View>}
+                        {!this.state.phoneExist && <View>
+                          <Text style={{ color: '#aaa' }} > Phone Number:</Text>
+                          <Text size={15} color="#32325D" > Not determined</Text>
+                        </View>}
                         <Divider style={{ backgroundColor: '#E9ECEF', marginTop: 10, width: width * 0.6 }} />
                         <Text style={{ color: '#aaa' }}>Specialization:</Text>
                         <Text size={15} color="#32325D"> {this.state.Specialization}</Text>

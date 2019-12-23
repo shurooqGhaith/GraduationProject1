@@ -181,7 +181,7 @@ class DoctorInfo extends React.Component {
   add(){
      var days="";
      var array=new Array(7);
-     var enable=false;
+     var enable=true;
      var id=this.state.id;
      let requiredArray1 = slotCreator.createSlot(this.state.from,this.state.to,"30");
 

@@ -80,6 +80,8 @@ class Info extends React.Component {
     var clinic=navigation.getParam('clinic');
     var av=navigation.getParam('available');
 
+    
+
      this.setState({
       idPatient:idP,
       idDoctor:idD,
@@ -125,7 +127,8 @@ class Info extends React.Component {
         if(pro.val()){
           let res=Object.values(pro.val());
           res.map((value)=>{
-              if(value.idDoctor==this.state.idDoctor && value.date==this.state.date && value.time==this.state.time){
+              if(value.idDoctor==idD && value.date==date && value.time==time){
+                console.log("processsss");
                       array1.push({process:value.process});
               }
           })
@@ -144,7 +147,8 @@ class Info extends React.Component {
           let res=Object.values(med.val());
           var noMed='';
           res.map((value)=>{
-            if(value.idDoctor==this.state.idDoctor && value.date==this.state.date && value.time==this.state.time){
+            if(value.idDoctor==idD && value.date==date && value.time==time){
+              console.log("medicine");
               array2.push({medicine:value.medicine});
               }
              
@@ -162,15 +166,18 @@ class Info extends React.Component {
          if(ch.val()){
            let res=Object.values(ch.val());
            res.map((value)=>{
-            if(value.idDoctor==this.state.idDoctor && value.date==this.state.date && value.time==this.state.time){
+            if(value.idDoctor==idD && value.date==date && value.time==time){
               array3.push({exam:value.exam});
                }
            })
            if(array3.length==0){array3.push({exam:'No medical checkup needed'})}
-  
+             console.log(array3.length);
            this.setState({
               exams:array3
            })
+          }
+          else{
+            array3.push({exam:'No medical checkup needed'})
           }
        }) //medicine fire
 
@@ -302,7 +309,7 @@ class Info extends React.Component {
                          <Divider style={{backgroundColor:'#E9ECEF',marginTop:10,marginLeft:20}}/>
                          <View style={{flexDirection:'column',marginTop:10}}>
                              <Text bold size={16} style={{color:'#004D40',marginLeft:10}}>Any Notes :</Text>
-                            <Text style={{color:'#333',marginLeft:10}} >{this.state.notes || "No notes2"}</Text>
+                            <Text style={{color:'#333',marginLeft:10}} >{this.state.notes || "No notes"}</Text>
                          </View>
                          <Divider style={{backgroundColor:'#E9ECEF',marginTop:10}}/>
 

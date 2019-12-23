@@ -712,7 +712,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
 
             }
             )
-            alert("added successfully!");
+           // alert("added successfully!");
             this.setState({showForm:false});
           }
         }
@@ -839,7 +839,7 @@ fire.database().ref("users").child(this.state.idPatient).child("appointment").ch
                   </Modal>
 </View>
 
-
+                      {!this.state.showForm && <View style={{marginTop:150}}><Text bold size={20}>Added successfully!</Text></View>}
                   
                  {this.state.showForm && <View style={{flexDirection:'column'}}>
                    <View style={{flexDirection:'row'}}>

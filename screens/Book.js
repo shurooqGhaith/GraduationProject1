@@ -282,6 +282,7 @@ class Book extends React.Component {
                 this.setState({
                     data:items,
                     nodata:false,
+                    nearest:true,
                     show:ar6
                 })
             }

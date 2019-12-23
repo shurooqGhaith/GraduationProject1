@@ -73,7 +73,9 @@ export default class MyPanel extends React.Component {
     fire.database().ref("users").child(id).child("session").on('value',(snapshot)=>{
       if(snapshot.val()){
         let app=Object.values(snapshot.val());
+        n=Math.ceil(app.length / 8)
         this.setState({
+            numberOfPages:n,
             session:app,
             noSession:false
         })
@@ -133,33 +135,34 @@ this.setState({showToast:false});
 
        
         <Toast  visible={this.state.showToast} message="Cancelled or delayed or not made yet "/>
-
-        {this.state.appointment
+        {this.state.noSession && <View style={{marginTop:150,marginLeft:150}}><Text>No session</Text></View>}
+        {this.state.session
         .slice(this.state.perPage * this.state.page, this.state.perPage * (this.state.page + 1))
         .map((item, i) => {
-          if(item.available){
+         // if(item.available){
           return (
             <DataTable.Row key={i}
              onPress={()=>
-             {this.show(item.idDoctor,item.dateSelected,item.timeSelected,item.clinicName,item.available);
+             {this.props.navigation.navigate("Info",{id:this.state.id,idDoctor:item.idDoctor,type:"patient",date:item.date,time:item.time,clinic:item.clinic,available:true});
+              // this.show(item.idDoctor,item.dateSelected,item.timeSelected,item.clinicName,item.available);
              } }>
               
                   <DataTable.Cell  >
-                    <Text>{item.dateSelected}</Text>
+                    <Text>{item.date}</Text>
                   </DataTable.Cell>
 
                   <DataTable.Cell >
-                    <Text>{item.timeSelected}</Text>
+                    <Text>{item.time}</Text>
                   </DataTable.Cell>
 
                   <DataTable.Cell >
-                    <Text>{item.clinicName}</Text>
+                    <Text>{item.clinic}</Text>
                   </DataTable.Cell>
                
               
             </DataTable.Row>
           );
-          }
+         // }
         })}
         
         <DataTable.Pagination

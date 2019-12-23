@@ -258,6 +258,7 @@ export default class SelectTime extends React.Component {
   this.setState({isShow:true,message:'Added successfully !'});
   setTimeout(function(){
    this.setState({isShow:false});
+   this.props.navigation.navigate("Agenda",{idPatient:this.state.idPatient})
   }.bind(this),5000);
 
   }).catch((error)=>{
