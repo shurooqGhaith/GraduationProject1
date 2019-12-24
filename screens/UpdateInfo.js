@@ -168,11 +168,12 @@ class UpdateInfo extends React.Component {
            }.bind(this),5000);
 
             });
-            this.setState({
-              currentPassword:'',
-              newPassword:''
-            })
+            // this.setState({
+            //   currentPassword:'',
+            //   newPassword:''
+            // })
     }
+    
     changeEmail = () => {
         //alert("change email method !");
         this.reauthenticate(this.state.currentPassword).then(() => {
@@ -201,10 +202,10 @@ class UpdateInfo extends React.Component {
            }.bind(this),5000);
 
         });
-        this.setState({
-          currentPassword:'',
-          email:''
-        })
+        // this.setState({
+        //   currentPassword:'',
+        //   email:''
+        // })
       }
 
     update(){
@@ -244,9 +245,9 @@ class UpdateInfo extends React.Component {
                       }.bind(this),5000);
        }
        )
-         this.setState({
-          phone:''
-         })
+        //  this.setState({
+        //   phone:''
+        //  })
     }
     updateSpecialization(){
         fire.database().ref("users").child(this.state.id).child("Specialization").set(this.state.Specialization).then(()=>{
@@ -264,9 +265,9 @@ class UpdateInfo extends React.Component {
                    }
 
            )
-    this.setState({
-      Specialization:''
-    })
+    // this.setState({
+    //   Specialization:''
+    // })
     }
 
 
