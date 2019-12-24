@@ -168,6 +168,10 @@ class UpdateInfo extends React.Component {
            }.bind(this),5000);
 
             });
+            this.setState({
+              currentPassword:'',
+              newPassword:''
+            })
     }
     changeEmail = () => {
         //alert("change email method !");
@@ -197,6 +201,10 @@ class UpdateInfo extends React.Component {
            }.bind(this),5000);
 
         });
+        this.setState({
+          currentPassword:'',
+          email:''
+        })
       }
 
     update(){
@@ -217,6 +225,9 @@ class UpdateInfo extends React.Component {
                       }.bind(this),5000);
        }
        )
+       this.setState({
+         name:''
+       })
     }
     updatePhone(){
       fire.database().ref("users").child(this.state.id).child("phone").set(this.state.phone).then(()=>{
@@ -233,7 +244,9 @@ class UpdateInfo extends React.Component {
                       }.bind(this),5000);
        }
        )
-
+         this.setState({
+          phone:''
+         })
     }
     updateSpecialization(){
         fire.database().ref("users").child(this.state.id).child("Specialization").set(this.state.Specialization).then(()=>{
@@ -251,7 +264,9 @@ class UpdateInfo extends React.Component {
                    }
 
            )
-    
+    this.setState({
+      Specialization:''
+    })
     }
 
 

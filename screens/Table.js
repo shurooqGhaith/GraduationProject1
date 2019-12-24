@@ -164,7 +164,7 @@ export default class DoctorAgenda extends Component {
       { cancelable: true },
     );
     
-    this.callNotification()
+   // this.callNotification()
   }
   async sendNotification(title="hello", body="sending a fucking notification", token="ExponentPushToken[OVK81WCGfOHwHyu1s3FRua]"){
 	
@@ -252,7 +252,7 @@ export default class DoctorAgenda extends Component {
    })
    if(ar.includes(dayName.toLowerCase())){
     Alert.alert(
-      'Shift All Appointments',
+      'Update Appointment',
       'Are you sure that you want to update this appointments from ' + fromDate + ' to ' + toDate +' ?',
       [
         {
@@ -341,7 +341,10 @@ fire.database().ref("users").child(this.state.idP).child("appointment").child(Ob
 
       }
     })//app doctor map
-   
+    alert("Changed successfully!");
+    this.setModal2Visible(true);
+
+
   })//app doctor
 
 })//then end
